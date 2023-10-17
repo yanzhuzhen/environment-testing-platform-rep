@@ -1,0 +1,13 @@
+version: '3'     #docker compose版本
+services:
+  frontend:
+    image: my-frontend-app
+    ports:
+      - "8080:8080"  # 映射前端容器的80端口到主机的80端口
+    depends_on:
+      - backend  # 声明前端依赖后端
+
+  backend:
+    image: my-backend-app
+    ports:
+      - "3000:3000"  # 映射后端容器的3000端口到主机的3000端口
