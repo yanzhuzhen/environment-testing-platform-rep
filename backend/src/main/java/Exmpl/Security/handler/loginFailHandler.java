@@ -1,6 +1,7 @@
 package Exmpl.Security.handler;
 
 import Exmpl.Entity.User;
+import Exmpl.utils.resultCode;
 import com.alibaba.fastjson.JSON;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -33,7 +34,7 @@ public class loginFailHandler implements AuthenticationFailureHandler {
             message = "登录失败";
         }
         //返回json数据
-        String result = JSON.toJSONString(Result.error().code(500).message(message));
+        String result = JSON.toJSONString(Result.error().code(resultCode.ERROR).message(message));
         outputStream.write(result.getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
         outputStream.close();
