@@ -1,7 +1,6 @@
 package Exmpl.Service;
 
 import Exmpl.Entity.User;
-import Exmpl.Mapper.userMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class userDetailsService implements UserDetailsService {
     @Autowired
-    Exmpl.Mapper.userMapper userMapper;
+    Exmpl.Dao.userMapper userMapper;
 
     public User selectByUsername(String username) {
         return userMapper.findByUsername(username);

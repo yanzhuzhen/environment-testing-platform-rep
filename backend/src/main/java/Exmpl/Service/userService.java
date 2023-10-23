@@ -1,13 +1,9 @@
 package Exmpl.Service;
 
 import Exmpl.Entity.User;
-import Exmpl.Mapper.userMapper;
+import Exmpl.Dao.userMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

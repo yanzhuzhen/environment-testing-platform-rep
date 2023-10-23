@@ -1,4 +1,4 @@
-package Exmpl.Mapper;
+package Exmpl.Dao;
 import Exmpl.Entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

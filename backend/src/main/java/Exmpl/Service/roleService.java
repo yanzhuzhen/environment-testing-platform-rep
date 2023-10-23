@@ -2,7 +2,7 @@ package Exmpl.Service;
 
 import Exmpl.Entity.Role;
 
-import Exmpl.Mapper.roleMapper;
+import Exmpl.Dao.roleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

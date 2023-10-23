@@ -1,7 +1,7 @@
 package Exmpl.Service;
 
 import Exmpl.Entity.Algorithm;
-import Exmpl.Mapper.algorithmMapper;
+import Exmpl.Dao.algorithmMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

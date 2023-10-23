@@ -1,4 +1,4 @@
-package Exmpl.Mapper;
+package Exmpl.Dao;
 
 import Exmpl.Entity.Role;
 

@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@MapperScan("Exmpl.Mapper")
+@MapperScan("Exmpl.Dao")
 @SpringBootApplication
 public class BackendApplication {
 
