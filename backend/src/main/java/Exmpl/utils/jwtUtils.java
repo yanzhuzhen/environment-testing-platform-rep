@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,14 +18,14 @@ import java.util.Map;
 @Component
 @ConfigurationProperties(prefix = "myjwt")
 public class jwtUtils {
-    private String secret; //密钥
+    private Key secret; //密钥
     private long expires; //过期时间
 
     //从数据声明生产令牌
     private String generateToken(Map<String,Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + expires);
         return Jwts.builder().setClaims(claims).setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(secret, SignatureAlgorithm.HS512).compact();
 
     }
 
