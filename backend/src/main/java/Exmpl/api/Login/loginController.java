@@ -1,15 +1,18 @@
 package Exmpl.api.Login;
 
 import Exmpl.utils.CommonUtils;
+import Exmpl.utils.VerificationCode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +47,15 @@ public class loginController {
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
+    }
+    @GetMapping("/verifyCode")
+    public void verifyCode(HttpServletRequest request, HttpServletResponse resp) throws IOException {
+        VerificationCode code = new VerificationCode();
+        BufferedImage image = code.getImage();
+        String text = code.getText();
+        HttpSession session = request.getSession(true);
+        session.setAttribute("verify_code", text);
+        VerificationCode.output(image,resp.getOutputStream());
     }
 }
 

@@ -1,17 +1,4 @@
--- DECLARE
---     tableExists INTEGER;
--- BEGIN
---     SELECT COUNT(*) INTO tableExists FROM user_tables WHERE table_name = '<table_name>';
---
---     IF tableExists > 0 THEN
---         EXECUTE IMMEDIATE 'DROP TABLE <table_name>';
---     END IF;
---
---     DBMS_OUTPUT.PUT_LINE('Table <table_name> has been dropped successfully');
--- EXCEPTION
---     WHEN OTHERS THEN
---         DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM(SQLCODE));
--- END;
+
 
 create table usertable(
     uno int primary key,
