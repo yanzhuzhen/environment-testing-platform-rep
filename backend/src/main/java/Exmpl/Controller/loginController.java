@@ -1,9 +1,9 @@
-package Exmpl.api.Login;
+package Exmpl.Controller;
 
-import Exmpl.utils.commonUtils;
-import Exmpl.utils.verificationCode;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import Exmpl.Utils.commonUtils;
+import Exmpl.Utils.verificationCode;
+import Exmpl.api.Login.LoginRequest;
+import Exmpl.api.Login.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,23 +29,13 @@ public class loginController {
         if(commonUtils.InputTest(username,password)) {
             if (users.containsKey(username) && users.get(username).equals(password)) {
                 // 生成用户令牌
-                String token = generateToken(username);
-                return ResponseEntity.ok(new LoginResponse(token));
+//                String token = generateToken(username);
+//                return ResponseEntity.ok(new LoginResponse(token));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
             }
         }
         return null;
-    }
-    private String generateToken(String username) {
-        // 生成JWT令牌
-        String secretKey = "secretKey";
-        Date expirationDate = new Date(System.currentTimeMillis() + 3600000);
-        return Jwts.builder()
-                .setSubject(username)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, secretKey)
-                .compact();
     }
     @GetMapping("/verifyCode")
     public void verifyCode(HttpServletRequest request, HttpServletResponse resp) throws IOException {

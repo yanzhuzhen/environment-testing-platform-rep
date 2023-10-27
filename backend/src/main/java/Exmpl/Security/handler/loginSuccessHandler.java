@@ -1,9 +1,10 @@
 package Exmpl.Security.handler;
 
 import Exmpl.Entity.User;
-import Exmpl.utils.jwtUtils;
-import Exmpl.utils.loginResult;
-import Exmpl.utils.resultCode;
+import Exmpl.Service.redisService;
+import Exmpl.Utils.jwtUtils;
+import Exmpl.Utils.loginResult;
+import Exmpl.Utils.resultCode;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import javax.annotation.Resource;
@@ -25,6 +26,9 @@ public class loginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Resource
     private jwtUtils jwtUtils;
+
+    @Resource
+    private redisService redisService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -50,5 +54,9 @@ public class loginSuccessHandler implements AuthenticationSuccessHandler {
         outputStream.write(result.getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
         outputStream.close();
+
+        //将token信息保存到redis
+        String tokenKey = "token_" + token;
+        redisService.setCache(tokenKey, token, jwtUtils.getExpires()/1000);
     }
 }

@@ -1,6 +1,7 @@
 package Exmpl.Security;
 
 
+import Exmpl.Security.Filter.checkTokenFilter;
 import Exmpl.Security.handler.loginFailHandler;
 import Exmpl.Security.handler.loginSuccessHandler;
 import Exmpl.Security.handler.anonymousAuthenticationHandler;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 
@@ -31,6 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private userAccessDeniedHandler userAccessDeniedHandler;
     @Resource
     private userDetailsService userDetailsService;
+
+    @Resource
+    private checkTokenFilter checkTokenFilter;
+
     //注入加密类
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -39,9 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //处理登录认证
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //登陆前进行过流
+        http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //登录过程的处理
         http.formLogin() //表单登录
-                .loginProcessingUrl("/user/login") //登录请求的url
+                .loginProcessingUrl("/api/login") //登录请求的url
                 .successHandler(loginSuccessHandler) //登陆成功处理器
                 .failureHandler(loginFailHandler) //登陆失败处理器
                 .and()

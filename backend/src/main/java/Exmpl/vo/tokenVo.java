@@ -1,4 +1,5 @@
-package Exmpl.utils;
+package Exmpl.vo;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class loginResult {
-    private int uno;
-    private  int code;
+public class tokenVo {
+    private Long  expire;   //过期时间
     private String token;
-    private Long tkisUselessTime;
 }

@@ -1,13 +1,13 @@
 package Exmpl.Security.handler;
 
-import Exmpl.utils.resultCode;
+import Exmpl.Utils.resultCode;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import Exmpl.utils.Result;
+import Exmpl.Utils.Result;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;

@@ -1,4 +1,4 @@
-package Exmpl.utils;
+package Exmpl.Utils;
 
 public class resultCode {
     public static final int SUCCESS = 200;

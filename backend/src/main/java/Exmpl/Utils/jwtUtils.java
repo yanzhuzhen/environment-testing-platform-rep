@@ -1,4 +1,4 @@
-package Exmpl.utils;
+package Exmpl.Utils;
 
 import Exmpl.Entity.User;
 import io.jsonwebtoken.Claims;
@@ -79,7 +79,7 @@ public class jwtUtils {
     }
 
     //验证令牌
-    public Boolean validateToken(String token,  UserDetails userDetails) {
+    public Boolean checkToken(String token, UserDetails userDetails) {
         User user = (User) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername())&&isTokenExpired(token));

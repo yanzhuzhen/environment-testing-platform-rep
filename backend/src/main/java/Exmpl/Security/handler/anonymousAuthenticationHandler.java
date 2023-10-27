@@ -1,6 +1,6 @@
 package Exmpl.Security.handler;
 
-import Exmpl.utils.resultCode;
+import Exmpl.Utils.resultCode;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import javax.servlet.ServletException;
@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import Exmpl.utils.Result;
+import Exmpl.Utils.Result;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
