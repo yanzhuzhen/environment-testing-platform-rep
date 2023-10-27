@@ -1,5 +1,6 @@
 package Exmpl.Entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +23,10 @@ public class User implements UserDetails {
     private String email;
     private List<Role> roles;
 
+    @TableField(exist = false)
+    private List<Menu> menuList;
+    @TableField(exist = false)
+    Collection<? extends GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

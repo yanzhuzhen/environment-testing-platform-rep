@@ -1,7 +1,7 @@
 package Exmpl.api.Login;
 
-import Exmpl.utils.CommonUtils;
-import Exmpl.utils.VerificationCode;
+import Exmpl.utils.commonUtils;
+import Exmpl.utils.verificationCode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class loginController {
         users.put("admin","admin123");
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
-        if(CommonUtils.InputTest(username,password)) {
+        if(commonUtils.InputTest(username,password)) {
             if (users.containsKey(username) && users.get(username).equals(password)) {
                 // 生成用户令牌
                 String token = generateToken(username);
@@ -50,12 +50,12 @@ public class loginController {
     }
     @GetMapping("/verifyCode")
     public void verifyCode(HttpServletRequest request, HttpServletResponse resp) throws IOException {
-        VerificationCode code = new VerificationCode();
+        verificationCode code = new verificationCode();
         BufferedImage image = code.getImage();
         String text = code.getText();
         HttpSession session = request.getSession(true);
         session.setAttribute("verify_code", text);
-        VerificationCode.output(image,resp.getOutputStream());
+        verificationCode.output(image,resp.getOutputStream());
     }
 }
 

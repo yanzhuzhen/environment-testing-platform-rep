@@ -28,7 +28,7 @@
           <el-checkbox size="default" class="loginRemember" v-model="checked">记住密码</el-checkbox>
         </el-col>
         <el-col :span="6" >
-          <el-link :underline="false" class="el-link">去注册吧</el-link>
+          <el-link :underline="false" class="el-link" src="src/views/signUp.vue">去注册吧</el-link>
         </el-col>
       </el-row>
 

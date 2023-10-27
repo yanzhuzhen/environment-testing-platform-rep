@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.util.Random;
 
 @Data
-public class VerificationCode {
+public class verificationCode {
 
 	private int width = 100;// 生成验证码图片的宽度
 	private int height = 30;// 生成验证码图片的高度

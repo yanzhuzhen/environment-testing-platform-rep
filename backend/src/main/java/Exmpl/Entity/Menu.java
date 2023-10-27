@@ -19,10 +19,11 @@ public class Menu {
     private String icon;
     private int mno_parent;
     private List<Role> role;
+    private String code;
 
     @JsonInclude(JsonInclude.Include.NON_NULL) //属性值为null时，不进行序列化
     @TableField(exist = false) //表中无此字段，故为false
-    private  List<Menu> childMenu = new ArrayList<Menu>();
+    private  List<Menu> childMenu = new ArrayList<Menu>(); //子菜单
 
     @TableField(exist = false)
     private String value; //用于判断是菜单还是按钮

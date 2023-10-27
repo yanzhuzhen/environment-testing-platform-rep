@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Exmpl.Dao.menuMapper">
+    <select id="findMenuListByUserId" resultType="Exmpl.Entity.Menu">
+        select distinct t5.mno, t5.mno_parent, t5.url, t5.icon, t5.mname from usertable t1
+        left join UR t2 on t2.uno = t1.uno
+        left join roletable t3 on t3.rno = t2.rno
+        left join MR t4 on t4.rno = t3.rno
+        lft join menu t5 on t5.mno = t4.mno
+        where t1.uno=#{uno}
+        order by t5.mno
+    </select>
+</mapper>

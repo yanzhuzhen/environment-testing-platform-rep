@@ -34,7 +34,10 @@ create table userToAlgo(
 
 create table menu(
     mno int primary key,
-    mname char(20)
+    mname char(20),
+    url char(255),
+    icon char(255),
+    mno_parent int
 );
 
 create table MR(
