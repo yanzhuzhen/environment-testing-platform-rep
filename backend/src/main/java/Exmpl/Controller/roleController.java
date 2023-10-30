@@ -1,5 +1,6 @@
 package Exmpl.Controller;
 
+import Exmpl.Dto.roleMenuDTO;
 import Exmpl.Entity.Menu;
 import Exmpl.Entity.Role;
 import Exmpl.Service.roleService;
@@ -79,5 +80,15 @@ public class roleController {
     public Result getAssignMenuTree(Long uno, Long rno){
         roleMenuVo menuTree = menuService.getAssignMenuTree(uno, rno);
         return Result.ok(menuTree);
+    }
+
+    //保存权限数据
+    @PostMapping("/saveRoleAssign")
+    public Result saveRoleAssign(@RequestBody roleMenuDTO roleMenuDTO){
+        if(roleService.saveRoleMenu(roleMenuDTO.getRno(), roleMenuDTO.getList())){
+            return Result.ok().message("保存成功");
+        }else {
+            return Result.error().message("保存失败");
+        }
     }
 }

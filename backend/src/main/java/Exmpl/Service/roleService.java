@@ -12,9 +12,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class roleService extends ServiceImpl<roleMapper, Role> implements roleServiceInter {
@@ -61,5 +63,12 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
         baseMapper.deleteRoleMenuByRno(id);
         //删除角色
         return baseMapper.deleteById(id)>0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean saveRoleMenu(Long rno, List<Long> menuIds) {
+        baseMapper.deleteRoleMenuByRno(rno);
+        return baseMapper.saveRoleMenu(rno,menuIds) > 0;
     }
 }

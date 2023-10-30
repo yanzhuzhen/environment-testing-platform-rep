@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 
 public interface roleMapper extends BaseMapper<Role> {
 
@@ -16,4 +18,7 @@ public interface roleMapper extends BaseMapper<Role> {
     //删除角色权限关系
     @Delete("delete from MR where rno = #{id}")
     void deleteRoleMenuByRno(Long id);
+
+    //保存角色权限关系
+    int saveRoleMenu(Long rno, List<Long> menuIds);
 }

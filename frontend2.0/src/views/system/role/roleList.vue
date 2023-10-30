@@ -24,6 +24,7 @@
           <el-button type="warning" icon="el-icon-setting" size="small" @click="assignRole(scope.row)">分配权限</el-button>"
         </template>
       </el-table-column>
+      <!-- 分页  -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -33,18 +34,34 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
+      <!-- 添加和修改角色 -->
+
+
+      <!-- 分配权限窗口 -->
+      <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleDialog.height"
+                     @onClose="onAssignClose()" @onConfirm="onAssignConfirm()">
+        <div slot="content">
+          <el-tree ref="assignTree" :data="assignTreeData" node-key="id" :props="defaultProps" empty-text="暂无数据"
+                   show-checkbox="true" :highlight-current="true" default-expand-all>
+          </el-tree>
+        </div>
+      </system-dialog>
     </el-table>
 
   </el-main>
 </template>
 
 <script>
-import {getRoles, addRole, updateRole, deleteRole, checkRole} from '@/api/role'
+import {addRole, checkRole, deleteRole, getAssignMenuTree, getRoles, updateRole, saveAssign} from '@/api/role'
 import systemDialog from "@/components/system/systemDialog.vue";
-import menu from "@/api/menu";
-  export default {
+import myIcon from "@/components/system/myIcon.vue";
+import leafUtils from "@/utils/leaf";
+import row from "element-ui/packages/row";
+
+export default {
     name:"roleList",
     components:{
+      myIcon,
       systemDialog
     },
     data(){
@@ -78,8 +95,25 @@ import menu from "@/api/menu";
           roleName: "",
           remark: "",
           creatUser: this.$store.getters.userId
-          }
+          },
+        //分配权限窗口属性
+        assignDialog:{
+          title:"",
+          visible:false,
+          height:450,
+          width:300
+        },
+
+        rno:"",
+        assignTreeData:[], //树节点数据
+        //树节点属性
+        defaultProps:{
+          children:"children",
+          label:"label"
         }
+
+      }
+
     },
     created() {
       this.search();
@@ -130,7 +164,38 @@ import menu from "@/api/menu";
           }
         }
       },
-      assignRole(row){
+      //分配权限
+      async assignRole(row) {
+
+        let params = {
+          rno: row.id,
+          uno: this.$store.getters.userId
+        }
+        //发送查询权限分配菜单的请求
+        let res = await getAssignMenuTree(params);
+        //判断是否成功,如果成功则获取当前登录用户的菜单权限
+        if(res.success){
+          //获取当前登录用户所有的菜单权限
+          let menuList = res.data.menuList;
+          //获取当前用户被分配角色已经拥有的菜单权限
+          let {checkList} = res.data;
+          //判断当前菜单是否为最后一级
+          let {setLeaf} = leafUtils();
+          //设置菜单列表
+          //设置树节点数据
+          this.assignTreeData = setLeaf(menuList);
+          //将回调延迟到一下次DOM更新循环之后，再修改数据之后立即调用该方法，然后等待DOM更新
+          this.$nextTick(() => {
+            //获取菜单节点数据
+            let nodes = this.$refs.assignTree.children;
+            //设置子节点
+            this.setChild(nodes, checkList);
+          })
+
+        }
+
+        this.roleDialog.title = `给[${row.roleName}]分配权限`;
+        this.roleDialog.visible = true;
 
       },
       handleSizeChange(size) {
@@ -180,7 +245,57 @@ import menu from "@/api/menu";
           }
         })
       },
+      onAssignClose(){
+        this.role.visible = false;
+      },
+      async onAssignConfirm(){
+        this.rno = row.id;
+        //获取选中的树节点的key
+        let ids = this.$refs.assignTree.getCheckedKeys();
+        //获取选中节点的父节点id
+        let pids = this.$refs.assignTree.getHalfCheckedKeys();
+        //组装选中节点的id
+        let listId = ids.concat(pids);
+        let params = {
+          list: listId,
+          rno: this.rno,
+        }
+        //发送请求
+        let res = await saveAssign(params);
+        if(res.success){
+          this.assignDialog.visible = false;
+          this.$message.success(res.message);
+        }else {
+          this.$message.error(res.message);
+        }
 
+      },
+      //设置子节点
+      setChild(childNodes, checkList) {
+        if(childNodes && childNodes.length >0){
+          for (let i = 0; i < childNodes.length; i++) {
+            //根据data或者key获取树组件中的node节点
+            let node = this.$refs.assignTree.getNode(childNodes[i]);
+            //判断是否已经拥有对应的角色权限
+            if(checkList && checkList.length>0){
+              for (let j = 0; j < checkList.length; j++) {
+                //判断是否拥有该权限
+                if(childNodes[i].id === checkList[j]){
+                  //设置选中
+                  if(childNodes[i].open){
+                    this.$refs.assignTree.setChecked(node, true);
+                    break;
+                  }
+                }
+              }
+            }
+            //判断如果存在子节点，则递归选择
+            if(childNodes[i].children ){
+              this.setChild(childNodes[i].children, checkList);
+            }
+          }
+        }
+      },
     }
   }
 </script>

@@ -31,3 +31,13 @@ export async function checkRole(param) {
   return http.getRestApi('/api/role/check/' + param)
 
 }
+
+//查询分配权限菜单树
+
+export async function getAssignMenuTree(param) {
+  return  http.get('/api/role/getAssignMenuTree', param)
+}
+
+export async function saveAssign(param) {
+  return http.post('/api/role/saveRoleAssign', param)
+}
