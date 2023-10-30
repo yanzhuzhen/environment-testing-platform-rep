@@ -13,13 +13,16 @@ import java.util.List;
 @TableName("menu")
 public class Menu {
     @TableId
-    private int mno;
-    private char mname;
+    private Long mno;
+    private String mname;
+    private String title;
     private String url;
+    private String path;
     private String icon;
-    private int mno_parent;
+    private Long mno_parent;
     private List<Role> role;
     private String code;
+    private int type;
 
     @JsonInclude(JsonInclude.Include.NON_NULL) //属性值为null时，不进行序列化
     @TableField(exist = false) //表中无此字段，故为false
@@ -29,7 +32,7 @@ public class Menu {
     private String value; //用于判断是菜单还是按钮
 
     @TableField(exist = false)
-    private boolean isOpen; //菜单是否展开
+    private boolean open; //菜单是否展开
 
 
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName("role")
 public class Role {
     @TableId
-    private int rno;
+    private Long rno;
     private String rolename;
     private boolean  isAdmin;
 //    private boolean isUpdate = false;

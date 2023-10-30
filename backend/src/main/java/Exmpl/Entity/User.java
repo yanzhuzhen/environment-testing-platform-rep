@@ -17,11 +17,13 @@ import java.util.List;
 @TableName("user")
 public class User implements UserDetails {
     @TableId
-    private int uno;
+    private Long uno;
     private String username;
     private String password;
+    private String avatar;
     private String email;
     private List<Role> roles;
+    private boolean isAdmin;
 
     @TableField(exist = false)
     private List<Menu> menuList;

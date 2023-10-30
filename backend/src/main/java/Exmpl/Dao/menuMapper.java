@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface menuMapper extends BaseMapper<Menu> {
     //根据用户ID查询菜单权限
-    List<Menu> findMenuListByUserId(@Param("uno") int uno);
+    List<Menu> findMenuListByUserId(@Param("uno") Long uno);
+
+    List<Menu> findMenuListByRoleId(@Param("rno") Long rno);
 }
