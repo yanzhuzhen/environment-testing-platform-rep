@@ -46,7 +46,7 @@ public class loginSuccessHandler implements AuthenticationSuccessHandler {
                 .getBody().getExpiration().getTime();
 
         //创建login带令牌的返回对象
-        loginResult loginResult = new loginResult(user.getUno(), resultCode.SUCCESS, token, expiresTime);
+        loginResult loginResult = new loginResult(Math.toIntExact(user.getUno()), resultCode.SUCCESS, token, expiresTime);
 
         //返回JSON
         String result = JSON.toJSONString(loginResult, SerializerFeature.DisableCircularReferenceDetect);

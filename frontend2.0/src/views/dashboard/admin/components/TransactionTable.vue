@@ -22,6 +22,7 @@
 
 <script>
 import { transactionList } from '@/api/remote-search'
+import {toThousandFilter} from "@/filters";
 
 export default {
   filters: {
@@ -45,6 +46,9 @@ export default {
     this.fetchData()
   },
   methods: {
+    toThousandFilter(){
+
+    },
     fetchData() {
       transactionList().then(response => {
         this.list = response.data.items.slice(0, 8)

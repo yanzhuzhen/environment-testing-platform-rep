@@ -8,7 +8,9 @@ import lombok.Data;
 
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
+import javax.management.remote.JMXAuthenticator;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,13 +28,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import Exmpl.Security.handler.loginFailHandler;
 
-@EqualsAndHashCode(callSuper = true)
 @Component
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class checkTokenFilter extends OncePerRequestFilter {
 
-    @Value("${request.login.url}")
-    private  String loginUrl;
+
+    private  String loginUrl = "/api/user/login";
+    private  String signupUrl = "/api/sysUser/signup";
+    private  String swaggerUrl1 = "/swagger*//**";
+    private  String swaggerUrl2 = "/v2/api-docs";
+    private  String swaggerUrl3 = "/webjars*//**";
+    private  String swaggerUrl4 = "/swagger-ui";
 
     @Resource
     private redisService redisService;
@@ -47,23 +55,29 @@ public class checkTokenFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String url = request.getRequestURI();  //获取当前请求的URL
-            //判断当前请求是否为登录，如不是则验证Token
-            if(!url.equals(loginUrl)){
-                this.checkToken(request);
-            }
-        }catch (AuthenticationException e){
-             loginFailHandler.onAuthenticationFailure(request, response, e );
-        }
-
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//        try {
+//            String url = request.getRequestURI();  //获取当前请求的URL
+//            System.out.println("1:"+url);
+//            System.out.println("2:"+swaggerUrl1);
+//            //判断当前请求是否为登录，如不是则验证Token
+//            if(!url.equals(loginUrl) && !url.equals(signupUrl) && !url.equals(swaggerUrl1)&& !url.equals(swaggerUrl2)&& !url.equals(swaggerUrl3)&& !url.equals(swaggerUrl4)){
+//                System.out.println("1111");
+//                this.checkToken(request);
+//
+//            }
+//        }catch (AuthenticationException e){
+//             loginFailHandler.onAuthenticationFailure(request, response, e );
+////            System.out.println("1111");
+//        }
+////        System.out.println("1111");
         doFilter(request, response, filterChain); // 登录请求不用验证
+
 
     }
 
     //验证Token
-    private void checkToken(HttpServletRequest request) throws userAuthenticationException {
+    private void checkToken(HttpServletRequest request) {
         //获取前端提交的token信息，从头部和参数获取
         String token = request.getHeader("token");
         if(ObjectUtils.isEmpty(token)){
@@ -98,7 +112,9 @@ public class checkTokenFilter extends OncePerRequestFilter {
         //设置请求信息
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         //把认证信息给SpringSecurity
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);// 构造用户名密码认证信息
+
+
 
     }
 

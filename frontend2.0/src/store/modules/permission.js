@@ -1,10 +1,10 @@
 //导入路由脚本文件的属性
-import { asyncRoutes, constantRoutes } from '@/router'
+import {asyncRoutes, constantRoutes} from '@/router'
 //导入获取菜单数据的方法
 import {getMenuList} from '@/api/user'
 //导入Layout
 import Layout from '@/layout'
-import {error} from "autoprefixer/lib/utils";
+
 /**
  * 判断当前登录用户是否拥有该角色下的菜单信息
  * @param roles
@@ -31,15 +31,20 @@ export function filterAsyncRoutes(routes, roles) {
     //判断是否拥有相应权限
     if (hasPermission(roles, tmp)) {
       //获取该路由对应的组件
-      let component = tmp.component;
+      const component = tmp.component;
       //判断是否有相应的组件
       if(route.component){
         //再判断是否有根组件
         if(component ===  'Layout'){
-          tmp.component = 'Layout'
-        }else {
+          tmp.component = Layout
+        }
+        else {
           //获取对应具体的组件
+          console.log("tmp.component:"+tmp.component)
+          console.log("tmp:"+tmp)
           tmp.component = (resolve) => require([`@/views${component}`], resolve)
+          console.log("tmp.component 2 :"+tmp.component)
+
         }
       }
       //判断是否有子菜单
@@ -74,10 +79,15 @@ const actions = {
 
         //存放对应权限的路由信息
 
-        let accessedRoutes
+        let accessedRoutes;
         //判断状态码，若为200则成功
         if(res.code === 200){
           accessedRoutes = filterAsyncRoutes(res.data, roles)
+          //accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+          console.log(accessedRoutes)
+          console.log(asyncRoutes)
+          console.log(res.data)
+
         }
         //将路由信息保存到store中
         commit('SET_ROUTES', accessedRoutes)

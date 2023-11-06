@@ -13,7 +13,7 @@ public class routerVo {
     private String path; //路由地址
     private String name; //路由名字
     private  String component; //组件名
-    private boolean show; //是否显示
+    private boolean alwaysShow; //是否显示
     private Meta mata;
 
     @Data
@@ -24,6 +24,6 @@ public class routerVo {
         private Object[] roles; //角色
     }
 
-    private List<routerVo> child = new ArrayList<routerVo>();
+    private List<routerVo> children = new ArrayList<routerVo>();
 
 }

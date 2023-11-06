@@ -6,23 +6,25 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@TableName("menu")
+@TableName("menutable")
 public class Menu {
     @TableId
     private Long mno;
-    private String mname;
-    private String title;
+    private String label;
+    private String pname;
+    private String name;
     private String url;
     private String path;
     private String icon;
-    private Long mno_parent;
-    private List<Role> role;
     private String code;
+    private Long pid;
     private int type;
+    private int isdelete;
 
     @JsonInclude(JsonInclude.Include.NON_NULL) //属性值为null时，不进行序列化
     @TableField(exist = false) //表中无此字段，故为false

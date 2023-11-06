@@ -1,18 +1,58 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, setTokeTime, setToken, getTokeTime, removeTokeTime, removeToken, clearStorage } from '@/utils/auth'
 import qs from 'qs';
 import message from "element-ui/packages/message";
+import {refreshToken} from "@/api/user";
 
 // 创建axios异步请求的实列
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, //拼接地址
   timeout: 50000 //请求超时时间
 })
+
+//刷新token
+function refreshTokenInfo(){
+  let params = {
+    token:getToken()
+  }
+  return refreshToken(params).then(res => res);
+}
+
+//是否刷新
+let isRefresh = false;
+
 // 请求前拦截
 service.interceptors.request.use(
   config => {
+    //获取当前系统时间
+    let sysTime = new Date().getTime();
+    //获取token过期时间
+    let expires = getTokeTime();
+    //判断token是否过期
+    if(expires > 0){
+      let minTime = (expires -sysTime)/1000/60;
+      //如果token离过期时间只有5分钟则刷新
+      if(minTime <= 5){
+        //isRefresh原本为false
+        if(!isRefresh){
+          isRefresh = true;
+          return refreshTokenInfo().then(res => {
+            if(res.success){
+              setToken(res.data.token);
+              setTokeTime(res.data.expires);
+              config.headers.token = getToken();
+            }
+            return config;
+          }).catch(err =>{
+
+          }).finally(() =>{
+            isRefresh = false;
+          })
+        }
+      }
+    }
     //判断store中是否存在token
     if (store.getters.token) {
       // 读取token信息，并将其交给请求头
@@ -21,6 +61,9 @@ service.interceptors.request.use(
     return config
   },
   error => {
+    //清空
+    clearStorage();
+    removeTokeTime();
     return Promise.reject(error)
   }
 )
@@ -39,7 +82,7 @@ service.interceptors.response.use(
       })
 
       // 50008: token不合法; 50012: 其他错误; 50014: token过期;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 600 || res.code === 50012 || res.code === 50014) {
         // 重新登录
         MessageBox.confirm('用户信息过期，请重新登录', '系统提示', {
           confirmButtonText: '登录',
@@ -47,6 +90,9 @@ service.interceptors.response.use(
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
+            //清空token
+            clearStorage();
+            removeTokeTime();
             location.reload()
           })
         })
@@ -58,6 +104,8 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
+    clearStorage();
+    removeTokeTime();
     Message({
       message: error.message,
       type: 'error',

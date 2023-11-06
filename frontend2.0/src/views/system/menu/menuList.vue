@@ -2,7 +2,7 @@
 <template>
   <el-main>
     <!-- 新增按钮 -->
-    <el-button type="success" size="small" @click="openAddWindow()" icon="el-icon-plus">新增</el-button>
+    <el-button type="success" size="small" @click="openAddWindow()" icon="el-icon-plus" v-if="hasPermission('system:menu:add')">新增</el-button>
     <!--表格-->
     <el-table
       :data="menuList"
@@ -31,8 +31,8 @@
       <el-table-column prop="url" label="菜单地址" sortable width="180"></el-table-column>
       <el-table-column label="操作" sortable width="180">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="onEdit(scope.row)" icon="el-icon-edit-outline">编辑</el-button>
-          <el-button type="danger" size="mini" @click="onDelete(scope.row)" icon="el-icon-edit-outline">删除</el-button
+          <el-button type="primary" size="mini" @click="onEdit(scope.row)" icon="el-icon-edit-outline" v-if="hasPermission('system:menu:update')">编辑</el-button>
+          <el-button type="danger" size="mini" @click="onDelete(scope.row)" icon="el-icon-edit-outline" v-if="hasPermission('system:menu:delete')">删除</el-button>
         </template>
       </el-table-column>
 
@@ -44,7 +44,7 @@
         <el-form ref="menu" :model="menuForm" :rules="rules" label-width="80px" :inline="true" size="small">
           <el-col span="24">
             <el-form-item label="菜单类型" prop="type">
-              <el-radio-group v-model="menu.type" >
+              <el-radio-group v-model="menuForm.type" >
                 <el-radio :label="0">目录</el-radio>
                 <el-radio :label="1">菜单</el-radio>
                 <el-radio :label="2">按钮</el-radio>
@@ -52,28 +52,28 @@
             </el-form-item>
           </el-col>
           <el-form-item label="所属菜单" size="small" prop="parentName">
-            <el-input v-model="menu.parentName" :readonly="true" @click.native="selectParentMenu()"/>
+            <el-input v-model="menuForm.parentName" :readonly="true" @click.native="selectParentMenu()"/>
           </el-form-item>
           <el-form-item label="菜单名称" size="small" prop="label">
-            <el-input v-model="menu.label"/>
+            <el-input v-model="menuForm.label"/>
           </el-form-item>
-          <el-form-item label="路由名称" size="small" prop="name" v-if="menu.type === 1">
-            <el-input v-model="menu.name"/>
+          <el-form-item label="路由名称" size="small" prop="name" v-if="menuForm.type === 1">
+            <el-input v-model="menuForm.name"/>
           </el-form-item>
-          <el-form-item label="路由地址" size="small" prop="path" v-if="menu.type !== 2">
-            <el-input v-model="menu.path"/>
+          <el-form-item label="路由地址" size="small" prop="path" v-if="menuForm.type !== 2">
+            <el-input v-model="menuForm.path"/>
           </el-form-item>
-          <el-form-item label="组件路径" size="small" prop="url" v-if="menu.type === 1">
-            <el-input v-model="menu.url"/>
+          <el-form-item label="组件路径" size="small" prop="url" v-if="menuForm.type === 1">
+            <el-input v-model="menuForm.url"/>
           </el-form-item>
           <el-form-item label="权限字段" size="small" prop="code">
-            <el-input v-model="menu.code"/>
+            <el-input v-model="menuForm.code"/>
           </el-form-item>
           <el-form-item label="菜单图标" size="small">
             <my-icon @selecticon="setIcon" ref="child"></my-icon>
           </el-form-item>
           <el-form-item label="菜单序号" size="small" prop="orderNum">
-            <el-input v-model="menu.orderNum"/>
+            <el-input v-model="menuForm.orderNum"/>
           </el-form-item>
         </el-form>
       </div>
@@ -110,6 +110,7 @@ import menu from "@/api/menu";
 import {style} from "svgo/lib/svgo/jsAPI";
 import myIcon from "@/components/system/myIcon.vue";
 import objCopy from "@/utils/objCopy";
+import hasPermission from "@/permission";
 
   export default {
     name: "menuList",
@@ -138,7 +139,7 @@ import objCopy from "@/utils/objCopy";
           width:630,
           height:270
         },
-        menu:{
+        menuForm:{
           id:"",
           type:"",
           parentId:"",
@@ -176,11 +177,12 @@ import objCopy from "@/utils/objCopy";
     },
     //查询菜单列表
     methods:{
+      hasPermission,
       style() {
         return style
       },
       openAddWindow(){
-        this.$resetForm("menuForm",this.menu);
+        this.$resetForm("menuForm",this.menuForm);
         this.menuDialog.title = "新增菜单";
         this.menuDialog.visible = true;
         this.$nextTick(() => {
@@ -199,6 +201,7 @@ import objCopy from "@/utils/objCopy";
         let res = await menu.getMenuList();
         if (res.success){
           this.menuList = res.data;
+          console.log(this.menuList);
         }
       },
       onClose(){
@@ -206,16 +209,16 @@ import objCopy from "@/utils/objCopy";
       },
       onConfirm(){
         //表单验证
-        this.$refs.menuForm.validate(async (valid) => {
+        this.$refs.menu.validate(async (valid) => {
           if (valid) {
             let res = null;
             //判断当前是新增还是修改
-            if (this.menu.id === "") {
+            if (this.menuForm.id === "") {
               //发生添加请求
-              res = await menu.addMenu(this.menu);
+              res = await menu.addMenu(this.menuForm);
             } else {
               //发生修改请求
-              res = await menu.updateMenu(this.menu)
+              res = await menu.updateMenu(this.menuForm)
             }
 
             if (res.success) {
@@ -241,15 +244,15 @@ import objCopy from "@/utils/objCopy";
         this.$refs.parentTree.store.nodesMap[data.id].expanded = !data.open
       },
       handleNodeClick(data){
-        this.menu.parentId = data.id;
-        this.menu.parentName = data.label;
+        this.menuForm.parentId = data.id;
+        this.menuForm.parentName = data.label;
       },
       setIcon(icon){
-        this.menu.icon = icon;
+        this.menuForm.icon = icon;
       },
       onEdit(row){
         //回现数据
-        this.$objCopy(row, this.menu);
+        this.$objCopy(row, this.menuForm);
         this.menuDialog.title = "编辑菜单";
         this.menuDialog.visible = true;
         this.$nextTick(() => {

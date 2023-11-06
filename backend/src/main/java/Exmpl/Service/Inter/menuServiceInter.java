@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface menuServiceInter extends IService<Menu> {
     //根据用户ID查询菜单
-    List<Menu> findMenuListByUserId(@Param("uno") Long uno);
+    List<Menu> findMenuListByUserId(Long uno);
     //查询菜单列表
     List<Menu> findMenuList(menuQueryVo menuQueryVo);
     //查询父菜单

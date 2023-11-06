@@ -45,7 +45,7 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
         queryWrapper.like(!ObjectUtils.isEmpty(roleQueryVo.getRolename()),"rolename",roleQueryVo.getRolename());
         queryWrapper.orderByAsc("rno");
         User user = userMapper.selectById(roleQueryVo.getUno());
-        if(user != null && !ObjectUtils.isEmpty(user.isAdmin()) && !user.isAdmin()){
+        if(user != null && !ObjectUtils.isEmpty(user.getIsadmin()) && user.getIsadmin()==0 ){
             //非管理，只能查询自己的角色
             queryWrapper.eq("create_user", roleQueryVo.getUno());
         }
@@ -70,5 +70,10 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
     public boolean saveRoleMenu(Long rno, List<Long> menuIds) {
         baseMapper.deleteRoleMenuByRno(rno);
         return baseMapper.saveRoleMenu(rno,menuIds) > 0;
+    }
+
+    @Override
+    public List<Long> findRnoByUno(Long id) {
+        return baseMapper.findRnoByUno(id);
     }
 }

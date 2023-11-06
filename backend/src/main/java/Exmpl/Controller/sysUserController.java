@@ -4,6 +4,7 @@ import Exmpl.Entity.Menu;
 import Exmpl.Entity.User;
 import Exmpl.Entity.userInfo;
 import Exmpl.Service.redisService;
+import Exmpl.Service.userService;
 import Exmpl.Utils.Result;
 import Exmpl.Utils.jwtUtils;
 import Exmpl.vo.routerVo;
@@ -12,12 +13,10 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,15 +28,18 @@ import Exmpl.Utils.menuTree;
 
 @RestController
 @RequestMapping("/api/sysUser")
-public class            sysUserController {
-
-
-
+public class   sysUserController {
     @Resource
     jwtUtils jwtUtils;
 
     @Resource
     redisService redisService;
+
+    @Resource
+    userService userService;
+
+    @Resource
+    BCryptPasswordEncoder passwordEncoder;
 
     //获取用户信息
     @GetMapping("/getInfo")
@@ -121,5 +123,18 @@ public class            sysUserController {
             return Result.ok().message("退出登录成功");
         }
         return Result.error().message("退出登录失败");
+    }
+    @PostMapping("/signup")
+    public Result signup(@RequestBody User user){
+        User hasUser = userService.findUserByUsername(user.getUsername());
+        if(hasUser != null){
+            return Result.error().message("该用户名已被使用");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userService.save(user)){
+            return Result.ok().message("用户注册成功");
+        }else {
+            return Result.error().message("用户注册失败");
+        }
     }
 }

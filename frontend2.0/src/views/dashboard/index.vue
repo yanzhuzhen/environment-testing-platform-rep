@@ -23,9 +23,11 @@ export default {
     ])
   },
   created() {
+    console.log("Dashboard start"+!this.roles.includes('admin'));
     if (!this.roles.includes('admin')) {
       this.currentRole = 'editorDashboard'
     }
+    console.log("Dashboard end");
   }
 }
 </script>

@@ -11,6 +11,7 @@ import Exmpl.Service.userDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private loginSuccessHandler loginSuccessHandler;
@@ -45,19 +47,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //处理登录认证
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         //登陆前进行过流
         http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //登录过程的处理
-        http.formLogin() //表单登录
-                .loginProcessingUrl("/api/login") //登录请求的url
-                .successHandler(loginSuccessHandler) //登陆成功处理器
-                .failureHandler(loginFailHandler) //登陆失败处理器
-                .and()
+        http
+//                .formLogin() //表单登录
+//                .loginProcessingUrl("/api/user/login") //登录请求的url
+//                .successHandler(loginSuccessHandler) //登陆成功处理器
+//                .failureHandler(loginFailHandler) //登陆失败处理器
+//                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //不创建Session
                 .and()
                 .authorizeRequests() //需要拦截的请求
-                .antMatchers("/api/login").permitAll() //登陆请求放行
+//                .antMatchers("/api/user/login").permitAll() //登陆请求放行
+//                .antMatchers("/api/sysUser/signup").permitAll() //注册请求放行
+                .antMatchers("/swagger*//**", "/v2/api-docs", "/webjars*//**","/swagger-ui").permitAll() //swagger放行
                 .anyRequest().authenticated()  //其他请求都不放行
                 .and()
                 .exceptionHandling()

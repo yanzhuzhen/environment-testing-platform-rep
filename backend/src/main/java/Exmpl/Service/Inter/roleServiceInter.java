@@ -19,4 +19,6 @@ public interface roleServiceInter extends IService<Role> {
 
     boolean saveRoleMenu(Long roleId, List<Long> menuIds);
 
+    List<Long> findRnoByUno(Long id);
+
 }

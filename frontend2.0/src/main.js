@@ -37,7 +37,12 @@ import objCopy from '@/utils/objCopy'
 Vue.prototype.$objCopy = objCopy
 
 import resetForm from "@/utils/resetForm";
+
 Vue.prototype.$resetForm = resetForm
+
+import hasPermission from "@/permission";
+Vue.prototype.hasPermission = hasPermission
+
 
 Vue.config.productionTip = false
 

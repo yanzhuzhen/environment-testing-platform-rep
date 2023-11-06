@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || "西南国土环境监测平台" // page title
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
@@ -19,19 +19,18 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
   devServer: {
-    port: port,
+    port: 9527,
     open: true,
     overlay: {
       warnings: false,
       errors: true
     },
-    //配置代理
     proxy: {
-      [process.env.VUE_APP_BASE_API]:{
-        target: "http://localhost:8080/api",
+      [process.env.VUE_APP_BASE_API ]: {
+        target: 'http://localhost:3000',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/api:':''
         }
       }
     }

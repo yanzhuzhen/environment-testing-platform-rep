@@ -9,27 +9,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class userDetailsService implements UserDetailsService {
-    @Resource
-    Exmpl.Dao.userMapper userMapper;
     @Resource
     private menuService menuService;
 
-
-    public User selectByUsername(String username) {
-        return userMapper.findByUsername(username);
-    }
+    @Resource
+    private userService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = selectByUsername(username);
+        User user = userService.findUserByUsername(username);
+        System.out.println(user);
         if (user == null) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }

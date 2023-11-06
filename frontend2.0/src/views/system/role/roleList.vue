@@ -6,9 +6,9 @@
         <el-input v-model="searchModel.rolename" placeholder="请输入角色名称"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="search(pageNo, pageSize)">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="search(pageNow, pageSize)">查询</el-button>
         <el-button icon="el-icon-refresh-right" @click="restTable()" >重置</el-button>
-        <el-button type="success" icon="el-icon-plus" @click="openAddWindow()">新增</el-button>
+        <el-button type="success" icon="el-icon-plus" @click="openAddWindow()" v-if="hasPermission('system:role:add')">新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 数据表格 -->
@@ -19,8 +19,8 @@
       <el-table-column prop="remark" label="角色备注" width="100"></el-table-column>
       <el-table-column label="操作" align="center" width="290">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-edit" size="small" @click="handleEdit(scope.row)" v-if="hasPermission('system:role:update')">编辑</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)" v-if="hasPermission('system:role:delete')">删除</el-button>
           <el-button type="warning" icon="el-icon-setting" size="small" @click="assignRole(scope.row)">分配权限</el-button>"
         </template>
       </el-table-column>
@@ -28,14 +28,30 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="pageNo"
+        :current-page="pageNow"
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
       <!-- 添加和修改角色 -->
+      <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleForm.height"
+      @onClose="onClose()" @onConfirm="onConfirm()">
+      <div slot="content">
+        <el-form ref="role" :model="roleForm" :rules="rules" label-width="80px" :inline="false" size="small">
+          <el-form-item label="角色编码" size="small" prop="roleCode">
+            <el-input v-model="roleForm.roleCode"></el-input>
+          </el-form-item>
+          <el-form-item label="角色名称" size="small" prop="roleName">
+            <el-input v-model="roleForm.roleName"></el-input>
+          </el-form-item>
+          <el-form-item label="角色描述" size="small" prop="roleName" >
+            <el-input type="textarea"  v-model="roleForm.roleName" :rows="5"></el-input>
+          </el-form-item>
 
+        </el-form>
+      </div>
+      </system-dialog>
 
       <!-- 分配权限窗口 -->
       <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleDialog.height"
@@ -57,6 +73,7 @@ import systemDialog from "@/components/system/systemDialog.vue";
 import myIcon from "@/components/system/myIcon.vue";
 import leafUtils from "@/utils/leaf";
 import row from "element-ui/packages/row";
+import hasPermission from "@/permission";
 
 export default {
     name:"roleList",
@@ -69,14 +86,14 @@ export default {
         //查询条件
         searchModel:{
           rolename:"",
-          pageNo:1,
+          pageNow:1,
           pageSize:10,
           userId:this.$store.getters.userId //当前登录用户ID
 
         },
         roleList:[],
         tableHeight:0,
-        pageNo: 1,
+        pageNow: 1,
         total:0,
         pageSize: 10,
         rules: {
@@ -89,7 +106,7 @@ export default {
           height:230,
           width:500
         },
-        role: {
+        roleForm: {
           id:"",
           roleCode: "",
           roleName: "",
@@ -124,9 +141,10 @@ export default {
       })
     },
     methods:{
-      async search(pageNo = 1, pageSize = 10){
+      hasPermission,
+      async search(pageNow = 1, pageSize = 10){
         //修改当前页码和当前每页数量
-        this.searchModel.pageNo = pageNo;
+        this.searchModel.pageNow = pageNow;
         this.searchModel.pageSize = pageSize;
         //发送查询请求
         let res = await getRoles(this.searchModel);
@@ -157,7 +175,7 @@ export default {
             //判断是否成功
             if (res.success) {
               this.$message.success(res.message);
-              await this.search(this.pageNo, this.pageSize);
+              await this.search(this.pageNow, this.pageSize);
             } else {
               this.$message.error(res.message);
             }
@@ -200,10 +218,10 @@ export default {
       },
       handleSizeChange(size) {
         this.pageSize = size;
-        this.search(this.pageNo, size);
+        this.search(this.pageNow, size);
       },
       handleCurrentChange(page) {
-        this.pageNo = page
+        this.pageNow = page
         this.search(page, this.pageSize);
       },
       restTable(){
@@ -221,7 +239,7 @@ export default {
       },
       onConfirm(){
         //表单验证
-        this.$refs.roleForm.validate(async (valid) => {
+        this.$refs.role.validate(async (valid) => {
           if (valid) {
             let res = null;
             //判断当前是新增还是修改
@@ -235,7 +253,7 @@ export default {
 
             if (res.success) {
               this.$message.success(res.message);
-              await this.search(this.pageNo, this.pageSize);
+              await this.search(this.pageNow, this.pageSize);
               this.roleDialog.visible = false;
             } else {
               this.$message.error(res.message);

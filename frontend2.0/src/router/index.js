@@ -56,6 +56,7 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
+
   {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
@@ -83,7 +84,7 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-  },
+  }
 
 ]
 
@@ -144,10 +145,72 @@ export const asyncRoutes = [
         component: () => import('@/views/icons/index'),
         name: 'Icons',
         meta: { title: 'Icons', icon: 'icon', noCache: true }
+      },
+      {
+        path: '401',
+        component: () => import('@/views/error-page/401'),
+        name: 'Page401',
+        meta: { title: '401', noCache: true }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: 'Page404',
+        meta: { title: '404', noCache: true }
       }
     ]
   },
 
+  {
+    "path": "/system",
+    "component": "Layout",
+    "alwaysShow": true,
+    "mata": {
+      "title": "系统管理",
+      "icon": null,
+      "roles": [
+        "system:admin"
+      ]
+    },
+    "children": [
+      {
+        "path": "/role/roleList",
+        "component": "/system/role/roleList",
+        "alwaysShow": false,
+        "mata": {
+          "title": "角色管理",
+          "icon": null,
+          "roles": [
+            "system:role"
+          ]
+        }
+      },
+      {
+        "path": "/menu/menuList",
+        "component": "/system/menu/menuList",
+        "alwaysShow": false,
+        "mata": {
+          "title": "菜单管理",
+          "icon": null,
+          "roles": [
+            "system:menu"
+          ]
+        }
+      },
+      {
+        "path": "/user/userList",
+        "component": "/system/user/userList",
+        "alwaysShow": false,
+        "mata": {
+          "title": "用户管理",
+          "icon": null,
+          "roles": [
+            "system:user"
+          ]
+        }
+      }
+    ]
+  },
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,
@@ -209,18 +272,18 @@ export const asyncRoutes = [
       icon: '404'
     },
     children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
+      // {
+      //   path: '401',
+      //   component: () => import('@/views/error-page/401'),
+      //   name: 'Page401',
+      //   meta: { title: '401', noCache: true }
+      // },
+      // {
+      //   path: '404',
+      //   component: () => import('@/views/error-page/404'),
+      //   name: 'Page404',
+      //   meta: { title: '404', noCache: true }
+      // }
     ]
   },
 

@@ -1,14 +1,18 @@
 package Exmpl.Utils;
 
 import Exmpl.Entity.User;
+import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+
+import javax.annotation.Resource;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,18 +20,30 @@ import java.util.Map;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "myjwt")
+@ConfigurationProperties(prefix = "jwt")
 public class jwtUtils {
-    private Key secret; //密钥
+    private String secret ;//密钥
     private long expires; //过期时间
 
     //从数据声明生产令牌
     private String generateToken(Map<String,Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + expires);
         return Jwts.builder().setClaims(claims).setExpiration(expirationDate)
-                .signWith(secret, SignatureAlgorithm.HS512).compact();
+                .signWith( SignatureAlgorithm.HS512, secret).compact();
 
     }
+
+//    public static void main(String[] args) {
+//        String secret = "EkingDoralSecretKey0904";
+//        secret+=secret;
+//        secret+=secret;
+//        secret+=secret;
+//        secret+=secret;
+//        secret+="1234567898765";
+//        System.out.println(secret);
+//        System.out.printf(Jwts.builder().setClaims(Maps.newConcurrentMap())
+//                .signWith( SignatureAlgorithm.HS512, secret).compact());
+//    }
 
     //从令牌中获取数据声明
     public Claims getClaims(String token){

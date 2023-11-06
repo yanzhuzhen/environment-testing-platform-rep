@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 @TableName("MR")
 public class MR {
-    @TableId
-    int id;
-    int mno;
-    int rno;
+   private Long mno;
+   private Long rno;
 }

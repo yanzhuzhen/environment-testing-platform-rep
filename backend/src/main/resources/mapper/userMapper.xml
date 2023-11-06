@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Exmpl.Dao.userMapper">
+
+    <insert id="saveUserRole">
+        insert into UR (uno,rno) values
+        <foreach collection="rnoList" item="i" index="index" separator=",">
+            (#{uno},#{i})
+        </foreach>
+    </insert>
+</mapper>

@@ -20,19 +20,14 @@ import java.util.*;
 
 @Service
 public class menuService extends ServiceImpl<menuMapper, Menu> implements menuServiceInter {
-    @Resource
-    menuMapper menuMapper;
 
     @Resource
     userMapper userMapper;
 
-    public List<Menu> getAllMenus(){
-        return menuMapper.selectList(null);
-    }
 
     @Override
     public List<Menu> findMenuListByUserId(Long uno) {
-        return baseMapper.findMenuListByUserId((long) Math.toIntExact(uno));
+        return baseMapper.findMenuListByUserId(uno);
     }
 
     @Override
@@ -58,8 +53,8 @@ public class menuService extends ServiceImpl<menuMapper, Menu> implements menuSe
         //构造一级菜单
         Menu menu = new Menu();
         menu.setMno(0L);
-        menu.setMno_parent(-1L);
-        menu.setTitle("一级菜单");
+        menu.setPid(-1L);
+        menu.setLabel("一级菜单");
         menuList.add(menu);
         //生成菜单树
         return menuTree.makeMenuTree(menuList, -1L);
@@ -70,7 +65,7 @@ public class menuService extends ServiceImpl<menuMapper, Menu> implements menuSe
         //创建条件构造器对象
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<Menu>();
         //查询父级ID
-        queryWrapper.eq("mno_parent", id);
+        queryWrapper.eq("pid", id);
         //判断数量是否大于0 如大于则存在
         return baseMapper.selectCount(queryWrapper) > 0;
     }
@@ -82,7 +77,7 @@ public class menuService extends ServiceImpl<menuMapper, Menu> implements menuSe
         User user = userMapper.selectById(uno);
         List<Menu> list = null;
         //判断当前用户是否是管理员若是则查询所有权限，反之则只能查询自己的权限
-        if(user != null && user.isAdmin()){
+        if(user != null && user.getIsadmin() == 1){
             //查询所有的权限菜单
             list = baseMapper.selectList(null);
         }else {

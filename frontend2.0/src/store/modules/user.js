@@ -1,9 +1,10 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTokeTime} from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+
   name: '',
   avatar: '',
   introduction: '',
@@ -40,11 +41,13 @@ const actions = {
       //传递用户名和密码
       login({ username: username.trim(), password: password }).then(response => {
         //解构出后端返回的数据
-        const { token } = response
+        console.log(response)
+        const { token, expires } = response
         //将返回的token保存到store中
         commit('SET_TOKEN', token)
         //设置token
         setToken(token)
+        setTokeTime(expires)
         resolve() //放行
       }).catch(error => {
         reject(error) //拒绝访问
@@ -74,6 +77,7 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         commit('SET_USERUID', id)
+        sessionStorage.setItem("codeList", JSON.stringify(roles))
         resolve(data)
       }).catch(error => {
         reject(error)

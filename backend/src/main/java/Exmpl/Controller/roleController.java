@@ -11,6 +11,7 @@ import Exmpl.vo.query.roleQueryVo;
 import Exmpl.vo.roleMenuVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ public class roleController {
     }
 
     //添加角色
+    @PreAuthorize("hasAuthority('system:role:add')")
     @PostMapping("/add")
     public Result add(@RequestBody Role role){
         //调用添加的方法
@@ -46,6 +48,7 @@ public class roleController {
     }
 
     //修改角色
+    @PreAuthorize("hasAuthority('system:role:update')")
     @PutMapping("/update")
     public Result update(@RequestBody Role role){
         //调用修改的方法
@@ -56,6 +59,7 @@ public class roleController {
     }
 
     //删除角色
+    @PreAuthorize("hasAuthority('system:role:delete')")
     @DeleteMapping ("/delete/{id}")
     public Result delete( @PathVariable Long id){
         //调用删除的方法
@@ -66,6 +70,7 @@ public class roleController {
     }
 
     //判断角色是否被占用
+    @PreAuthorize("hasAuthority('system:role:delete')")
     @GetMapping("/check/{id}")
     public Result check(@PathVariable Long id){
         //调用查询角色数量的方法

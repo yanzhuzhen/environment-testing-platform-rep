@@ -3,12 +3,14 @@ package Exmpl.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Service
 public class redisService {
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     //存缓存
     public void setCache(String key,String value, Long timeout){

@@ -36,7 +36,6 @@
             name="password"
             tabindex="2"
             autocomplete="on"
-            @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
@@ -45,10 +44,41 @@
           </span>
         </el-form-item>
       </el-tooltip>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
+      <el-row :gutter="20">
+        <el-col :span="16">
+          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+        </el-col>
+        <el-col :span="8">
+          <el-button :loading="loading" style="width:100%;margin-bottom:30px;" @click="openAddWindow()">注册</el-button>
+        </el-col>
+      </el-row>
     </el-form>
+
+    <system-dialog :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
+                   @onClose="onClose()" @onConfirm="onConfirm()" style="margin-top: 200px">
+      <div slot="content">
+
+        <el-form ref="userForm" :model="user" :rules="rules" label-width="80px" :inline="true" size="small">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="用户名" prop="username" size="small">
+                <el-input v-model="user.username"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="密码" size="small" prop="password">
+                <el-input type="password" v-model="user.password"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="电话" size="small" prop="phone">
+                <el-input  v-model="user.phone"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+    </system-dialog>
 
 <!--    <el-dialog title="Or connect with" :visible.sync="showDialog">-->
 <!--      Can not be simulated on local, so please combine you own business simulation! ! !-->
@@ -63,10 +93,23 @@
 <script>
 // import SocialSign from './components/SocialSignin'
 
+import systemDialog from "@/components/system/systemDialog.vue";
+import {signup} from "@/api/user";
+
 export default {
   name: 'Login',
+  components: {systemDialog},
   // components: { SocialSign },
   data() {
+    let phoneCheck = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入手机号码"));
+      } else if (!/^1[345789]\d{9}$/.test(value)) {
+        callback(new Error("请输入正确格式得手机号"));
+      } else {
+        callback();
+      }
+    }
     return {
       //登录表单对象
       loginForm: {
@@ -75,15 +118,36 @@ export default {
       },
       //表单验证规则
       loginRules: {
-        username: [{ required: true, trigger: 'blur', message:"请输入合法的用户名" }],
-        password: [{ required: true, trigger: 'blur', message:"请输入合法的密码" }]
+        username: [{ required: true, trigger: 'blur', message:"请输入正确的用户名" }],
+        password: [{ required: true, trigger: 'blur', message:"请输入正确的密码" }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      userDialog: {
+        title: "",
+        visible: false,
+        height: 400,
+        width: 100
+      },
+      user: {
+        id: "",
+        username: "",
+        realname: "",
+        phone: "",
+        email: "",
+        avatar: ""
+      },
+      rules: {
+        username: [{required: true, trigger: 'blur', message: "请填写用户名"}],
+        password: [{required: true, trigger: 'blur', message: "请填写密码"}],
+        realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"}],
+        phone: [{trigger: 'blur', validator: phoneCheck}],
+
+      },
     }
   },
   watch: {
@@ -109,9 +173,43 @@ export default {
   },
 
   methods: {
-    checkCapslock(e) {
-      const { key } = e
-      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+    handleAvatarSuccess(res, file) {
+      this.user.avatar = res.data;
+      this.$forceUpdate();
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    openAddWindow() {
+      this.$resetForm('userForm', this.user);
+      this.userDialog.title = "注册";
+      this.userDialog.visible = true;
+    },
+    onClose() {
+      this.userDialog.visible = false;
+    },
+    onConfirm() {
+      this.$refs.userForm.validate(async (valid) => {
+        if (valid) {
+          let res = null;
+            res = await signup(this.user);
+          if (res.success) {
+            this.$message.success(res.message);
+            this.userDialog.visible = false;
+          } else {
+            this.$message.error(res.message);
+          }
+        }
+      })
     },
     //是否显示密码
     showPwd() {
@@ -132,10 +230,14 @@ export default {
         if (valid) {
           this.loading = true //显示加载动画
           //调用vuex中的user/login方法，发送请求
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store.dispatch("user/login", this.loginForm)
             .then(() => {
+              console.log("login success")
+              console.log("login success"+this.redirect);
+              // this.$router.push({ path: '/system'})
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              console.log("login success 2"+this.redirect);
             })
             .catch(() => {
               this.loading = false
@@ -295,5 +397,29 @@ $light_gray:#eee;
       display: none;
     }
   }
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>

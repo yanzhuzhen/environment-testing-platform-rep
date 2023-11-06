@@ -3,6 +3,7 @@ package Exmpl.Controller;
 import Exmpl.Entity.Menu;
 import Exmpl.Utils.Result;
 import Exmpl.vo.query.menuQueryVo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import Exmpl.Service.menuService;
 import javax.annotation.Resource;
@@ -16,11 +17,11 @@ public class menuController {
 
     //查询菜单列表
     @GetMapping("/list")
-    public Result list(menuQueryVo menuQueryVo){
+    public List<Menu> list(menuQueryVo menuQueryVo){
         //调用查询菜单列表的方法
         List<Menu> menuList = menuService.findMenuList(menuQueryVo);
         //返回数据
-        return Result.ok(menuList);
+        return menuList;
     }
 
     //查询上级菜单列表
@@ -33,6 +34,7 @@ public class menuController {
     }
 
     //添加菜单
+    @PreAuthorize("hasAuthority('system:menu:add')")
     @PostMapping("/add")
     public Result add(@RequestBody Menu menu){
         //调用新增的方法
@@ -43,6 +45,7 @@ public class menuController {
     }
 
     //修改菜单
+    @PreAuthorize("hasAuthority('system:menu:update')")
     @PutMapping("/update")
     public Result update(@RequestBody Menu menu){
         //调用修改的方法
@@ -53,6 +56,7 @@ public class menuController {
     }
 
     //删除菜单
+    @PreAuthorize("hasAuthority('system:menu:delete')")
     @DeleteMapping ("/delete/{id}")
     public Result delete( @PathVariable Long id){
         //调用删除的方法
@@ -63,6 +67,7 @@ public class menuController {
     }
 
     //检查是否有子菜单
+    @PreAuthorize("hasAuthority('system:menu:delete')")
     @GetMapping("/check/{id}")
     public Result check(@PathVariable Long id){
         //判断菜单是否有子菜单
