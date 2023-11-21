@@ -29,6 +29,6 @@ export function getTokeTime(time) {
   return  sessionStorage.getItem(timeKey);
 }
 
-export function removeTokeTime(time) {
+export function removeTokeTime() {
   return  sessionStorage.setItem(timeKey, 0);
 }

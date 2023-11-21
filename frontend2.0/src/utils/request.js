@@ -81,7 +81,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008: token不合法; 50012: 其他错误; 50014: token过期;
+      // 600: token不合法; 50012: 其他错误; 50014: token过期;
       if (res.code === 600 || res.code === 50012 || res.code === 50014) {
         // 重新登录
         MessageBox.confirm('用户信息过期，请重新登录', '系统提示', {
@@ -93,7 +93,7 @@ service.interceptors.response.use(
             //清空token
             clearStorage();
             removeTokeTime();
-            location.reload()
+            location.reload();
           })
         })
       }

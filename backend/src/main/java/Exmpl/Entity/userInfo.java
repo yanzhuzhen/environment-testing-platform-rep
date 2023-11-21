@@ -10,10 +10,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class userInfo implements Serializable {
-    private Long id;
-    private String name;
+    private Long uno;
+    private String username;
     private String avatar;
-    private String introduction;
+    private String remark;
     private Object[] roles;
 
 

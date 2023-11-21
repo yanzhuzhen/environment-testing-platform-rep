@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 @TableName("roletable")
 public class Role {
@@ -12,5 +14,6 @@ public class Role {
     private Long rno;
     private String rolename;
     private String remark;
-
+    private String createuser;
+    private String rolecode;
 }

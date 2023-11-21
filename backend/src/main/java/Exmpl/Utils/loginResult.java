@@ -11,5 +11,5 @@ public class loginResult {
     private int uno;
     private  int code;
     private String token;
-    private Long tkisUselessTime;
+    private Long expires;
 }

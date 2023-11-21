@@ -13,57 +13,55 @@
     </el-form>
     <!-- 数据表格 -->
     <el-table :data="roleList" :height="tableHeight" border stripe style="width: 100%; margin-bottom: 10px">
-      <el-table-column align="center" prop="id" label="角色编号" width="100"></el-table-column>
-      <el-table-column prop="name" label="角色名称"></el-table-column>
-      <el-table-column prop="code" label="角色编码"></el-table-column>
+      <el-table-column align="center" prop="rno" label="角色编号" width="100"></el-table-column>
+      <el-table-column prop="rolename" label="角色名称"></el-table-column>
+      <el-table-column prop="rolecode" label="角色编码"></el-table-column>
       <el-table-column prop="remark" label="角色备注" width="100"></el-table-column>
       <el-table-column label="操作" align="center" width="290">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleEdit(scope.row)" v-if="hasPermission('system:role:update')">编辑</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)" v-if="hasPermission('system:role:delete')">删除</el-button>
-          <el-button type="warning" icon="el-icon-setting" size="small" @click="assignRole(scope.row)">分配权限</el-button>"
+          <el-button type="warning" icon="el-icon-setting" size="small" @click="assignRole(scope.row)">分配权限</el-button>
         </template>
       </el-table-column>
-      <!-- 分页  -->
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNow"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-      <!-- 添加和修改角色 -->
-      <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleForm.height"
-      @onClose="onClose()" @onConfirm="onConfirm()">
+    </el-table>
+    <!-- 分页  -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageNow"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
+    <!-- 添加和修改角色 -->
+    <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleDialog.height"
+                   @onClose="onClose()" @onConfirm="onConfirm()">
       <div slot="content">
-        <el-form ref="role" :model="roleForm" :rules="rules" label-width="80px" :inline="false" size="small">
-          <el-form-item label="角色编码" size="small" prop="roleCode">
-            <el-input v-model="roleForm.roleCode"></el-input>
+        <el-form ref="roleForm" :model="role" :rules="rules" label-width="80px" :inline="true" size="small">
+          <el-form-item label="角色编码" size="small" prop="rolecode">
+            <el-input v-model="role.rolecode"></el-input>
           </el-form-item>
-          <el-form-item label="角色名称" size="small" prop="roleName">
-            <el-input v-model="roleForm.roleName"></el-input>
+          <el-form-item label="角色名称" size="small" prop="rolename">
+            <el-input v-model="role.rolename"></el-input>
           </el-form-item>
-          <el-form-item label="角色描述" size="small" prop="roleName" >
-            <el-input type="textarea"  v-model="roleForm.roleName" :rows="5"></el-input>
+          <el-form-item label="角色描述" size="small" prop="remark" >
+            <el-input type="textarea"  v-model="role.remark" :rows="5"></el-input>
           </el-form-item>
-
         </el-form>
       </div>
-      </system-dialog>
+    </system-dialog>
 
-      <!-- 分配权限窗口 -->
-      <system-dialog :title="roleDialog.title" :visible="roleDialog.visible" :width="roleDialog.width" :height="roleDialog.height"
-                     @onClose="onAssignClose()" @onConfirm="onAssignConfirm()">
-        <div slot="content">
-          <el-tree ref="assignTree" :data="assignTreeData" node-key="id" :props="defaultProps" empty-text="暂无数据"
-                   show-checkbox="true" :highlight-current="true" default-expand-all>
-          </el-tree>
-        </div>
-      </system-dialog>
-    </el-table>
-
+    <!-- 分配权限窗口 -->
+    <system-dialog :title="assignDialog.title" :visible="assignDialog.visible" :width="assignDialog.width" :height="assignDialog.height"
+                   @onClose="onAssignClose()" @onConfirm="onAssignConfirm()">
+      <div slot="content">
+        <el-tree ref="assignTree" :data="assignTreeData" node-key="rno" :props="defaultProps" empty-text="暂无数据"
+                 show-checkbox :highlight-current="true" default-expand-all>
+        </el-tree>
+      </div>
+    </system-dialog>
   </el-main>
 </template>
 
@@ -73,7 +71,7 @@ import systemDialog from "@/components/system/systemDialog.vue";
 import myIcon from "@/components/system/myIcon.vue";
 import leafUtils from "@/utils/leaf";
 import row from "element-ui/packages/row";
-import hasPermission from "@/permission";
+import hasPermission from "@/permission/index";
 
 export default {
     name:"roleList",
@@ -88,7 +86,7 @@ export default {
           rolename:"",
           pageNow:1,
           pageSize:10,
-          userId:this.$store.getters.userId //当前登录用户ID
+          unonow:this.$store.getters.uno //当前登录用户ID
 
         },
         roleList:[],
@@ -97,8 +95,8 @@ export default {
         total:0,
         pageSize: 10,
         rules: {
-          roleName:[{ required: true, message: '请输入角色名称', trigger: 'blur' }],
-          roleCode:[{ required: true, message: '请输入角色编码', trigger: 'blur' }]
+          rolename:[{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+          rolecode:[{ required: true, message: '请输入角色编码', trigger: 'blur' }]
         },
         roleDialog: {
           title:"",
@@ -106,12 +104,12 @@ export default {
           height:230,
           width:500
         },
-        roleForm: {
-          id:"",
-          roleCode: "",
-          roleName: "",
+        role: {
+          rno:"",
+          rolecode: "",
+          rolename: "",
           remark: "",
-          creatUser: this.$store.getters.userId
+          creatuser: this.$store.getters.uno
           },
         //分配权限窗口属性
         assignDialog:{
@@ -151,19 +149,21 @@ export default {
         if(res.success){
           this.roleList = res.data.records;
           this.total = res.data.total;
-
+          console.log("!")
+        }else {
+          console.log(res)
         }
       },
       handleEdit(row){
         //数据回显
         this.$objCopy(row, this.role);
+        console.log(row)
         this.roleDialog.title = "编辑角色";
         this.roleDialog.visible = true;
-
       },
       async handleDelete(row) {
         //判断角色是否被占用
-        let res = await checkRole({id: row.id});
+        let res = await checkRole(row.rno);
         if (!res.success) {
           //提示不能删除
           this.$message.warning(res.message);
@@ -171,7 +171,7 @@ export default {
           let confirm = await this.$myconfirm("确定要删除吗？");
           if (confirm) {
             //发送删除请求
-            let res = await deleteRole({id: row.id});
+            let res = await deleteRole(row.rno);
             //判断是否成功
             if (res.success) {
               this.$message.success(res.message);
@@ -183,15 +183,15 @@ export default {
         }
       },
       //分配权限
-      async assignRole(row) {
-
+      async assignRole(row) {   //回显未做！！！！！！！！！
         let params = {
-          rno: row.id,
-          uno: this.$store.getters.userId
+          rno: row.rno,
+          uno: this.$store.getters.uno
         }
         //发送查询权限分配菜单的请求
         let res = await getAssignMenuTree(params);
         //判断是否成功,如果成功则获取当前登录用户的菜单权限
+        console.log(res)
         if(res.success){
           //获取当前登录用户所有的菜单权限
           let menuList = res.data.menuList;
@@ -212,8 +212,8 @@ export default {
 
         }
 
-        this.roleDialog.title = `给[${row.roleName}]分配权限`;
-        this.roleDialog.visible = true;
+        this.assignDialog.title = `给[${row.rolename}]分配权限`;
+        this.assignDialog.visible = true;
 
       },
       handleSizeChange(size) {
@@ -235,39 +235,36 @@ export default {
 
       },
       onClose(){
-        this.role.visible = false;
+        this.roleDialog.visible = false;
       },
       onConfirm(){
         //表单验证
-        this.$refs.role.validate(async (valid) => {
+        this.$refs.roleForm.validate(async (valid) => {
           if (valid) {
             let res = null;
             //判断当前是新增还是修改
-            if (this.role.id === "") {
+            if (this.role.rno === "") {
               //发生添加请求
               res = await addRole(this.role)
             } else {
               //发生修改请求
               res = await updateRole(this.role)
             }
-
             if (res.success) {
               this.$message.success(res.message);
               await this.search(this.pageNow, this.pageSize);
               this.roleDialog.visible = false;
             } else {
               this.$message.error(res.message);
-
             }
-
           }
         })
       },
       onAssignClose(){
-        this.role.visible = false;
+        this.assignDialog.visible = false;
       },
       async onAssignConfirm(){
-        this.rno = row.id;
+        this.rno = row.rno;
         //获取选中的树节点的key
         let ids = this.$refs.assignTree.getCheckedKeys();
         //获取选中节点的父节点id
@@ -298,7 +295,7 @@ export default {
             if(checkList && checkList.length>0){
               for (let j = 0; j < checkList.length; j++) {
                 //判断是否拥有该权限
-                if(childNodes[i].id === checkList[j]){
+                if(childNodes[i].rno === checkList[j]){
                   //设置选中
                   if(childNodes[i].open){
                     this.$refs.assignTree.setChecked(node, true);

@@ -56,21 +56,21 @@ public class checkTokenFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        try {
-//            String url = request.getRequestURI();  //获取当前请求的URL
-//            System.out.println("1:"+url);
-//            System.out.println("2:"+swaggerUrl1);
-//            //判断当前请求是否为登录，如不是则验证Token
-//            if(!url.equals(loginUrl) && !url.equals(signupUrl) && !url.equals(swaggerUrl1)&& !url.equals(swaggerUrl2)&& !url.equals(swaggerUrl3)&& !url.equals(swaggerUrl4)){
-//                System.out.println("1111");
-//                this.checkToken(request);
-//
-//            }
-//        }catch (AuthenticationException e){
-//             loginFailHandler.onAuthenticationFailure(request, response, e );
-////            System.out.println("1111");
-//        }
-////        System.out.println("1111");
+        try {
+            String url = request.getRequestURI();  //获取当前请求的URL
+            System.out.println("1:"+url);
+            System.out.println("2:"+swaggerUrl1);
+            //判断当前请求是否为登录，如不是则验证Token
+            if(!url.equals(loginUrl) && !url.equals(signupUrl) && !url.equals(swaggerUrl1)&& !url.equals(swaggerUrl2)&& !url.equals(swaggerUrl3)&& !url.equals(swaggerUrl4)){
+                System.out.println("1111");
+                this.checkToken(request);
+
+            }
+        }catch (AuthenticationException e){
+             loginFailHandler.onAuthenticationFailure(request, response, e );
+//            System.out.println("1111");
+        }
+//        System.out.println("1111");
         doFilter(request, response, filterChain); // 登录请求不用验证
 
 

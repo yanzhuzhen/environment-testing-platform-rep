@@ -14,7 +14,7 @@ public class routerVo {
     private String name; //路由名字
     private  String component; //组件名
     private boolean alwaysShow; //是否显示
-    private Meta mata;
+    private Meta meta;
 
     @Data
     @AllArgsConstructor

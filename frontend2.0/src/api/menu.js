@@ -3,6 +3,7 @@ import http from "@/utils/request";
 export default {
   //查询菜单列表
   async getMenuList(params){
+    console.log('2');
     return http.get("/api/menu/list", params);
   },
   async getParentMenuList(params){

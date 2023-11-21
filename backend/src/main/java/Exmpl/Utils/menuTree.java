@@ -29,7 +29,7 @@ public class menuTree {
                         routerVo.setComponent(item.getUrl());
                         routerVo.setAlwaysShow(false);
                     }
-                    routerVo.setMata(routerVo.new Meta(item.getLabel(), item.getIcon(), item.getCode().split(","))); //设置meta
+                    routerVo.setMeta(routerVo.new Meta(item.getLabel(), item.getIcon(), item.getCode().split(","))); //设置meta
                     //递归生成路由菜单树
                     List<routerVo> child = makeRouter(menuList, item.getMno()); //生成子菜单
                     routerVo.setChildren(child); //把子路由放到路由菜单中
@@ -49,7 +49,7 @@ public class menuTree {
                     Menu menu = new Menu(); //创建菜单
                     BeanUtils.copyProperties(item,menu); //将原有对象的属性复制给新的菜单对象
                     List<Menu> child = makeMenuTree(menuList, item.getMno()); //获取每一个item对象的子菜单，递归生成菜单树
-                    menu.setChildMenu(child); //设置子菜单
+                    menu.setChildren(child); //设置子菜单
                     menuTreeList.add(menu); //将菜单对象加到集合
                 });
         return menuTreeList;

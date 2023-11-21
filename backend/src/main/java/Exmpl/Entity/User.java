@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +28,7 @@ public class User implements Serializable, UserDetails {
     private String realname;
     private int isadmin;
     private boolean isAccountNonExpired = true;
-    private boolean isAccountNonLocked= true;
+    private boolean isAccountNonLocked = true;
     private boolean isCredentialsNonExpired = true;
     private boolean isEnabled = true;
     private int isdelete;

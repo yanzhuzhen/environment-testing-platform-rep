@@ -3,9 +3,11 @@
 <mapper namespace="Exmpl.Dao.roleMapper">
 
     <insert id="saveRoleMenu">
+
         insert into MR (rno,mno) values
         <foreach collection="menuIds" item="i" index="index" separator=",">
             (#{rno},#{i})
         </foreach>
+
     </insert>
 </mapper>

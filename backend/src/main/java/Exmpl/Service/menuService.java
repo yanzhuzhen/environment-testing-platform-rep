@@ -47,7 +47,7 @@ public class menuService extends ServiceImpl<menuMapper, Menu> implements menuSe
         //只查询目录和菜单
         queryWrapper.in("type", Arrays.asList(0, 1));
         //设置排序字段
-        queryWrapper.orderByAsc("order_num");
+        queryWrapper.orderByAsc("mno");
         //查询菜单列表
         List<Menu> menuList = baseMapper.selectList(queryWrapper);
         //构造一级菜单

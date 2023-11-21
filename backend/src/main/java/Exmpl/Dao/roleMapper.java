@@ -13,7 +13,7 @@ import java.util.List;
 public interface roleMapper extends BaseMapper<Role> {
 
     //查询角色数量
-    @Select("select count(1) from roles where rno = #{id}")
+    @Select("select count(1) from roletable where rno = #{id}")
     int getRoleCountByRno(Long id);
 
     //删除角色权限关系
@@ -23,6 +23,6 @@ public interface roleMapper extends BaseMapper<Role> {
     //保存角色权限关系
     int saveRoleMenu(Long rno, List<Long> menuIds);
 
-    @Select("select RNO from UR where UNO = #{id}")
+    @Select("select rno from UR where uno = #{id}")
     List<Long> findRnoByUno(Long id);
 }

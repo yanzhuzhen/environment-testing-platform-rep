@@ -47,7 +47,7 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
                 fileService.deleteFile(user.getAvatar());
             }
         }
-        return false;
+        return baseMapper.deleteUserRole(uno)>0;
     }
 
     @Override

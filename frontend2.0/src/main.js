@@ -40,10 +40,6 @@ import resetForm from "@/utils/resetForm";
 
 Vue.prototype.$resetForm = resetForm
 
-import hasPermission from "@/permission";
-Vue.prototype.hasPermission = hasPermission
-
-
 Vue.config.productionTip = false
 
 new Vue({

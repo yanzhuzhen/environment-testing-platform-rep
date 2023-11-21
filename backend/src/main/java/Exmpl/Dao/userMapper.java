@@ -9,10 +9,10 @@ import java.util.List;
 
 @Mapper
 public interface userMapper extends BaseMapper<User> {
-    User findByUsername(@Param("username") String username);
 
-    @Delete("delete from UR where UNO = #{uno}")
+    @Delete("delete from ur where uno = #{uno};")
     int deleteUserRole(Long uno);
 
-    int saveUserRole(Long uno, List<Long> ronList);
+    int saveUserRole(Long uno, List<Long> rnoList);
+
 }

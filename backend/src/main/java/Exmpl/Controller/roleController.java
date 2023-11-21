@@ -29,7 +29,7 @@ public class roleController {
     @GetMapping("/list")
     public Result list(roleQueryVo roleQueryVo){
         //创建分页对象
-        IPage<Role> page = new Page<Role>(roleQueryVo.getPageNow(), roleQueryVo.getPageSize());
+        IPage<Role> page = new Page<Role>();
         //调用查询方法
         roleService.findRoleListByUno(page, roleQueryVo);
         //返回数据

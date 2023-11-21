@@ -9,6 +9,7 @@ import Exmpl.Service.Inter.roleServiceInter;
 import Exmpl.vo.query.roleQueryVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,11 +45,12 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
         QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
         queryWrapper.like(!ObjectUtils.isEmpty(roleQueryVo.getRolename()),"rolename",roleQueryVo.getRolename());
         queryWrapper.orderByAsc("rno");
-        User user = userMapper.selectById(roleQueryVo.getUno());
-        if(user != null && !ObjectUtils.isEmpty(user.getIsadmin()) && user.getIsadmin()==0 ){
+        User user = userMapper.selectById(roleQueryVo.getUnonow());
+        if(user != null && !ObjectUtils.isEmpty(user.getIsadmin()) && user.getIsadmin() == 0 ){
             //非管理，只能查询自己的角色
-            queryWrapper.eq("create_user", roleQueryVo.getUno());
+            queryWrapper.eq("createuser", roleQueryVo.getUnonow());
         }
+
         return baseMapper.selectPage(page, queryWrapper);
     }
 

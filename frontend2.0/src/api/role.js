@@ -7,7 +7,7 @@ export function getRoutes() {
 
 //查询角色列表
 export async function getRoles(param) {
-  return http.get('/api/role/list', param);
+  return  http.get('/api/role/list', param);
 }
 
 //添加角色

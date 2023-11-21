@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @TableName("menutable")
 public class Menu {
     @TableId
+    @Column(name = "mno", columnDefinition = "bigint(20)")
     private Long mno;
     private String label;
     private String pname;
@@ -28,7 +30,7 @@ public class Menu {
 
     @JsonInclude(JsonInclude.Include.NON_NULL) //属性值为null时，不进行序列化
     @TableField(exist = false) //表中无此字段，故为false
-    private  List<Menu> childMenu = new ArrayList<Menu>(); //子菜单
+    private  List<Menu> children = new ArrayList<Menu>(); //子菜单
 
     @TableField(exist = false)
     private String value; //用于判断是菜单还是按钮

@@ -59,7 +59,7 @@ public class userController {
     public Result update(@RequestBody User user){
         //查询用户
         User i = userService.findUserByUsername(user.getUsername());
-        if(i != null&&i.getUno() != user.getUno()){
+        if(i != null && i.getUno() != user.getUno()){
             return Result.error().message("该用户名已被使用");
         }
         if(userService.updateById(user)){
@@ -96,12 +96,13 @@ public class userController {
     }
 
     @PostMapping("/saveUserRole")
-    public Result saveUserRole(@RequestBody userRoleDTO userRoleDT0){
+    public Result saveUserRole(@RequestBody userRoleDTO userRoleDTO){
         if (userService.saveUserRole(userRoleDTO.getUno(), userRoleDTO.getRnoList())){
             return Result.ok().message("角色分配成功");
         }
             return Result.error().message("角色分配失败");
     }
+
     @DeleteMapping("/deleteRole/{id}")
     public Result deleteRole(@PathVariable Long id){
 

@@ -25,26 +25,23 @@ function hasPermission(roles, route) {
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
     //判断是否拥有相应权限
     if (hasPermission(roles, tmp)) {
       //获取该路由对应的组件
-      const component = tmp.component;
+      const component = tmp.component
       //判断是否有相应的组件
       if(route.component){
         //再判断是否有根组件
         if(component ===  'Layout'){
           tmp.component = Layout
-        }
-        else {
+        } else {``
           //获取对应具体的组件
-          console.log("tmp.component:"+tmp.component)
-          console.log("tmp:"+tmp)
+          console.log(tmp.component)
+          console.log(tmp)
           tmp.component = (resolve) => require([`@/views${component}`], resolve)
-          console.log("tmp.component 2 :"+tmp.component)
-
+          console.log(tmp.component)
         }
       }
       //判断是否有子菜单
@@ -76,17 +73,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       //获取后台菜单数据
       getMenuList().then(res =>{
-
         //存放对应权限的路由信息
-
         let accessedRoutes;
         //判断状态码，若为200则成功
         if(res.code === 200){
           accessedRoutes = filterAsyncRoutes(res.data, roles)
           //accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-          console.log(accessedRoutes)
-          console.log(asyncRoutes)
-          console.log(res.data)
 
         }
         //将路由信息保存到store中

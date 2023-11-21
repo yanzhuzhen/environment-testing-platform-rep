@@ -5,10 +5,11 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
 
-  name: '',
+  username: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  uno:''
 }
 
 const mutations = {
@@ -19,7 +20,7 @@ const mutations = {
     state.introduction = introduction
   },
   SET_NAME: (state, name) => {
-    state.name = name
+    state.username = name
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -27,8 +28,8 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_USERUID: (state, userId) => {
-    state.id= userId
+  SET_USERUID: (state, uno) => {
+    state.uno= uno
   }
 }
 
@@ -65,7 +66,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction, id } = data
+      const { roles, username, avatar, remark, uno } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -73,10 +74,10 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        commit('SET_USERUID', id)
+        commit('SET_INTRODUCTION', remark)
+        commit('SET_USERUID', uno)
         sessionStorage.setItem("codeList", JSON.stringify(roles))
         resolve(data)
       }).catch(error => {

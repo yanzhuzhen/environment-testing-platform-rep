@@ -1,4 +1,3 @@
-
 <template>
   <el-main>
     <!-- 新增按钮 -->
@@ -8,31 +7,30 @@
       :data="menuList"
       style="width: 100%;margin-top: 20px;"
       :height="tableHeight"
-      row-key="id"
-      border
+      row-key="mno"
+      border stripe
       default-expand-all
       :tree-props="{children: 'children'}">
       <el-table-column prop="label" label="菜单名称" sortable width="180"></el-table-column>
       <el-table-column prop="type" label="菜单类型" sortable width="180" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag size="normal" v-if="scope.row.type === 0">目录</el-tag>
           <el-tag size="normal" type="success" v-else-if="scope.row.type === 1">菜单</el-tag>
           <el-tag size="normal" type="warning" v-else-if="scope.row.type === 2">按钮</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="icon" label="菜单图标" sortable width="180" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <i :class="scope.row.icon" v-if="scope.row.icon.includes('el-icon')"></i>
           <svg-icon v-else :icon-class="scope.row.icon"></svg-icon>
         </template>
       </el-table-column>
       <el-table-column prop="path" label="菜单路由" sortable width="180"></el-table-column>
-      <el-table-column prop="mname" label="菜单名字" sortable width="180"></el-table-column>
       <el-table-column prop="url" label="菜单地址" sortable width="180"></el-table-column>
       <el-table-column label="操作" sortable width="180">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="onEdit(scope.row)" icon="el-icon-edit-outline" v-if="hasPermission('system:menu:update')">编辑</el-button>
-          <el-button type="danger" size="mini" @click="onDelete(scope.row)" icon="el-icon-edit-outline" v-if="hasPermission('system:menu:delete')">删除</el-button>
+        <template v-slot="scope">
+          <el-button type="primary" size="mini" @click="onEdit(scope.row)" icon="el-icon-edit" v-if="hasPermission('system:menu:update')">编辑</el-button>
+          <el-button type="danger" size="mini" @click="onDelete(scope.row)" icon="el-icon-delete" v-if="hasPermission('system:menu:delete')">删除</el-button>
         </template>
       </el-table-column>
 
@@ -42,7 +40,7 @@
                    @onClose="onClose()" @onConfirm="onConfirm()">
       <div slot="content">
         <el-form ref="menu" :model="menuForm" :rules="rules" label-width="80px" :inline="true" size="small">
-          <el-col span="24">
+          <el-col :span="24">
             <el-form-item label="菜单类型" prop="type">
               <el-radio-group v-model="menuForm.type" >
                 <el-radio :label="0">目录</el-radio>
@@ -51,8 +49,8 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-form-item label="所属菜单" size="small" prop="parentName">
-            <el-input v-model="menuForm.parentName" :readonly="true" @click.native="selectParentMenu()"/>
+          <el-form-item label="所属菜单" size="small" prop="pname">
+            <el-input v-model="menuForm.pname" :readonly="true" @click.native="selectParentMenu()"/>
           </el-form-item>
           <el-form-item label="菜单名称" size="small" prop="label">
             <el-input v-model="menuForm.label"/>
@@ -72,31 +70,29 @@
           <el-form-item label="菜单图标" size="small">
             <my-icon @selecticon="setIcon" ref="child"></my-icon>
           </el-form-item>
-          <el-form-item label="菜单序号" size="small" prop="orderNum">
-            <el-input v-model="menuForm.orderNum"/>
-          </el-form-item>
         </el-form>
       </div>
     </system-dialog>
 
     <!-- 选择上级菜单 -->
     <system-dialog :title="parentDialog.title" :width="parentDialog.width" :visible="parentDialog.visible"
-                   @onParentClose="onParentClose()" @onParentConfirm="onParentClose()">
+                   @onParentClose="onParentClose()" @onParentConfirm="onParentConfirm()">
       <div slot="content">
         <el-tree style="font-size: 14px;" ref="parentTree" :data="parentMenuList" :props="defaultProps" empty-text="暂无数据"
                  :show-checkbox="false" default-expand-all :highlight-current="true" :expand-on-click-node="false"
           @node-click="handleNodeClick">
-          <div class="custom-tree-node" slot-scope="{ node, data}">
+          <template v-slot="{node, data}">
+            <div class="custom-tree-node">
             <span v-if="data.children.length === 0">
-              <i class="el-icon-document"
-                 style="color: white;font-size: 18px"/>
+                <i :class="data.icon" v-if="data.icon.includes('el-icon')" style="color: rgb(128,128,128);font-size: 18px"></i>
             </span>
-            <span v-else @click.stop="changIcon(data)">
+              <span v-else @click.stop="changIcon(data)">
               <svg-icon v-if="data.open" icon-class="add-s"/>
               <svg-icon v-else icon-class="sub-s"/>
             </span>
-            <span style="margin-left: 3px">{{node.label}}</span>
-          </div>
+              <span style="margin-left: 3px">{{node.label}}</span>
+            </div>
+          </template>
         </el-tree>
       </div>
 
@@ -109,21 +105,13 @@ import systemDialog from "@/components/system/systemDialog.vue";
 import menu from "@/api/menu";
 import {style} from "svgo/lib/svgo/jsAPI";
 import myIcon from "@/components/system/myIcon.vue";
-import objCopy from "@/utils/objCopy";
-import hasPermission from "@/permission";
+import hasPermission from "@/permission/index";
+
 
   export default {
     name: "menuList",
     computed: {
-      rules: {
-          type:[{required: true, message: '请选择菜单类型', trigger: 'change'}],
-          parentName:[{required: true, message: '请选择所属菜单名称', trigger: 'change'}],
-          label:[{required: true, message: '请输入菜单名称', trigger: 'blur'}],
-          path:[{required: true, message: '请输入路由路径', trigger: 'blur'}],
-          url:[{required: true, message: '请输入组件路径', trigger: 'blur'}],
-          code:[{required: true, message: '请输入权限字段', trigger: 'blur'}],
-          name:[{required: true, message: '请输入路由名称', trigger: 'blur'}],
-      }
+
     },
     components:{
       systemDialog,
@@ -139,17 +127,26 @@ import hasPermission from "@/permission";
           width:630,
           height:270
         },
+        rules: {
+          type:[{required: true, message: '请选择菜单类型', trigger: 'change'}],
+          pname:[{required: true, message: '请选择所属菜单名称', trigger: 'change'}],
+          label:[{required: true, message: '请输入菜单名称', trigger: 'blur'}],
+          path:[{required: true, message: '请输入路由路径', trigger: 'blur'}],
+          url:[{required: true, message: '请输入组件路径', trigger: 'blur'}],
+          code:[{required: true, message: '请输入权限字段', trigger: 'blur'}],
+          name:[{required: true, message: '请输入路由名称', trigger: 'blur'}],
+          icon:[{required: true, message: '请输入图标', trigger: 'blur'}],
+        },
         menuForm:{
-          id:"",
+          mno:"",
           type:"",
-          parentId:"",
-          parentName:"",
+          pid:"",
+          pname:"",
           label:"",
           path:"",
           icon:"",
           url:"",
           code:"",
-          orderNum:"",
           name:""
         },
         parentDialog:{
@@ -182,7 +179,7 @@ import hasPermission from "@/permission";
         return style
       },
       openAddWindow(){
-        this.$resetForm("menuForm",this.menuForm);
+        this.$resetForm("menu",this.menuForm);
         this.menuDialog.title = "新增菜单";
         this.menuDialog.visible = true;
         this.$nextTick(() => {
@@ -198,10 +195,15 @@ import hasPermission from "@/permission";
         }
       },
       async search(){
+        console.log('1');
         let res = await menu.getMenuList();
+
+        console.log(res);
         if (res.success){
           this.menuList = res.data;
           console.log(this.menuList);
+        }else {
+          console.log('3');
         }
       },
       onClose(){
@@ -241,11 +243,11 @@ import hasPermission from "@/permission";
       //切换图标
       changIcon(data){
         data.open = !data.open
-        this.$refs.parentTree.store.nodesMap[data.id].expanded = !data.open
+        this.$refs.parentTree.store.nodesMap[data.mno].expanded = !data.open
       },
       handleNodeClick(data){
-        this.menuForm.parentId = data.id;
-        this.menuForm.parentName = data.label;
+        this.menuForm.pid = data.mno;
+        this.menuForm.pname = data.label;
       },
       setIcon(icon){
         this.menuForm.icon = icon;
@@ -261,7 +263,7 @@ import hasPermission from "@/permission";
       },
       async onDelete(row) {
         //判断是否存在子菜单
-        let res = await menu.checkMenu({id: row.id});
+        let res = await menu.checkMenu({id: row.mno});
         if(!res.success){
           //提示不能删除
           this.$message.warning(res.message);
@@ -269,7 +271,7 @@ import hasPermission from "@/permission";
           let confirm = await this.$myconfirm("确定要删除吗？");
           if(confirm){
             //发送删除请求
-            let res = await menu.deleteMenu({id: row.id});
+            let res = await menu.deleteMenu({id: row.mno});
             //判断是否成功
             if (res.success){
               this.$message.success(res.message);

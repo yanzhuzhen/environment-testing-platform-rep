@@ -17,11 +17,11 @@ public class menuController {
 
     //查询菜单列表
     @GetMapping("/list")
-    public List<Menu> list(menuQueryVo menuQueryVo){
+    public Result list(menuQueryVo menuQueryVo){
         //调用查询菜单列表的方法
         List<Menu> menuList = menuService.findMenuList(menuQueryVo);
         //返回数据
-        return menuList;
+        return Result.ok(menuList);
     }
 
     //查询上级菜单列表

@@ -33,17 +33,6 @@ public class jwtUtils {
 
     }
 
-//    public static void main(String[] args) {
-//        String secret = "EkingDoralSecretKey0904";
-//        secret+=secret;
-//        secret+=secret;
-//        secret+=secret;
-//        secret+=secret;
-//        secret+="1234567898765";
-//        System.out.println(secret);
-//        System.out.printf(Jwts.builder().setClaims(Maps.newConcurrentMap())
-//                .signWith( SignatureAlgorithm.HS512, secret).compact());
-//    }
 
     //从令牌中获取数据声明
     public Claims getClaims(String token){

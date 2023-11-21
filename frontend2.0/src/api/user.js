@@ -35,20 +35,20 @@ export  default {
   async updateUser(params){
     return http.put("api/user/update",params);
   },
-  async deleteUser(params){
-    return http.delete("api/user/delete",params);
+  async deleteUser(id){
+    return http.delete("api/user/delete/"+id);
   },
   async getAssignRoleList(params){
     return http.get("api/user/getRoleListForAssign",params);
   },
-  async getRnoByUno(params){
-    return http.getRestApi("api/user/getRnoByUno",params);
+  async getRnoByUno(id){
+    return http.getRestApi("api/user/getRnoByUno/"+id);
   },
   async assignRoleSave(params){
     return http.post("api/user/saveUserRole",params);
   },
-  async deleteRole(params){
-    return http.delete("api/user/deleteRole",params);
+  async deleteRole(id){
+    return http.delete("api/user/deleteRole/"+id);
   },
 
 }

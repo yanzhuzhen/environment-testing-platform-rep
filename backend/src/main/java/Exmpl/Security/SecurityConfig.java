@@ -52,17 +52,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //登录过程的处理
         http
-//                .formLogin() //表单登录
-//                .loginProcessingUrl("/api/user/login") //登录请求的url
-//                .successHandler(loginSuccessHandler) //登陆成功处理器
-//                .failureHandler(loginFailHandler) //登陆失败处理器
-//                .and()
+                .formLogin() //表单登录
+                .loginProcessingUrl("/api/user/login") //登录请求的url
+                .successHandler(loginSuccessHandler) //登陆成功处理器
+                .failureHandler(loginFailHandler) //登陆失败处理器
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //不创建Session
                 .and()
                 .authorizeRequests() //需要拦截的请求
-//                .antMatchers("/api/user/login").permitAll() //登陆请求放行
-//                .antMatchers("/api/sysUser/signup").permitAll() //注册请求放行
+                .antMatchers("/api/user/login").permitAll() //登陆请求放行
+                .antMatchers("/api/sysUser/signup").permitAll() //注册请求放行
                 .antMatchers("/swagger*//**", "/v2/api-docs", "/webjars*//**","/swagger-ui").permitAll() //swagger放行
                 .anyRequest().authenticated()  //其他请求都不放行
                 .and()
