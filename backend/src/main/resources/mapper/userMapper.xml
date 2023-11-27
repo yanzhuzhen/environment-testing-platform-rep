@@ -7,4 +7,12 @@
             (#{uno},#{item})
         </foreach>
     </insert>
+    <insert id="saveUser" parameterType="User">
+        insert into usertable(username,email,phone,password)
+        values (#{username},#{email},#{phone},#{password})
+    </insert>
+    <select id="getUserByEmail" resultType="Exmpl.Entity.User">
+        select * from usertable where email = #{email}
+    </select>
+
 </mapper>

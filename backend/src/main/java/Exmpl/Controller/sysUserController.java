@@ -1,5 +1,6 @@
 package Exmpl.Controller;
 
+import Exmpl.Dto.userDTO;
 import Exmpl.Entity.Menu;
 import Exmpl.Entity.User;
 import Exmpl.Entity.userInfo;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -124,17 +126,30 @@ public class   sysUserController {
         }
         return Result.error().message("退出登录失败");
     }
-    @PostMapping("/signup")
-    public Result signup(@RequestBody User user){
-        User hasUser = userService.findUserByUsername(user.getUsername());
-        if(hasUser != null){
-            return Result.error().message("该用户名已被使用");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if(userService.save(user)){
-            return Result.ok().message("用户注册成功");
-        }else {
+    @PostMapping("/sendCode")
+    public Result registerByEmail(@RequestBody userDTO userDTO){
+        try {
+            return userService.registerEmail(userDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
             return Result.error().message("用户注册失败");
         }
     }
+    /**
+     * 通过邮箱或者手机号登陆
+     * @return
+     */
+    @PostMapping("/signup")
+    public Result activation(@RequestBody HashMap<String,String> para){
+        try {
+
+            String email=para.get("email");
+            String code = para.get("code");
+            return userService.activation(email,code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error().message("注册失败");
+        }
+    }
+
 }

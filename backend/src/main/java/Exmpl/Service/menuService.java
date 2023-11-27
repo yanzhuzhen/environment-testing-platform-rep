@@ -4,6 +4,7 @@ import Exmpl.Entity.Menu;
 import Exmpl.Entity.User;
 import Exmpl.Service.Inter.menuServiceInter;
 import Exmpl.Utils.menuTree;
+import Exmpl.Utils.systemConstants;
 import Exmpl.vo.query.menuQueryVo;
 import Exmpl.vo.roleMenuVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -108,5 +109,11 @@ public class menuService extends ServiceImpl<menuMapper, Menu> implements menuSe
         vo.setMenuList(menuList);
         vo.setCheckList(listIds.toArray());
         return vo;
+    }
+
+    @Override
+    public boolean deleteMenuById(Long mno) {
+        baseMapper.deleteMenuRole(mno);
+        return baseMapper.deleteById(mno)>0;
     }
 }

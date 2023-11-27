@@ -12,6 +12,7 @@
       default-expand-all
       :tree-props="{children: 'children'}">
       <el-table-column prop="label" label="菜单名称" sortable width="180"></el-table-column>
+      <el-table-column prop="pname" label="父菜单名称" sortable width="180"></el-table-column>
       <el-table-column prop="type" label="菜单类型" sortable width="180" align="center">
         <template v-slot="scope">
           <el-tag size="normal" v-if="scope.row.type === 0">目录</el-tag>
@@ -76,9 +77,9 @@
 
     <!-- 选择上级菜单 -->
     <system-dialog :title="parentDialog.title" :width="parentDialog.width" :visible="parentDialog.visible"
-                   @onParentClose="onParentClose()" @onParentConfirm="onParentConfirm()">
+                   @onClose="onParentClose()" @onConfirm="onParentConfirm()">
       <div slot="content">
-        <el-tree style="font-size: 14px;" ref="parentTree" :data="parentMenuList" :props="defaultProps" empty-text="暂无数据"
+        <el-tree style="font-size: 14px;" ref="parentTree" :data="parentMenuList" :props="defaultProps" empty-text="暂无数据" node-key="mno"
                  :show-checkbox="false" default-expand-all :highlight-current="true" :expand-on-click-node="false"
           @node-click="handleNodeClick">
           <template v-slot="{node, data}">
@@ -193,12 +194,14 @@ import hasPermission from "@/permission/index";
         if (res.success){
           this.parentMenuList = res.data;
         }
+        console.log(res);
+        console.log(this.parentMenuList);
       },
       async search(){
         console.log('1');
         let res = await menu.getMenuList();
 
-        console.log(res);
+
         if (res.success){
           this.menuList = res.data;
           console.log(this.menuList);
@@ -215,7 +218,7 @@ import hasPermission from "@/permission/index";
           if (valid) {
             let res = null;
             //判断当前是新增还是修改
-            if (this.menuForm.id === "") {
+            if (this.menuForm.mno === "") {
               //发生添加请求
               res = await menu.addMenu(this.menuForm);
             } else {
@@ -235,10 +238,12 @@ import hasPermission from "@/permission/index";
         })
       },
       onParentClose(){
-        this.menuDialog.visible = false;
+        this.parentDialog.visible = false;
+        console.log(2);
       },
       onParentConfirm(){
-        this.menuDialog.visible = false;
+        console.log(1);
+        this.parentDialog.visible = false;
       },
       //切换图标
       changIcon(data){
@@ -263,7 +268,7 @@ import hasPermission from "@/permission/index";
       },
       async onDelete(row) {
         //判断是否存在子菜单
-        let res = await menu.checkMenu({id: row.mno});
+        let res = await menu.checkMenu(row.mno);
         if(!res.success){
           //提示不能删除
           this.$message.warning(res.message);
@@ -271,7 +276,7 @@ import hasPermission from "@/permission/index";
           let confirm = await this.$myconfirm("确定要删除吗？");
           if(confirm){
             //发送删除请求
-            let res = await menu.deleteMenu({id: row.mno});
+            let res = await menu.deleteMenu(row.mno);
             //判断是否成功
             if (res.success){
               this.$message.success(res.message);

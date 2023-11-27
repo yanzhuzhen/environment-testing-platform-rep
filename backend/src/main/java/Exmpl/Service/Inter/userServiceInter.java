@@ -1,7 +1,9 @@
 package Exmpl.Service.Inter;
 
 
+import Exmpl.Dto.userDTO;
 import Exmpl.Entity.User;
+import Exmpl.Utils.Result;
 import Exmpl.vo.query.userQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -13,9 +15,16 @@ public interface userServiceInter  extends IService<User> {
 
     IPage<User> findUserListByPage(IPage<User> page, userQueryVo userQueryVo);
 
-    boolean deleteById(Long uno);
+    boolean deleteUserById(Long uno);
 
     boolean saveUserRole(Long uno, List<Long> rnoList);
 
     boolean deleteRole(Long uno);
+
+    User findUserByEmail(String email);
+
+    Result registerEmail(userDTO userDTO);
+
+    Result activation(String email, String code);
 }
+

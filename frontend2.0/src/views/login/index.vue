@@ -1,100 +1,116 @@
 <template>
   <div class="login-container">
-  <!--登录表单-->
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <div style="height: 60px; line-height: 60px; font-size: 20px; padding-left: 50px; color: white;
+      background-color: rgba(0,0,0,0.2)">西南地区国土环境监测学习平台</div>
+    <div style="margin: 150px auto; background: white; width: 500px; border-radius: 10px; overflow: hidden">
       <div class="title-container">
-        <h3 class="title">西南地区国土环境检测学习平台</h3>
+        <h3 class="title">登录</h3>
       </div>
-      <!--用户名-->
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="请输入你的用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
-      <!--密码-->
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入你的密码"
-            name="password"
-            tabindex="2"
-            autocomplete="on"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-form-item>
-      </el-tooltip>
-      <el-row :gutter="20">
-        <el-col :span="16">
-          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-        </el-col>
-        <el-col :span="8">
-          <el-button :loading="loading" style="width:100%;margin-bottom:30px;" @click="openAddWindow()">注册</el-button>
-        </el-col>
-      </el-row>
-    </el-form>
-
-    <system-dialog :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
-                   @onClose="onClose()" @onConfirm="onConfirm()" style="margin-top: 200px">
+          <el-form ref="loginForm" :model="loginForm" :rules="loginRules" style="margin: 20px auto" class="login-form" autocomplete="on" label-position="left">
+                <!--用户名-->
+            <el-form-item prop="username">
+              <span class="svg-container">
+                <svg-icon icon-class="user" />
+              </span>
+                  <el-input
+                    ref="username"
+                    v-model="loginForm.username"
+                    placeholder="请输入你的用户名"
+                    name="username"
+                    type="text"
+                    tabindex="1"
+                    autocomplete="on"
+                  />
+            </el-form-item>
+                <!--密码-->
+            <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+                  <el-form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password" />
+                </span>
+                    <el-input
+                      :key="passwordType"
+                      ref="password"
+                      v-model="loginForm.password"
+                      :type="passwordType"
+                      placeholder="请输入你的密码"
+                      name="password"
+                      tabindex="2"
+                      autocomplete="on"
+                      @blur="capsTooltip = false"
+                      @keyup.enter.native="handleLogin"
+                    />
+                    <span class="show-pwd" @click="showPwd">
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                </span>
+                  </el-form-item>
+                </el-tooltip>
+            <el-button type="text" size="mid"  autocomplete="off" @click="handlePass">忘记密码？</el-button>
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+              </el-col>
+              <el-col :span="8">
+                <el-button :loading="loading" style="width:100%;margin-bottom:30px;" @click="openAddWindow()">注册</el-button>
+              </el-col>
+            </el-row>
+          </el-form>
+    </div>
+    <system-dialog class="login-container" :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
+                   @onClose="onClose()" @onConfirm="onConfirm()" style="margin-top: 200px ">
       <div slot="content">
-
-        <el-form ref="userForm" :model="user" :rules="rules" label-width="80px" :inline="true" size="small">
+        <el-form  class="signup-form" ref="userForm" :model="user" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
           <el-row>
-            <el-col :span="24">
+            <el-col>
               <el-form-item label="用户名" prop="username" size="small">
-                <el-input v-model="user.username"></el-input>
+                <el-input v-model="user.username" style="width: 200px" ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="24">
+            <el-col >
               <el-form-item label="密码" size="small" prop="password">
-                <el-input type="password" v-model="user.password"></el-input>
+                <el-input type="password" v-model="user.password" style="width: 200px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="24">
-              <el-form-item label="电话" size="small" prop="phone">
-                <el-input  v-model="user.phone"></el-input>
+            <el-col >
+              <el-form-item label="确认密码" size="small" prop="password">
+                <el-input type="password" v-model="user.confirmPassword" style="width: 200px"></el-input>
               </el-form-item>
+            </el-col>
+            <el-col >
+              <el-form-item label="电话" size="small" prop="phone">
+                <el-input  v-model="user.phone" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col >
+              <el-form-item label="邮箱" size="small" prop="email">
+                <el-input  v-model="user.email" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col >
+              <el-row :gutter="20">
+                <el-col :span="16">
+                  <el-form-item label="验证码" size="small" prop="code">
+                    <el-input  v-model="user.code" style="width: 200px"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-button type="primary" size="medium" style="height: 47px" class="ml-5" @click="onSendCode">获取验证码</el-button>
+                </el-col>
+              </el-row>
             </el-col>
           </el-row>
         </el-form>
       </div>
     </system-dialog>
-
-<!--    <el-dialog title="Or connect with" :visible.sync="showDialog">-->
-<!--      Can not be simulated on local, so please combine you own business simulation! ! !-->
-<!--      <br>-->
-<!--      <br>-->
-<!--      <br>-->
-<!--      <social-sign />-->
-<!--    </el-dialog>-->
   </div>
+
 </template>
 
 <script>
 // import SocialSign from './components/SocialSignin'
 
 import systemDialog from "@/components/system/systemDialog.vue";
-import {signup} from "@/api/user";
+import {sendCode, signup} from "@/api/user";
 
 export default {
   name: 'Login',
@@ -105,12 +121,22 @@ export default {
       if (!value) {
         callback(new Error("请输入手机号码"));
       } else if (!/^1[345789]\d{9}$/.test(value)) {
-        callback(new Error("请输入正确格式得手机号"));
+        callback(new Error("请输入正确格式的手机号"));
+      } else {
+        callback();
+      }
+    }
+    let emailCheck = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入邮箱"));
+      } else if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+        callback(new Error("请输入正确格式的邮箱"));
       } else {
         callback();
       }
     }
     return {
+      activeName:'first',
       //登录表单对象
       loginForm: {
         username: '',
@@ -137,15 +163,20 @@ export default {
         id: "",
         username: "",
         realname: "",
+        password:"",
+        confirmPassword:"",
         phone: "",
         email: "",
+        code:"",
         avatar: ""
       },
       rules: {
-        username: [{required: true, trigger: 'blur', message: "请填写用户名"}],
-        password: [{required: true, trigger: 'blur', message: "请填写密码"}],
-        realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"}],
+        username: [{required: true, trigger: 'blur', message: "请填写用户名"},{ min: 1, max:10, message: '长度在10个字符以内', trigger: 'blur' }],
+        password: [{required: true, trigger: 'blur', message: "请填写密码"},{ min: 1, max: 20, message: '长度在20个字符以内', trigger: 'blur' }],
+        realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"},{ min: 1, max: 5, message: '长度在5个字符以内', trigger: 'blur' }],
         phone: [{trigger: 'blur', validator: phoneCheck}],
+        email:[{trigger: 'blur', validator: emailCheck}],
+        code:[{required: true, trigger: 'blur', message: "请填写验证码"},{ min: 1, max: 5, message: '长度为5个字符', trigger: 'blur' }],
 
       },
     }
@@ -191,14 +222,27 @@ export default {
     },
     openAddWindow() {
       this.$resetForm('userForm', this.user);
-      this.userDialog.title = "注册";
+      this.userDialog.title = "用户注册";
       this.userDialog.visible = true;
     },
     onClose() {
       this.userDialog.visible = false;
     },
+    async onSendCode() {
+      let para = Object.assign({}, this.user);
+      let res = null;
+      res = await sendCode(para);
+      if (res.success) {
+        this.$message.success(res.message);
+      } else {
+        this.$message.error(res.message);
+      }
+
+
+    },
     onConfirm() {
       this.$refs.userForm.validate(async (valid) => {
+        let para={"email":this.user.email,"code":this.user.code};
         if (valid) {
           let res = null;
             res = await signup(this.user);
@@ -254,25 +298,7 @@ export default {
         }
         return acc
       }, {})
-    }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
+    },
   }
 }
 </script>
@@ -282,8 +308,8 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+$light_gray: #3268fc;
+$cursor: #3268fc;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -297,6 +323,7 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
+    background: white;
 
     input {
       background: transparent;
@@ -316,10 +343,10 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(55, 61, 75, 0.25);
+    background: rgb(255, 255, 255);
     border-radius: 5px;
-    color: #454545;
+    color: #ffffff;
   }
 }
 </style>
@@ -327,7 +354,18 @@ $cursor: #fff;
 <style lang="scss" scoped>
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
-$light_gray:#eee;
+$light_gray: #1e1f22;
+
+
+.signup-form {
+  position: relative;
+  width: 520px;
+  max-width: 100%;
+  padding: 20px 35px 0;
+  margin: 2px auto;
+  overflow: hidden;
+
+}
 
 .login-container {
   min-height: 100%;
@@ -339,8 +377,8 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
+    padding: 20px 35px 0;
+    margin: 2px auto;
     overflow: hidden;
   }
 
@@ -370,7 +408,7 @@ $light_gray:#eee;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 30px auto 40px auto;
       text-align: center;
       font-weight: bold;
     }

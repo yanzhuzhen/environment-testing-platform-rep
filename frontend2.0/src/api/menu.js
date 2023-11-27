@@ -3,7 +3,6 @@ import http from "@/utils/request";
 export default {
   //查询菜单列表
   async getMenuList(params){
-    console.log('2');
     return http.get("/api/menu/list", params);
   },
   async getParentMenuList(params){
@@ -15,11 +14,11 @@ export default {
   async updateMenu(params){
     return http.put("/api/menu/update", params);
   },
-  async deleteMenu(params){
-    return http.delete("/api/menu/delete", params);
+  async deleteMenu(id){
+    return http.delete("/api/menu/delete/"+id);
   },
-  async checkMenu(params){
-    return http.getRestApi("/api/menu/check", params);
+  async checkMenu(id){
+    return http.getRestApi("/api/menu/check/"+id);
   }
 }
 

@@ -6,13 +6,13 @@
                   {{userChooseIcon}}
                 </span>
       <div class="iconList">
-        <i v-for="i in iconList" :key="i" :class="i" @click="setIcon(i)" style="font-size: 20px;"></i>
+        <i v-for="item in iconList" :key="item" :class="item" @click="setIcon(item)" style="font-size: 20px;"></i>
       </div>
     </el-popover>
   </div>
 </template>
 
-<script >
+<script>
   import {elementIcons} from "@/utils/icon";
 
   export default {
@@ -52,15 +52,15 @@
     display: inline-block;
     width: 60px;
     height: 45px;
-    color: white;
+    color: black;
     font-size: 20px;
-    border: 1px solid #e6e6e6;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
     line-height: 45px;
     margin: 5px;
-    & :hover{
+    &:hover{
       color: orange;
       border-color: orange;
     }

@@ -1,5 +1,6 @@
 package Exmpl.Controller;
 
+import Exmpl.Dao.incMapper;
 import Exmpl.Dto.roleMenuDTO;
 import Exmpl.Entity.Menu;
 import Exmpl.Entity.Role;
@@ -24,6 +25,9 @@ public class roleController {
     private roleService roleService;
     @Resource
     private menuService menuService;
+    @Resource
+    private incMapper incMapper;
+
 
     //查询角色列表
     @GetMapping("/list")
@@ -40,6 +44,8 @@ public class roleController {
     @PreAuthorize("hasAuthority('system:role:add')")
     @PostMapping("/add")
     public Result add(@RequestBody Role role){
+        Long id = incMapper.findAllRole() + 1;
+        role.setRno(id);
         //调用添加的方法
         if (roleService.save(role)){
             return Result.ok().message("角色添加成功");

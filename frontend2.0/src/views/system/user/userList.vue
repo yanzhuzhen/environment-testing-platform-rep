@@ -271,8 +271,8 @@ export default {
         if (confirm) {
           console.log(row.uno)
           let res = user.deleteUser(row.uno);
-          console.log((await res).success)
-          if ((await res).success) {
+          console.log(res.success)
+          if (res.success) {
             this.$message.success(res.message);
             await this.search(this.pageNow, this.pageSize);
           } else {

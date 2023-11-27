@@ -21,7 +21,6 @@ public class verificationCode {
 	private Color bgColor = new Color(255, 255, 255);// 定义验证码图片的背景颜色为白色
 	private Random random = new Random();
 	private String codes = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	@Getter
 	private String text;// 记录随机字符串
 
 	//获取一个随意颜色

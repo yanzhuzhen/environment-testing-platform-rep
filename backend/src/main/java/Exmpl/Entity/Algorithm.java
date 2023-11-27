@@ -6,10 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("algorithm")
+@TableName("algorithmtable")
 public class Algorithm{
     @TableId
-    private int ano;
-    private String algName;
-    private String algDate;
+    private Long ano;
+    private String algname;
+    private String alg;
+    private String createuser;
+    private int ispermit;
+    private int algtype;
 }
+

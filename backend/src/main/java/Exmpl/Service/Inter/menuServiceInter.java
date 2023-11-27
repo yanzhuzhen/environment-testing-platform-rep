@@ -22,4 +22,6 @@ public interface menuServiceInter extends IService<Menu> {
     //查询分配权限树列表
     roleMenuVo getAssignMenuTree(Long uno, Long rno );
 
+    boolean deleteMenuById(Long mno);
+
 }

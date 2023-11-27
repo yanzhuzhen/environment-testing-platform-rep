@@ -1,5 +1,6 @@
 package Exmpl.Controller;
 
+import Exmpl.Dao.incMapper;
 import Exmpl.Entity.Menu;
 import Exmpl.Utils.Result;
 import Exmpl.vo.query.menuQueryVo;
@@ -14,6 +15,9 @@ import java.util.List;
 public class menuController {
     @Resource
     private menuService menuService;
+
+    @Resource
+    incMapper incMapper;
 
     //查询菜单列表
     @GetMapping("/list")
@@ -37,6 +41,8 @@ public class menuController {
     @PreAuthorize("hasAuthority('system:menu:add')")
     @PostMapping("/add")
     public Result add(@RequestBody Menu menu){
+        Long id = incMapper.findAllMenu() + 1;
+        menu.setMno(id);
         //调用新增的方法
         if (menuService.save(menu)){
             return Result.ok().message("菜单添加成功");
@@ -60,7 +66,7 @@ public class menuController {
     @DeleteMapping ("/delete/{id}")
     public Result delete( @PathVariable Long id){
         //调用删除的方法
-        if (menuService.removeById(id)){
+        if (menuService.deleteMenuById(id)){
             return Result.ok().message("菜单删除成功");
         }
         return Result.error().message("菜单删除失败");

@@ -1,6 +1,7 @@
 package Exmpl.Controller;
 
 import Exmpl.Dto.userRoleDTO;
+import Exmpl.Dao.incMapper;
 import Exmpl.Entity.Role;
 import Exmpl.Entity.User;
 import Exmpl.Service.roleService;
@@ -27,6 +28,9 @@ public class userController {
     roleService roleService;
     @Resource
     BCryptPasswordEncoder passwordEncoder;
+    @Resource
+    incMapper incMapper;
+
 
     @Resource
     userRoleDTO userRoleDTO;
@@ -46,6 +50,8 @@ public class userController {
         if(u != null){
             return Result.error().message("该用户名已被使用");
         }
+        Long id = incMapper.findAllUser() + 1;
+        user.setUno(id);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if(userService.save(user)){
             return Result.ok().message("用户添加成功");
@@ -72,8 +78,7 @@ public class userController {
     @PreAuthorize("hasAuthority('system:user:delete')")
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Long id){
-
-        if(userService.deleteById(id)){
+        if(userService.deleteUserById(id)){
             return Result.ok().message("用户删除成功");
         }else {
             return Result.error().message("用户删除失败");

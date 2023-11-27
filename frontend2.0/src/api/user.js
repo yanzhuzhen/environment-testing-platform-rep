@@ -25,6 +25,10 @@ export async function signup(params){
   return http.post("api/sysUser/signup", params);
 }
 
+export async function sendCode(params){
+  return http.post("api/sysUser/sendCode", params);
+}
+
 export  default {
   async getUserList(params){
     return http.get("api/user/list",params);

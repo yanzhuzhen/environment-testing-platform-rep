@@ -2,6 +2,7 @@ package Exmpl.Security;
 
 
 import Exmpl.Security.Filter.checkTokenFilter;
+
 import Exmpl.Security.handler.loginFailHandler;
 import Exmpl.Security.handler.loginSuccessHandler;
 import Exmpl.Security.handler.anonymousAuthenticationHandler;
@@ -44,15 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
     //处理登录认证
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         //登陆前进行过流
         http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //登录过程的处理
-        http
-                .formLogin() //表单登录
+        http.formLogin() //表单登录
                 .loginProcessingUrl("/api/user/login") //登录请求的url
                 .successHandler(loginSuccessHandler) //登陆成功处理器
                 .failureHandler(loginFailHandler) //登陆失败处理器
@@ -62,8 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() //需要拦截的请求
                 .antMatchers("/api/user/login").permitAll() //登陆请求放行
-                .antMatchers("/api/sysUser/signup").permitAll() //注册请求放行
-                .antMatchers("/swagger*//**", "/v2/api-docs", "/webjars*//**","/swagger-ui").permitAll() //swagger放行
+                .antMatchers("/api/sysUser/signup","/api/sysUser/sendCode").permitAll() //注册放行
                 .anyRequest().authenticated()  //其他请求都不放行
                 .and()
                 .exceptionHandling()
@@ -71,9 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(userAccessDeniedHandler) //认证用户无权限访问
                 .and()
                 .cors(); //支持跨域
-
-
     }
+
 
     //配置认证处理器
     @Override

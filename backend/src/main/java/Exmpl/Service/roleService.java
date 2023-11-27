@@ -26,18 +26,6 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
     @Resource
     userMapper userMapper;
 
-    public int insertRole (Role role){
-        return roleMapper.insert(role);
-    }
-    public int updateRole (Role role){
-        return roleMapper.updateById(role);
-    }
-    public int deleteRole (Role role){
-        return roleMapper.deleteById(role);
-    }
-    public Role selectRole (Role role){
-        return roleMapper.selectById(role.getRno());
-    }
 
     @Override
     public IPage<Role> findRoleListByUno(IPage<Role> page, roleQueryVo roleQueryVo) {

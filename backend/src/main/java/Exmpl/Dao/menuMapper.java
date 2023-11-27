@@ -2,6 +2,7 @@ package Exmpl.Dao;
 
 import Exmpl.Entity.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,4 +13,7 @@ public interface menuMapper extends BaseMapper<Menu> {
     List<Menu> findMenuListByUserId( Long uno);
 
     List<Menu> findMenuListByRoleId(Long rno);
+
+    @Delete("delete from mr where mno = #{mno};")
+    int deleteMenuRole(Long mno);
 }
