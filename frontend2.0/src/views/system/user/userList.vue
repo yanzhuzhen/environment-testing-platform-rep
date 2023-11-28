@@ -36,6 +36,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+<!--    修改角色-->
     <system-dialog :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
                    @onClose="onClose()" @onConfirm="onConfirm()">
       <div slot="content">
@@ -123,6 +124,15 @@ export default {
           callback();
         }
       }
+      let emailCheck = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error("请输入邮箱"));
+        } else if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+          callback(new Error("请输入正确格式的邮箱"));
+        } else {
+          callback();
+        }
+      }
       return {
         searchModel: {
           username: "",
@@ -144,7 +154,7 @@ export default {
           width: 500
         },
         user: {
-          uno: undefined,
+          uno: "",
           username: "",
           realname: "",
           phone: "",
@@ -156,7 +166,7 @@ export default {
           password: [{required: true, trigger: 'blur', message: "请填写密码"}],
           realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"}],
           phone: [{trigger: 'blur', validator: phoneCheck}],
-
+          email:[{trigger: 'blur', validator: emailCheck}],
         },
         uploadHeader: {"token": getToken()},
         //分配角色窗口属性
@@ -280,7 +290,6 @@ export default {
 
           }
         }
-
       },
       async assignRole(row) {
         //防止回显出现问题

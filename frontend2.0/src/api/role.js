@@ -16,8 +16,8 @@ export async function addRole(data) {
 }
 
 //修改角色
-export async function updateRole(id, data) {
-  return http.put('/api/role/update/' + id, data);
+export async function updateRole(data) {
+  return http.put('/api/role/update/' ,data);
 }
 
 //删除角色

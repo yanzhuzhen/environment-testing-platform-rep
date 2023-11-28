@@ -3,8 +3,8 @@
     <!-- 查询条件 -->
     <el-form ref="searchForm" :model="searchModel" label-width="80px" :inline="true" size="small">
       <el-form-item>
-        <el-input v-model="searchModel.rolename" placeholder="请输入角色名称"/>
-      </el-form-item>
+      <el-input v-model="searchModel.rolename" placeholder="请输入角色名称"/>
+    </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search(pageNow, pageSize)">查询</el-button>
         <el-button icon="el-icon-refresh-right" @click="restTable()" >重置</el-button>
@@ -87,7 +87,6 @@ export default {
           pageNow:1,
           pageSize:10,
           unonow:this.$store.getters.uno //当前登录用户ID
-
         },
         roleList:[],
         tableHeight:0,

@@ -9,7 +9,11 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
-  uno:''
+  uno:'',
+  phone:'',
+  email:'',
+  realname:''
+
 }
 
 const mutations = {
@@ -30,7 +34,17 @@ const mutations = {
   },
   SET_USERUID: (state, uno) => {
     state.uno= uno
+  },
+  SET_PHONE: (state, phone) => {
+    state.phone= phone
+  },
+  SET_EMAIL: (state, email) => {
+    state.email= email
+  },
+  SET_REALNAME: (state, realname) => {
+    state.realname= realname
   }
+
 }
 
 const actions = {
@@ -66,8 +80,8 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-      const { roles, username, avatar, remark, uno } = data
-
+      const { roles, username, avatar, remark, uno, phone, email, realname } = data
+        console.log(data)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -78,6 +92,10 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', remark)
         commit('SET_USERUID', uno)
+        commit('SET_PHONE', phone)
+        commit('SET_EMAIL', email)
+        commit('SET_REALNAME', realname)
+
         sessionStorage.setItem("codeList", JSON.stringify(roles))
         resolve(data)
       }).catch(error => {

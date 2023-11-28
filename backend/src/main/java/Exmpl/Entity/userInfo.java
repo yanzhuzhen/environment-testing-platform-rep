@@ -12,6 +12,9 @@ import java.io.Serializable;
 public class userInfo implements Serializable {
     private Long uno;
     private String username;
+    private String realname;
+    private Long phone;
+    private String email;
     private String avatar;
     private String remark;
     private Object[] roles;

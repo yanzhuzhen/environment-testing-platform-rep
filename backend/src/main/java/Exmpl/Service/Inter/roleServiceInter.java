@@ -21,4 +21,6 @@ public interface roleServiceInter extends IService<Role> {
 
     List<Long> findRnoByUno(Long id);
 
+    List<String> findRolenameByUno(Long id);
+
 }

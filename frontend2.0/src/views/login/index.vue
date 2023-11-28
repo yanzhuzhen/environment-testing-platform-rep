@@ -174,10 +174,9 @@ export default {
         username: [{required: true, trigger: 'blur', message: "请填写用户名"},{ min: 1, max:10, message: '长度在10个字符以内', trigger: 'blur' }],
         password: [{required: true, trigger: 'blur', message: "请填写密码"},{ min: 1, max: 20, message: '长度在20个字符以内', trigger: 'blur' }],
         realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"},{ min: 1, max: 5, message: '长度在5个字符以内', trigger: 'blur' }],
-        phone: [{trigger: 'blur', validator: phoneCheck}],
-        email:[{trigger: 'blur', validator: emailCheck}],
+        phone: [{required: true,trigger: 'blur', validator: phoneCheck}],
+        email:[{required: true,trigger: 'blur', validator: emailCheck}],
         code:[{required: true, trigger: 'blur', message: "请填写验证码"},{ min: 1, max: 5, message: '长度为5个字符', trigger: 'blur' }],
-
       },
     }
   },
@@ -204,22 +203,6 @@ export default {
   },
 
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.user.avatar = res.data;
-      this.$forceUpdate();
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
-    },
     openAddWindow() {
       this.$resetForm('userForm', this.user);
       this.userDialog.title = "用户注册";

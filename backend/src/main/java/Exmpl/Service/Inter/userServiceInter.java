@@ -21,10 +21,10 @@ public interface userServiceInter  extends IService<User> {
 
     boolean deleteRole(Long uno);
 
-    User findUserByEmail(String email);
-
     Result registerEmail(userDTO userDTO);
 
     Result activation(String email, String code);
+
+    String findAvatarByUno(Long id);
 }
 

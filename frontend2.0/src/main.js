@@ -19,14 +19,13 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-
 import myconfirm from "@/utils/myconfirm";
 Vue.prototype.$myconfirm = myconfirm;
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
-  // locale: enLang // 如果使用中文，无需设置，请删除
 })
+
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
@@ -41,6 +40,9 @@ import resetForm from "@/utils/resetForm";
 Vue.prototype.$resetForm = resetForm
 
 Vue.config.productionTip = false
+
+
+
 
 new Vue({
   el: '#app',

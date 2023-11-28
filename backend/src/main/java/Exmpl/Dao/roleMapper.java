@@ -23,6 +23,9 @@ public interface roleMapper extends BaseMapper<Role> {
     //保存角色权限关系
     int saveRoleMenu(Long rno, List<Long> menuIds);
 
-    @Select("select rno from UR where uno = #{id}")
+    @Select("select rno from ur where uno = #{id}")
     List<Long> findRnoByUno(Long id);
+
+    @Select("select rolename from roletable, ur where roletable.rno = ur.rno and uno = #{id}")
+    List<String> findRolenameByUno(Long id);
 }

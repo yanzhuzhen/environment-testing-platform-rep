@@ -39,6 +39,9 @@ export  default {
   async updateUser(params){
     return http.put("api/user/update",params);
   },
+  async editUser(params){
+    return http.put("api/user/edit",params);
+  },
   async deleteUser(id){
     return http.delete("api/user/delete/"+id);
   },
@@ -53,6 +56,12 @@ export  default {
   },
   async deleteRole(id){
     return http.delete("api/user/deleteRole/"+id);
+  },
+  async getAvatar(id){
+    return http.get("api/user/getAvatar/"+id);
+  },
+  async getRolename(id){
+    return http.get("api/user/getRolename/"+id);
   },
 
 }

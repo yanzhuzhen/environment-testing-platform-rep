@@ -55,7 +55,7 @@ public class   sysUserController {
         User user = (User) authentication.getPrincipal(); //获取用户信息
         List<Menu> menuList = user.getMenuList(); //获取授权信息
         Object[] roles = menuList.stream().filter(Objects::nonNull).map(Menu::getCode).toArray(); //获取权限编码
-        userInfo userInfo = new userInfo(user.getUno(), user.getUsername(), user.getAvatar(), null, roles);
+        userInfo userInfo = new userInfo(user.getUno(), user.getUsername(), user.getRealname(), user.getPhone(), user.getEmail(), user.getAvatar(), null, roles);
         return Result.ok(userInfo).message("用户信息查询成功");
 
     }

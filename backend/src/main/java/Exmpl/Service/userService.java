@@ -92,14 +92,6 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
-        queryWrapper.eq("email",email);
-
-        return baseMapper.selectOne(queryWrapper);
-    }
-
-    @Override
     public Result registerEmail(userDTO userDTO){
         try {
             //判断密码是否输入
@@ -203,6 +195,10 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
         return Result.ok().message("注册成功，请使用注册的账号登录");
     }
 
+    @Override
+    public String findAvatarByUno(Long id) {
+        return userMapper.findAvatarByUno(id);
+    }
 
 
 }

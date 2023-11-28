@@ -117,4 +117,32 @@ public class userController {
             return Result.error().message("角色删除失败");
         }
     }
+
+    @GetMapping("/getAvatar/{id}")
+    public Result getAvatar(@PathVariable Long id){
+        String avatar = userService.findAvatarByUno(id);
+        return Result.ok(avatar);
+    }
+
+    @GetMapping("/getRolename/{id}")
+    public Result getRolename(@PathVariable Long id){
+        List<String> rolenameList = roleService.findRolenameByUno(id);
+        return Result.ok(rolenameList);
+    }
+
+    @PutMapping("/edit")
+    public Result edit(@RequestBody User user){
+        //查询用户
+        User i = userService.findUserByUsername(user.getUsername());
+        if(i != null && i.getUno() != user.getUno()){
+            return Result.error().message("该用户名已被使用");
+        }
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userService.updateById(user)){
+            return Result.ok().message("个人信息修改成功");
+        }else {
+            return Result.error().message("个人信息修改失败");
+        }
+    }
+
 }

@@ -66,4 +66,9 @@ public class roleService extends ServiceImpl<roleMapper, Role> implements roleSe
     public List<Long> findRnoByUno(Long id) {
         return baseMapper.findRnoByUno(id);
     }
+
+    @Override
+    public List<String> findRolenameByUno(Long id) {
+        return baseMapper.findRolenameByUno(id);
+    }
 }

@@ -7,12 +7,13 @@ import lombok.Data;
 
 @Data
 @TableName("algorithmtable")
-public class Algorithm{
+public class Alg {
     @TableId
     private Long ano;
     private String algname;
-    private String alg;
+    private String remark;
     private String createuser;
+    private String createuno;
     private int ispermit;
     private int algtype;
 }
