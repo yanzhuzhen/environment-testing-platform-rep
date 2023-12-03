@@ -62,8 +62,9 @@
               action="http://localhost:3000/api/oss/file/upload?module=avatar"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
+              :on-remove="handleAvatarRemove"
               :before-upload="beforeAvatarUpload"
-              :data="uploadHeader">
+              :headers="uploadHeader">
               <img v-if="user.avatar" :src="user.avatar" class="avatar" alt="">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -104,6 +105,7 @@ import systemDialog from "@/components/system/systemDialog.vue";
 import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import user from "@/api/user";
+import deleteFile from "@/api/ossFile";
 
 
 export default {
@@ -200,6 +202,14 @@ export default {
 
     },
     methods: {
+      async handleAvatarRemove(){
+         let res = await deleteFile(this.user.avatar);
+         if(res.success){
+           this.user.avatar = "";
+           this.$message.success(res.message);
+         }
+
+      },
       hasPermission,
       handleSizeChange(size) {
         this.pageSize = size;
@@ -259,15 +269,15 @@ export default {
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLtM = file.size / 1024 / 1024 < 4;
 
         if (!isJPG) {
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+        if (!isLtM) {
+          this.$message.error('上传头像图片大小不能超过 4 MB!');
         }
-        return isJPG && isLt2M;
+        return isJPG && isLtM;
       },
       handleEdit(row) {
         this.userDialog.title = "编辑用户";

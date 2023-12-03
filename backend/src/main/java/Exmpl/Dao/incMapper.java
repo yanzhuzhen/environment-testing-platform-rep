@@ -14,4 +14,10 @@ public interface incMapper {
     Long findAllRole();
     @Select("select count(1) from menutable")
     Long findAllMenu();
+    @Select("select count(1) from algorithmtable")
+    Long findAllAlg();
+    @Select("select count(1) from follows")
+    Long findAllFollows();
+    @Select("select count(1) from article")
+    Long findAllArticle();
 }

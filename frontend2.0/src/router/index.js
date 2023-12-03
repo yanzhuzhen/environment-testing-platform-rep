@@ -41,6 +41,21 @@ import nestedRouter from './modules/nested'
  */
 export const constantRoutes = [
   {
+    path: '/article/create',
+    component: () => import('@/views/platform/create'),
+    hidden: true
+  },
+  {
+    path: '/article/edit',
+    component: () => import('@/views/platform/edit'),
+    hidden: true
+  },
+  {
+    path: '/article/view',
+    component: () => import('@/views/platform/view'),
+    hidden: true
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
@@ -136,6 +151,7 @@ export const asyncRoutes = [
     ]
   },
 
+
   {
     path: '/icon',
     component: Layout,
@@ -229,20 +245,20 @@ export const asyncRoutes = [
     children: [
       {
         path: 'create',
-        component: () => import('@/views/example/create'),
+        component: () => import('@/views/articleComponents/create'),
         name: 'CreateArticle',
         meta: { title: 'Create Article', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
+        component: () => import('@/views/articleComponents/edit'),
         name: 'EditArticle',
         meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
         hidden: true
       },
       {
         path: 'list',
-        component: () => import('@/views/example/list'),
+        component: () => import('@/views/articleComponents/list'),
         name: 'ArticleList',
         meta: { title: 'Article List', icon: 'list' }
       }

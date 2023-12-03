@@ -2,6 +2,7 @@ package Exmpl.Controller;
 
 import Exmpl.Service.fileService;
 import Exmpl.Utils.Result;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +20,11 @@ public class OSSController {
     public Result upload(MultipartFile file, String module){
         String url = fileService.upload(file,module);
         return Result.ok(url).message("文件上传成功");
+    }
+
+    @DeleteMapping("/delete/{url}")
+    public Result delete(String url){
+        fileService.deleteFile(url);
+        return Result.ok().message("已删除上传文件");
     }
 }

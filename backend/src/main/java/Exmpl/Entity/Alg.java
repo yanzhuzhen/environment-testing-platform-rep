@@ -12,9 +12,11 @@ public class Alg {
     private Long ano;
     private String algname;
     private String remark;
+    private String context;
     private String createuser;
     private String createuno;
     private int ispermit;
     private int algtype;
+    private String lang;
 }
 

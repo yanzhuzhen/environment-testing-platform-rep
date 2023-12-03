@@ -1,7 +1,6 @@
 package Exmpl.Service;
 
 import Exmpl.Dto.userDTO;
-import Exmpl.Entity.Role;
 import Exmpl.Entity.User;
 import Exmpl.Dao.userMapper;
 import Exmpl.Dao.incMapper;
@@ -53,9 +52,9 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
     public User findUserByUsername(String username) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
         queryWrapper.eq("username",username);
-
         return baseMapper.selectOne(queryWrapper);
     }
+
 
     @Override
     public IPage<User> findUserListByPage(IPage<User> page, userQueryVo userQueryVo) {
@@ -119,39 +118,10 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
             System.out.println(i);
             //给刚注册好的用户发送邮件
             testTemplateMail(user.getEmail());
-            return Result.ok().message("邮件已发送至邮箱，请在10分钟内完成激活!");
+            return Result.ok().message("邮件已发送至邮箱，请在10分钟内完成!");
         } catch (Exception e){
             e.printStackTrace();
-            return Result.error().message("注册失败");
-        }
-    }
-
-    /**
-     * 发送邮件
-     * @param receiver 收件人
-     */
-    @Async
-    public void testTemplateMail(String receiver){
-        //发送邮件
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-        String subject = "西南地区国土环境监测学习平台--用户注册";
-        String emailTemplate = "registerTemplate";
-        //获取激活码
-        String code = strUtils.getRandomString(5);
-        //将激活码存入redis服务器
-        //设置有效期10分钟  key值为:Action+邮箱 value值为:验证码
-        redisService.setCache("Action:"+receiver,code, (long) (10*60));
-        System.out.println("key:"+"Action:"+receiver+"   value:"+code);
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("email", receiver);
-        dataMap.put("code", code);
-        dataMap.put("createTime", sdf.format(new Date()));
-        try {
-            sendEmailUtil.sendTemplateMail(receiver, subject, emailTemplate, dataMap);
-            System.out.println("发送完成");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
+            return Result.error().message("获取验证码失败");
         }
     }
 
@@ -194,6 +164,113 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
 
         return Result.ok().message("注册成功，请使用注册的账号登录");
     }
+
+
+    @Override
+    public Result updatePasswordByEmail(userDTO userDTO) {
+        try {
+            User user =  userMapper.getUserByEmail(userDTO.getEmail());
+            //判断是否有该用户
+            if(user == null)
+                return Result.error().message("未找到使用此邮箱的用户！");
+            //判断密码是否输入
+            if(StringUtils.isBlank(userDTO.getPassword())||StringUtils.isBlank(userDTO.getConfirmPassword()))
+                return Result.error().message("密码不能为空！");
+            //如果两次面不相等
+            if(!userDTO.getPassword().equals(userDTO.getConfirmPassword()))
+                return Result.error().message("密码不一致！");
+            //不能与原密码相同
+            boolean matches = passwordEncoder.matches(userDTO.getPassword(), user.getPassword());
+            if(matches)
+                return Result.error().message("新密码不能与原密码相同！");
+
+
+            //给用户密码进行盐值加密
+            baseMapper.updatePassword(passwordEncoder.encode(userDTO.getPassword()), userDTO.getEmail());
+            baseMapper.isNonEnable(userDTO.getEmail()); //暂时失效，等待激活
+            user.setEnabled(false);
+            testTemplateMail(user.getEmail());
+            return Result.ok().message("邮件已发送至邮箱，请在10分钟内完成!");
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    /**
+     * 修改密码激活
+     *
+     * @param email 邮箱
+     * @param code  激活码
+     * @return
+     */
+    @Override
+    public Result activationPassword(String email, String code) {
+        //判断输入是否为空
+        if(StringUtils.isBlank(email)||StringUtils.isBlank(code)){
+            return Result.error().message("请输入邮箱或验证码");
+        }
+        //校验激活码是否正常
+
+        // redis服务器上获取的激活码
+        String s = redisService.getCache("Action:" + email);
+        System.out.println("redis服务器上获取的激活码为:"+s);
+        //从redis服务器中获取code值，如果code值为空，说明激活码错误或者已过期!
+        if(s==null)
+            return Result.error().message("邮箱或验证码错误或者已过期");
+        //激活码是否正确
+        if(!code.equals(s))//不正确
+        {
+            return Result.error().message("验证码错误或者已过期");
+        }
+
+        //激活后从redis服务器上移除
+        redisService.delCache("Action:" + email);
+
+        //用户激活
+        User user = baseMapper.getUserByEmail(email);
+        user.setEnabled(true);
+        baseMapper.isEnable(user.getEmail());
+
+        return Result.ok().message("密码修改成功，请使用新的密码登录");
+    }
+
+
+
+
+    /**
+     * 发送邮件
+     * @param receiver 收件人
+     */
+    @Async
+    public void testTemplateMail(String receiver){
+        //发送邮件
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        String subject = "西南地区国土环境监测学习平台--用户注册或修改密码";
+        String emailTemplate = "registerTemplate";
+        //获取激活码
+        String code = strUtils.getRandomString(5);
+        //将激活码存入redis服务器
+        //设置有效期10分钟  key值为:Action+邮箱 value值为:验证码
+        redisService.setCache("Action:"+receiver,code, (long) (10*60));
+        System.out.println("key:"+"Action:"+receiver+"   value:"+code);
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("email", receiver);
+        dataMap.put("code", code);
+        dataMap.put("createTime", sdf.format(new Date()));
+        try {
+            sendEmailUtil.sendTemplateMail(receiver, subject, emailTemplate, dataMap);
+            System.out.println("发送完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+
+
+
+
 
     @Override
     public String findAvatarByUno(Long id) {

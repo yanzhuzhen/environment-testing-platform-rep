@@ -27,6 +27,8 @@ Vue.use(Element, {
 })
 
 
+
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -41,7 +43,24 @@ Vue.prototype.$resetForm = resetForm
 
 Vue.config.productionTip = false
 
+// 在你的组件中引入 highlight.js 和样式
+import hljs from 'highlight.js'
+import 'highlight.js/styles/dark.css' // 选择你喜欢的样式
 
+Vue.directive('highlight', function (el) {
+  let blocks = el.querySelectorAll('pre code');
+  blocks.forEach((block) => {
+    hljs.highlightElement(block)
+    block.innerHTML = `<ol><li>${block.innerHTML.replace(
+      /\n/g,
+      `</li><li class="line">`
+    )}</li></ol>`;
+  })
+})
+
+//复制板
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
 
 
 new Vue({

@@ -45,7 +45,7 @@
                 </span>
                   </el-form-item>
                 </el-tooltip>
-            <el-button type="text" size="mid"  autocomplete="off" @click="handlePass">忘记密码？</el-button>
+            <el-button type="text" size="mid"  autocomplete="off" @click="forgotPassword()">忘记密码？</el-button>
             <el-row :gutter="20">
               <el-col :span="16">
                 <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
@@ -56,7 +56,8 @@
             </el-row>
           </el-form>
     </div>
-    <system-dialog class="login-container" :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
+<!--    注册-->
+    <system-dialog :title="userDialog.title" :visible="userDialog.visible" :width="userDialog.width" :height="userDialog.height"
                    @onClose="onClose()" @onConfirm="onConfirm()" style="margin-top: 200px ">
       <div slot="content">
         <el-form  class="signup-form" ref="userForm" :model="user" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
@@ -102,6 +103,44 @@
         </el-form>
       </div>
     </system-dialog>
+
+<!--    忘记密码-->
+    <system-dialog :title="emailDialog.title" :visible="emailDialog.visible" :width="emailDialog.width" :height="emailDialog.height"
+                   @onClose="onClose()" @onConfirm="onPassword()" style="margin-top: 200px ">
+      <div slot="content">
+        <el-form  class="signup-form" ref="emailForm" :model="userEmail" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
+          <el-row>
+            <el-col >
+              <el-form-item label="密码" size="small" prop="password">
+                <el-input type="password" v-model="userEmail.password" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col >
+              <el-form-item label="确认密码" size="small" prop="password">
+                <el-input type="password" v-model="userEmail.confirmPassword" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col >
+              <el-form-item label="邮箱" size="small" prop="email">
+                <el-input  v-model="userEmail.email" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col>
+              <el-form-item label="验证码" size="small" prop="code">
+                <el-input  v-model="userEmail.code" style="width: 200px"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="35">
+            <el-col :span="9">
+              <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onSendCodePWD">获取验证码</el-button>
+            </el-col >
+          </el-row>
+        </el-form>
+      </div>
+    </system-dialog>
+
+
   </div>
 
 </template>
@@ -110,7 +149,7 @@
 // import SocialSign from './components/SocialSignin'
 
 import systemDialog from "@/components/system/systemDialog.vue";
-import {sendCode, signup} from "@/api/user";
+import {activationPassword, sendCode, signup, updatePasswordByEmail} from "@/api/user";
 
 export default {
   name: 'Login',
@@ -159,6 +198,12 @@ export default {
         height: 400,
         width: 100
       },
+      emailDialog: {
+        title: "忘记密码",
+        visible: false,
+        height: 400,
+        width: 100
+      },
       user: {
         id: "",
         username: "",
@@ -169,6 +214,12 @@ export default {
         email: "",
         code:"",
         avatar: ""
+      },
+      userEmail: {
+        password:"",
+        confirmPassword:"",
+        email:"",
+        code:"",
       },
       rules: {
         username: [{required: true, trigger: 'blur', message: "请填写用户名"},{ min: 1, max:10, message: '长度在10个字符以内', trigger: 'blur' }],
@@ -203,6 +254,31 @@ export default {
   },
 
   methods: {
+    async onPassword(){
+      let para = {"email":this.userEmail.email,"code":this.userEmail.code};
+      let res = await activationPassword(para);
+      if (res.success) {
+        this.$message.success(res.message);
+      } else {
+        this.$message.error(res.message);
+      }
+
+    },
+    async onSendCodePWD() {
+      let para = Object.assign({}, this.userEmail);
+      let res = null;
+      res = await updatePasswordByEmail(para);
+      if (res.success) {
+        this.$message.success(res.message);
+      } else {
+        this.$message.error(res.message);
+      }
+    },
+
+    forgotPassword() {
+      this.$resetForm('emailForm', this.userEmail);
+      this.emailDialog.visible = true;
+    },
     openAddWindow() {
       this.$resetForm('userForm', this.user);
       this.userDialog.title = "用户注册";
@@ -210,6 +286,7 @@ export default {
     },
     onClose() {
       this.userDialog.visible = false;
+      this.emailDialog.visible = false;
     },
     async onSendCode() {
       let para = Object.assign({}, this.user);
@@ -220,8 +297,6 @@ export default {
       } else {
         this.$message.error(res.message);
       }
-
-
     },
     onConfirm() {
       this.$refs.userForm.validate(async (valid) => {

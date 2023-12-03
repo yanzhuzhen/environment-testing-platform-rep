@@ -198,10 +198,7 @@ import hasPermission from "@/permission/index";
         console.log(this.parentMenuList);
       },
       async search(){
-        console.log('1');
         let res = await menu.getMenuList();
-
-
         if (res.success){
           this.menuList = res.data;
           console.log(this.menuList);

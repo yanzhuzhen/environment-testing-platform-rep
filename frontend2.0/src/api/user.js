@@ -29,6 +29,14 @@ export async function sendCode(params){
   return http.post("api/sysUser/sendCode", params);
 }
 
+export async function updatePasswordByEmail(params){
+  return http.post("api/sysUser/updatePasswordByEmail", params);
+}
+
+export async function activationPassword(params){
+  return http.post("api/sysUser/activationPassword", params);
+}
+
 export  default {
   async getUserList(params){
     return http.get("api/user/list",params);

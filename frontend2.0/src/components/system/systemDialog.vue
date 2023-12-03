@@ -3,7 +3,7 @@
     <el-dialog top="5hv" :title="title" :visible.sync="visible" width="width + 'px'"
                :before-close="onClose" :close-on-click-modal="false">
       <div class="container" :style="{height:height + 'px'}">
-        <slot name="content"></slot>
+        <slot name="content" v-if="visible"></slot>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="onClose">取 消</el-button>
@@ -50,7 +50,7 @@
 
 </script>
 
-<style>
+<style lang="scss">
   .container{
     overflow-x: initial;
     overflow-y: auto;

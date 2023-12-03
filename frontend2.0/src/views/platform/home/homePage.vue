@@ -6,15 +6,30 @@
         <h3 class="medium"><img style="object-fit: scale-down; width: 100%; height: 100%;" :src="item.idView" alt=""/></h3>
       </el-carousel-item>
     </el-carousel>
-
+    <el-card class="box-card" shadow="hover">
+      <el-container>
+        <el-aside width="200px">
+            <div>
+              最多好评
+            </div>
+        </el-aside>
+        <el-main>
+        </el-main>
+      </el-container>
+    </el-card>
 
 
   </el-main>
 </template>
 
 <script>
+
+
+import CreateArticle from "@/views/articleComponents/create.vue";
+
 export default {
   name:"homePage",
+  components: {CreateArticle},
   data(){
     return{
       imgList: [
@@ -44,4 +59,9 @@ export default {
 .el-carousel__item:nth-child(2n+1) {
   background-color: #d3dce6;
 }
+.el-aside {
+  background-color: #ffffff;
+  color: #1e1f22;
+}
+
 </style>

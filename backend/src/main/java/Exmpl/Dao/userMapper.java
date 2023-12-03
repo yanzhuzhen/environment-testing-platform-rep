@@ -16,8 +16,17 @@ public interface userMapper extends BaseMapper<User> {
     @Select("select count(1) from usertable where email = #{email}")
     int findUserByEmail(String email);
 
+    @Select("select username from usertable where uno = #{id}")
+    String findUserById(Long id);
+
     @Update("update usertable set is_enabled = 1 where email = #{email}")
-    int isEnable(String email);
+    void isEnable(String email);
+
+    @Update("update usertable set is_enabled = 0 where email = #{email}")
+    void isNonEnable(String email);
+
+    @Update("update usertable set password = #{password} where email = #{email}")
+    void updatePassword(String password, String email);
 
     int saveUserRole(Long uno, List<Long> rnoList);
 

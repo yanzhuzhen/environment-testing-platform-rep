@@ -42,7 +42,7 @@ public class fileService implements fileServiceInter {
             newName = module + "/" + date + "/" + newName;
             ossClient.putObject(bucketName,newName,inputStream);
             ossClient.shutdown();
-            return "http://" + bucketName + "." + endPoint + "/" + newName;
+            return "https://" + bucketName + "." + endPoint + "/" + newName;
         }catch (IOException e){
             e.printStackTrace();
         }

@@ -126,23 +126,21 @@ public class   sysUserController {
         }
         return Result.error().message("退出登录失败");
     }
+    // 发送邮件
     @PostMapping("/sendCode")
     public Result registerByEmail(@RequestBody userDTO userDTO){
         try {
             return userService.registerEmail(userDTO);
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.error().message("用户注册失败");
+            return Result.error().message("获取验证码失败");
         }
     }
-    /**
-     * 通过邮箱或者手机号登陆
-     * @return
-     */
+
+    // 通过邮箱注册
     @PostMapping("/signup")
     public Result activation(@RequestBody HashMap<String,String> para){
         try {
-
             String email=para.get("email");
             String code = para.get("code");
             return userService.activation(email,code);
@@ -151,5 +149,30 @@ public class   sysUserController {
             return Result.error().message("注册失败");
         }
     }
+
+    // 发送邮件
+    @PostMapping("/updatePasswordByEmail")
+    public Result updatePasswordByEmail(@RequestBody userDTO userDTO){
+        try {
+            return userService.updatePasswordByEmail(userDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    // 通过邮箱注册
+    @PostMapping("/activationPassword")
+    public Result activationPassword(@RequestBody HashMap<String,String> para){
+        try {
+            String email=para.get("email");
+            String code = para.get("code");
+            return userService.activationPassword(email,code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error().message("修改密码失败，请重试");
+        }
+    }
+
 
 }

@@ -28,6 +28,15 @@ public class Result<T>{
         return r;
     }
 
+    public  static <T> Result<T> error(T data) {
+        Result<T> r = new Result<T>();
+        r.setSuccess(false);
+        r.setCode(resultCode.ERROR);
+        r.setData(data);
+        r.setMessage("操作失败");
+        return r;
+    }
+
     public  static <T> Result<T> error() {
         Result<T> r = new Result<T>();
         r.setSuccess(false);
