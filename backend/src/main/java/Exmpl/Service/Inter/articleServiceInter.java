@@ -5,6 +5,8 @@ import Exmpl.vo.query.articleQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 public interface articleServiceInter extends IService<Article> {
     public IPage<Article> findArticleList(IPage<Article> page, articleQueryVo articleQueryVo);
 
@@ -18,4 +20,9 @@ public interface articleServiceInter extends IService<Article> {
     int alreadyLike(Long id, Long uno);
 
     Article getArticle(Long id);
+
+
+    List<Article> getUserRankByAuthor(String author);
+
+    List<Article> rank();
 }

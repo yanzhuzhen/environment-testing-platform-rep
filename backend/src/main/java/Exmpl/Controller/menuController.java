@@ -10,6 +10,8 @@ import Exmpl.Service.menuService;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static Exmpl.Utils.oparateLogUtils.opalog;
+
 @RestController
 @RequestMapping("/api/menu")
 public class menuController {
@@ -45,6 +47,7 @@ public class menuController {
         menu.setMno(id);
         //调用新增的方法
         if (menuService.save(menu)){
+            opalog("添加菜单");
             return Result.ok().message("菜单添加成功");
         }
         return Result.error().message("菜单添加失败");
@@ -56,6 +59,7 @@ public class menuController {
     public Result update(@RequestBody Menu menu){
         //调用修改的方法
         if (menuService.updateById(menu)){
+            opalog("修改菜单");
             return Result.ok().message("菜单修改成功");
         }
         return Result.error().message("菜单修改失败");
@@ -67,6 +71,7 @@ public class menuController {
     public Result delete( @PathVariable Long id){
         //调用删除的方法
         if (menuService.deleteMenuById(id)){
+            opalog("删除菜单");
             return Result.ok().message("菜单删除成功");
         }
         return Result.error().message("菜单删除失败");

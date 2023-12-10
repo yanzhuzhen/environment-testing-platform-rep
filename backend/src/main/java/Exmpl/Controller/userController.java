@@ -11,12 +11,16 @@ import Exmpl.vo.query.roleQueryVo;
 import Exmpl.vo.query.userQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static Exmpl.Utils.oparateLogUtils.opalog;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -54,6 +58,7 @@ public class userController {
         user.setUno(id);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if(userService.save(user)){
+            opalog("添加用户");
             return Result.ok().message("用户添加成功");
         }else {
             return Result.error().message("用户添加失败");
@@ -69,6 +74,7 @@ public class userController {
             return Result.error().message("该用户名已被使用");
         }
         if(userService.updateById(user)){
+            opalog("修改用户");
             return Result.ok().message("用户修改成功");
         }else {
             return Result.error().message("用户修改失败");
@@ -79,6 +85,7 @@ public class userController {
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Long id){
         if(userService.deleteUserById(id)){
+            opalog("删除用户");
             return Result.ok().message("用户删除成功");
         }else {
             return Result.error().message("用户删除失败");
@@ -103,6 +110,7 @@ public class userController {
     @PostMapping("/saveUserRole")
     public Result saveUserRole(@RequestBody userRoleDTO userRoleDTO){
         if (userService.saveUserRole(userRoleDTO.getUno(), userRoleDTO.getRnoList())){
+            opalog("分配角色");
             return Result.ok().message("角色分配成功");
         }
             return Result.error().message("角色分配失败");
@@ -112,6 +120,7 @@ public class userController {
     public Result deleteRole(@PathVariable Long id){
 
         if(userService.deleteRole(id)){
+            opalog("删除分配角色");
             return Result.ok().message("角色删除成功");
         }else {
             return Result.error().message("角色删除失败");
@@ -139,6 +148,7 @@ public class userController {
         }
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if(userService.updateById(user)){
+            opalog("修改个人信息");
             return Result.ok().message("个人信息修改成功");
         }else {
             return Result.error().message("个人信息修改失败");

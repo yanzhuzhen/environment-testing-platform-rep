@@ -3,6 +3,7 @@ package Exmpl.Service;
 import Exmpl.Entity.Menu;
 import Exmpl.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+
 public class userDetailsService implements UserDetailsService {
     @Resource
     private menuService menuService;
 
+    @Lazy
     @Resource
     private userService userService;
 

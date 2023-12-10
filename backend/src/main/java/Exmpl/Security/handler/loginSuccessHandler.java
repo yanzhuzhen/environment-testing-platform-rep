@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
 @Component
 public class loginSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -54,7 +56,7 @@ public class loginSuccessHandler implements AuthenticationSuccessHandler {
         outputStream.write(result.getBytes(StandardCharsets.UTF_8));
         outputStream.flush();
         outputStream.close();
-
+        log.info(user.getUsername()+"::"+"登录成功");
         //将token信息保存到redis
         String tokenKey = "token_" + token;
         redisService.setCache(tokenKey, token, jwtUtils.getExpires()/1000);

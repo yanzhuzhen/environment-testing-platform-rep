@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
+
 @Service
 public class articleService extends ServiceImpl<articleMapper, Article> implements articleServiceInter {
 
@@ -27,16 +29,15 @@ public class articleService extends ServiceImpl<articleMapper, Article> implemen
         QueryWrapper<Article> queryWrapper = new QueryWrapper<Article>();
         queryWrapper.like(!ObjectUtils.isEmpty(articleQueryVo.getTitle()),"title",articleQueryVo.getTitle());
         queryWrapper.like("status","published").or().like("status","enable");
-        queryWrapper.orderByAsc("display_time");
+        queryWrapper.orderByAsc("displaytime");
         return baseMapper.selectPage(page,queryWrapper);
     }
 
     @Override
     public IPage<Article> findArticleListU(IPage<Article> page, articleQueryVo articleQueryVo) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<Article>();
-        queryWrapper.like(!ObjectUtils.isEmpty(articleQueryVo.getTitle()),"title",articleQueryVo.getTitle());
         queryWrapper.like("author",articleQueryVo.getAuthor());
-        queryWrapper.orderByAsc("display_time");
+        queryWrapper.orderByAsc("displaytime");
         return baseMapper.selectPage(page,queryWrapper);
     }
 
@@ -58,5 +59,15 @@ public class articleService extends ServiceImpl<articleMapper, Article> implemen
     @Override
     public Article getArticle(Long id) {
         return baseMapper.findArticleById(id);
+    }
+
+    @Override
+    public List<Article> getUserRankByAuthor(String author) {
+        return baseMapper.getUserRankByAuthor(author);
+    }
+
+    @Override
+    public List<Article> rank() {
+        return baseMapper.getRank();
     }
 }

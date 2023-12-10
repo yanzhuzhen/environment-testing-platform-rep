@@ -2,12 +2,10 @@ package Exmpl.Controller;
 
 import Exmpl.Dao.incMapper;
 import Exmpl.Dto.roleMenuDTO;
-import Exmpl.Entity.Menu;
 import Exmpl.Entity.Role;
 import Exmpl.Service.roleService;
 import Exmpl.Service.menuService;
 import Exmpl.Utils.Result;
-import Exmpl.vo.query.menuQueryVo;
 import Exmpl.vo.query.roleQueryVo;
 import Exmpl.vo.roleMenuVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,7 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
+
+import static Exmpl.Utils.oparateLogUtils.opalog;
 
 @RestController
 @RequestMapping("/api/role")
@@ -48,6 +47,7 @@ public class roleController {
         role.setRno(id);
         //调用添加的方法
         if (roleService.save(role)){
+            opalog("添加角色");
             return Result.ok().message("角色添加成功");
         }
         return Result.error().message("角色添加失败");
@@ -59,6 +59,7 @@ public class roleController {
     public Result update(@RequestBody Role role){
         //调用修改的方法
         if (roleService.updateById(role)){
+            opalog("修改角色");
             return Result.ok().message("角色修改成功");
         }
         return Result.error().message("角色修改失败");
@@ -70,6 +71,7 @@ public class roleController {
     public Result delete( @PathVariable Long id){
         //调用删除的方法
         if (roleService.deleteRoleById(id)){
+            opalog("删除角色");
             return Result.ok().message("角色删除成功");
         }
         return Result.error().message("角色删除失败");

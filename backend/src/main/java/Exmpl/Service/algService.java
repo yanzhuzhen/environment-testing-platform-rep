@@ -17,7 +17,17 @@ public class algService extends ServiceImpl<algMapper, Alg> implements algServic
     @Resource
     algMapper algMapper;
 
+    @Override
     public IPage<Alg> findAlgList(IPage<Alg> page, algQueryVo algQueryVo) {
+        QueryWrapper<Alg> queryWrapper = new QueryWrapper<Alg>();
+        queryWrapper.like("createuser",algQueryVo.getCreateuser());
+        queryWrapper.like(!ObjectUtils.isEmpty(algQueryVo.getAlgname()),"algname",algQueryVo.getAlgname());
+        queryWrapper.eq("ispermit",1);
+        return baseMapper.selectPage(page,queryWrapper);
+    }
+
+    @Override
+    public IPage<Alg> findAlgListM(IPage<Alg> page, algQueryVo algQueryVo) {
         QueryWrapper<Alg> queryWrapper = new QueryWrapper<Alg>();
         queryWrapper.like("createuser",algQueryVo.getCreateuser());
         queryWrapper.like(!ObjectUtils.isEmpty(algQueryVo.getAlgname()),"algname",algQueryVo.getAlgname());

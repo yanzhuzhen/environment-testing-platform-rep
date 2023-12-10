@@ -1,0 +1,58 @@
+<!-- 级别从高到低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+<!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+<!-- 以下 每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志 -->
+<!-- scan 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 -->
+<!-- scanPeriod 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration  scan="true" scanPeriod="60 seconds" debug="false"
+                xmlns="http://ch.qos.logback/xml/ns/logback"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback
+                https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
+
+    <!-- 动态日志级别 -->
+    <jmxConfigurator />
+    <property name="charset" value="UTF-8"/>
+    <!--格式化输出：%d表示日期，%t：表示线程名，%-5level：级别从左显示5个字符宽度，%c:类全路径，%msg：日志消息，%M:方法名，%L：日志所属行号，%n：换行符（Windows平台为"\r\n"，Unix平台为"\n"） -->
+    <property name="FORMAT" value="[%X{TRACE_ID}] - %-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %c.%M：%L：%msg%n"/>
+
+    <!-- ConsoleAppender 控制台输出日志 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                <!-- 设置日志输出格式 -->
+                ${FORMAT}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 将日志写入数据库 -->
+        <appender name="Custom" class="Exmpl.Utils.CustomAppender">
+            <!-- 自定义Appender的配置 -->
+        </appender>
+
+<!--    登录日志-->
+    <logger name="Exmpl.Security.handler" level="info" >
+        <appender-ref ref="console" />
+        <appender-ref ref="Custom" />
+    </logger>
+
+<!--    操作日志-->
+    <logger name="Exmpl.Utils.oparateLogUtils" level="info" >
+        <appender-ref ref="console" />
+        <appender-ref ref="Custom" />
+    </logger>
+
+    <!--    系统日志-->
+    <logger name="Exmpl.Utils.systemLogUtils" level="info" >
+        <appender-ref ref="console" />
+        <appender-ref ref="Custom" />
+    </logger>
+
+    <!-- root级别 -->
+    <root level="info">
+        <!-- 只有该级别日志及以上级别日志才会输出到指定渠道 -->
+        <!-- 测试：debug。上生产环境时，需要改成info或error -->
+        <appender-ref ref="console" />
+    </root>
+</configuration>

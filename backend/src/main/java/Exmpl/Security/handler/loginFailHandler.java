@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 import Exmpl.Utils.Result;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+@Slf4j
 @Component
 public class loginFailHandler implements AuthenticationFailureHandler {
     int code = 500;

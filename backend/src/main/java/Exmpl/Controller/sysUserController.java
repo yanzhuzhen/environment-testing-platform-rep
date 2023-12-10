@@ -10,7 +10,11 @@ import Exmpl.Utils.Result;
 import Exmpl.Utils.jwtUtils;
 import Exmpl.vo.routerVo;
 import Exmpl.vo.tokenVo;
+import ch.qos.logback.classic.Logger;
 import io.jsonwebtoken.Jwts;
+
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +32,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import Exmpl.Utils.menuTree;
 
+import static Exmpl.Utils.oparateLogUtils.opalog;
+import static Exmpl.Utils.systemLogUtils.syslog;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/sysUser")
 public class   sysUserController {
@@ -56,6 +64,7 @@ public class   sysUserController {
         List<Menu> menuList = user.getMenuList(); //获取授权信息
         Object[] roles = menuList.stream().filter(Objects::nonNull).map(Menu::getCode).toArray(); //获取权限编码
         userInfo userInfo = new userInfo(user.getUno(), user.getUsername(), user.getRealname(), user.getPhone(), user.getEmail(), user.getAvatar(), null, roles);
+        syslog("查询用户信息成功");
         return Result.ok(userInfo).message("用户信息查询成功");
 
     }
@@ -88,6 +97,7 @@ public class   sysUserController {
         String newTokenKey = "token_"+newToken;
         redisService.setCache(newTokenKey,newToken, jwtUtils.getExpires()/1000);
         tokenVo tokenVo = new tokenVo(expire,newToken);
+        syslog("token刷新");
         return Result.ok(tokenVo).message("token刷新成功");
     }
 
@@ -103,6 +113,7 @@ public class   sysUserController {
                 .collect(Collectors.toList());
 
         List<routerVo> routerVoList = menuTree.makeRouter(menuCollect, 0L); //生成路由数据
+        syslog("获取菜单数据");
         return Result.ok(routerVoList).message("获取菜单数据成功");
 
 
@@ -120,8 +131,10 @@ public class   sysUserController {
         //判断用户信息是否为空，不为空则清空
         if (authentication != null){
             new SecurityContextLogoutHandler().logout(request, response, authentication);
+            User user = (User) authentication.getPrincipal();
             //清除redis缓存中的
             redisService.delCache("token_"+token);
+            syslog("退出登录成功");
             return Result.ok().message("退出登录成功");
         }
         return Result.error().message("退出登录失败");
@@ -130,13 +143,13 @@ public class   sysUserController {
     @PostMapping("/sendCode")
     public Result registerByEmail(@RequestBody userDTO userDTO){
         try {
+            log.info(userDTO.getUsername()+"::"+"获取验证码");
             return userService.registerEmail(userDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            opalog(userDTO.getUsername()+"::"+"获取验证码失败");
             return Result.error().message("获取验证码失败");
         }
     }
-
     // 通过邮箱注册
     @PostMapping("/signup")
     public Result activation(@RequestBody HashMap<String,String> para){
@@ -154,9 +167,10 @@ public class   sysUserController {
     @PostMapping("/updatePasswordByEmail")
     public Result updatePasswordByEmail(@RequestBody userDTO userDTO){
         try {
+            log.info(userDTO.getUsername()+"::"+"获取验证码");
             return userService.updatePasswordByEmail(userDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(userDTO.getUsername()+"::"+"获取验证码失败");
             return Result.error().message("获取验证码失败");
         }
     }

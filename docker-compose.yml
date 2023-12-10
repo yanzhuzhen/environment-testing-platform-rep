@@ -3,7 +3,7 @@ services:
   frontend:
     image: my-frontend-app
     ports:
-      - "8080:8080"  # 映射前端容器的80端口到主机的80端口
+      - "9527:9527"  # 映射前端容器的8080端口到主机的9527端口
     depends_on:
       - backend  # 声明前端依赖后端
 
@@ -11,3 +11,10 @@ services:
     image: my-backend-app
     ports:
       - "3000:3000"  # 映射后端容器的3000端口到主机的3000端口
+    depends_on:
+      - database
+
+  database:
+    image: mymysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=11203172

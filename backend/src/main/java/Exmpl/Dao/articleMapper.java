@@ -7,6 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
 @Mapper
 public interface articleMapper extends BaseMapper<Article> {
 
@@ -25,4 +29,10 @@ public interface articleMapper extends BaseMapper<Article> {
 
     @Select("select * from article where id = #{id}")
     Article findArticleById(Long id);
+
+    @Select("select * from article where author = #{author} order by score desc limit 10")
+    List<Article> getUserRankByAuthor(String author);
+
+    @Select("select * from article order by score desc limit 20")
+    List<Article> getRank();
 }
