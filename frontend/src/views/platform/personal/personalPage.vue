@@ -82,7 +82,7 @@
                 <el-table-column align="center" label="操作" width="200">
                   <template v-slot="scope">
                     <el-button type="primary" icon="el-icon-edit" size="small" @click="openAddWindow(scope.row.id)">编辑</el-button>
-                    <el-button type="danger" icon="el-icon-delete" size="small" >删除</el-button>
+                    <el-button type="danger" icon="el-icon-delete" size="small" @click="handleArticleDelete(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -530,6 +530,7 @@ export  default {
       this.userDialog.visible = true;
       this.resetUser();
     },
+
     resetUser(){
       this.user.uno=this.$store.getters.uno;
       this.user.username=this.$store.getters.username;
@@ -548,6 +549,20 @@ export  default {
       let confirm = await this.$myconfirm("确定删除该算法吗？");
       if (confirm) {
         let res = alg.deleteAlg(row.ano)
+        if (res.success) {
+          this.$message.success(res.message);
+          await this.search(this.pageNow, this.pageSize);
+        } else {
+          this.$message.error(res.message);
+
+        }
+      }
+    },
+    async handleArticleDelete(row) {
+      //提示是否确认删除
+      let confirm = await this.$myconfirm("确定删除该算法吗？");
+      if (confirm) {
+        let res = article.deleteArticle(row.id)
         if (res.success) {
           this.$message.success(res.message);
           await this.search(this.pageNow, this.pageSize);

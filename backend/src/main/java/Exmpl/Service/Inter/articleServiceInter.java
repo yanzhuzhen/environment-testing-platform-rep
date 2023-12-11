@@ -10,6 +10,8 @@ import java.util.List;
 public interface articleServiceInter extends IService<Article> {
     public IPage<Article> findArticleList(IPage<Article> page, articleQueryVo articleQueryVo);
 
+    List<Article> findHomePageList();
+
     IPage<Article> findArticleListM(IPage<Article> page, articleQueryVo articleQueryVo);
 
     IPage<Article> findArticleListU(IPage<Article> page, articleQueryVo articleQueryVo);

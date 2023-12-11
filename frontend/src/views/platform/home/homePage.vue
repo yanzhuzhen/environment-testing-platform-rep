@@ -22,15 +22,27 @@
             </div>
           </el-aside>
           <el-main>
-              <div v-for="index in 4" :key="index" class="waterfall-item">
-                <el-card class="box-card" style="margin-bottom: 10px">
+              <div v-for="i in homepage" :key="i.id" class="waterfall-item">
+                <el-card class="card" style="margin-bottom: 10px;" >
                   <div slot="header" class="clearfix">
-                    <span>卡片名称</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                    <span>{{ i.title }}</span>
                   </div>
-                  <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
+                  <div  class="text item" style="margin-bottom: 10px">
+                    {{'文章概述:' + i.contentshort}}
                   </div>
+                  <div  class="text item" style="margin-bottom: 10px">
+                    {{'文章作者:' + i.author}}
+                  </div>
+                  <div  class="text item" style="margin-bottom: 10px">
+                    <p @click="upto(i.id, i.author)">查看文章</p>
+                  </div>
+                  <el-rate
+                   v-model="i.score"
+                   disabled
+                   show-score
+                   text-color="#ff9900"
+                   score-template="{value}">
+                  </el-rate>
                 </el-card>
               </div>
           </el-main>
@@ -71,15 +83,26 @@ export default {
         { content: 'Item 2' },
         { content: 'Item 3' },
         ],
-      tableData:[]
+      tableData:[],
+      homepage:[]
     }
   },
   mounted() {
   },
   created() {
     this.getList();
+    this.homeList();
   },
   methods:{
+    upto(id, author){
+      this.$router.push({
+        path:"../article/view",
+        query:{
+          id:id,
+          author:author
+        }
+      })
+    },
     load () {
       this.count += 2
     },
@@ -89,6 +112,12 @@ export default {
         this.tableData = res.data;
       }
 
+    },
+    async homeList(){
+      let res = await article.homePage();
+      if(res.success){
+        this.homepage = res.data;
+      }
     }
   }
 }
@@ -149,5 +178,22 @@ export default {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   background-color: rgb(36, 49, 65);
 }
+.card{
+  position: relative;
+  width: 100%;
+  padding: 40px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+  border-radius: 8px;
+  text-align: center;
+  margin-right: 50px;
+  overflow: hidden;
+}
+
+.card:hover{
+  color: white;
+  background-color: #20a0ff;
+}
+
 
 </style>

@@ -25,6 +25,11 @@ public class articleService extends ServiceImpl<articleMapper, Article> implemen
     }
 
     @Override
+    public List<Article> findHomePageList() {
+        return baseMapper.getList();
+    }
+
+    @Override
     public IPage<Article> findArticleListM(IPage<Article> page, articleQueryVo articleQueryVo) {
         QueryWrapper<Article> queryWrapper = new QueryWrapper<Article>();
         queryWrapper.like(!ObjectUtils.isEmpty(articleQueryVo.getTitle()),"title",articleQueryVo.getTitle());

@@ -53,6 +53,11 @@ public class articleController {
 
     }
 
+    @GetMapping("/homePage")
+    public Result homePage(){
+        List<Article> articles =  articleService.findHomePageList();
+        return Result.ok(articles);
+    }
 
     @PostMapping("/add")
     public Result add(@RequestBody Article article){
@@ -124,12 +129,12 @@ public class articleController {
         }
     }
 
-    @GetMapping("/alreadyLike/{id}/{uno}")
+    @PostMapping("/alreadyLike/{id}/{uno}")
     public Result alreadyLike(@PathVariable Long id, @PathVariable Long uno){
         if(articleService.alreadyLike(id, uno)>0){
             return Result.ok(true);
         }else {
-            return Result.error(false);
+            return Result.ok(false);
         }
     }
 

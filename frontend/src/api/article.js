@@ -1,5 +1,7 @@
 import http from "@/utils/request";
 
+
+
 export async function getArticleList(param) {
   return  http.get('/api/article/list', param);
 }
@@ -17,7 +19,7 @@ export async function like(id, uno) {
 }
 
 export async function alreadyLike(id, uno) {
-  return  http.get('/api/article/alreadyLike/'+ id + '/' + uno);
+  return  http.post('/api/article/alreadyLike/'+ id + '/' + uno);
 }
 
 export async function getEditArticle(id) {
@@ -64,4 +66,8 @@ export async function getRank(author) {
 
 export async function Rank() {
   return http.get('/api/article/getRank')
+}
+
+export async function homePage() {
+  return http.get('/api/article/homePage')
 }

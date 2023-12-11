@@ -44,10 +44,12 @@
           <span>{{ scope.row.score }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="添加到喜欢" width="200">
-        <template v-slot="scope">
-          <el-button type="success" icon="el-icon-circle-check" size="small" circle @click="islike(scope.row.id)" v-if="!alreadyLike(scope.row.id)"></el-button>
-          <el-button type="info" icon="el-icon-circle-check" size="small" @click="isliked()" v-if="alreadyLike(scope.row.id)" round></el-button>
+      <el-table-column align="center" label="来打分吧！" width="200" >
+        <template v-slot="scope" >
+          <el-rate
+            v-model="scoring"
+            :colors="colors">
+          </el-rate>
         </template>
       </el-table-column>
     </el-table>
@@ -99,6 +101,8 @@ export default {
         pageNow: 1,
         pageSize: 10
       },
+      colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+      scoring:null,
     }
   },
   created() {
@@ -132,8 +136,7 @@ export default {
     isliked(){
       this.$message.success("已添加到喜欢");
     },
-
-    async alreadyLike(id){
+    async myalreadyLike(id){
       let res = await article.alreadyLike(id, this.$store.getters.uno)
       if(res.success){
         return res.data;

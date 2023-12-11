@@ -35,4 +35,7 @@ public interface articleMapper extends BaseMapper<Article> {
 
     @Select("select * from article order by score desc limit 20")
     List<Article> getRank();
+
+    @Select("select * from article order by rand() limit 4")
+    List<Article> getList();
 }

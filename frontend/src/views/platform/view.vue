@@ -18,7 +18,7 @@
         </template>
       </div>
       <el-main>
-        <el-card class="box-card" style="padding-right: 20px;padding-left: 20px;padding-bottom: 20px">
+        <el-card class="box-card" style="padding-right: 20px;padding-left: 20px;padding-bottom: 20px;">
           <div class="author">
             {{myauthor}}
             <el-rate
@@ -89,7 +89,7 @@ export default {
     async getScore(){
       let res = await article.getScore(this.$route.query.id);
       if(res.success){
-        this.score = res.data/5;
+        this.score = res.data;
       }
     },
     async getRank(author){
