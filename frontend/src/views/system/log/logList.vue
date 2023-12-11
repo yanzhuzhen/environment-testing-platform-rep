@@ -34,7 +34,13 @@
     <el-table :height="tableHeight" :data="logList" border stripe style="width: 100%; margin-bottom: 10px">
       <el-table-column prop="id" label="日志ID"></el-table-column>
       <el-table-column prop="loglevel" label="日志级别"></el-table-column>
-      <el-table-column prop="logname" label="日志名称"></el-table-column>
+      <el-table-column prop="logname" label="日志名称">
+        <template v-slot="scope">
+          <el-tag v-if="scope.row.logname === 'Exmpl.Utils.oparateLogUtils'">操作日志</el-tag>
+          <el-tag v-if="scope.row.logname === 'Exmpl.Security.handler.loginSuccessHandler'" type="success">登录日志</el-tag>
+          <el-tag v-if="scope.row.logname === 'Exmpl.Utils.systemLogUtils'" type="danger">系统日志</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="logcontent" label="日志内容"></el-table-column>
       <el-table-column prop="logtime" label="生成时间"></el-table-column>
       <el-table-column prop="logclass" label="日志所在类"></el-table-column>
@@ -90,7 +96,7 @@ export default {
       pageSize: 10,
       total: 0,
       lognameOptions: [{
-        value: 'Exmpl.Security.handler',
+        value: 'Exmpl.Security.handler.loginSuccessHandler',
         label: '登录日志'
       },
       {
@@ -165,7 +171,7 @@ export default {
       //提示是否确认删除
       let confirm = await this.$myconfirm("确定删除该日志吗？");
       if (confirm) {
-        let res = log.deleteLog(row.id);
+        let res = await log.deleteLog(row.id);
         if (res.success) {
           this.$message.success(res.message);
           await this.search(this.pageNow, this.pageSize);
