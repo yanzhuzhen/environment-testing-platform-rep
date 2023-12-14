@@ -191,4 +191,18 @@ public class articleController {
         }
     }
 
+    @GetMapping("/isscored/{articleid}/{uno}")
+    public Result isscored(@PathVariable Long articleid, @PathVariable Long uno){
+        int i = articleService.isscored(articleid, uno);
+        return Result.ok(i);
+    }
+
+    @PostMapping("/score/{articleid}/{uno}/{score}")
+    public Result score(@PathVariable Long articleid, @PathVariable Long uno, @PathVariable int score){
+        if(articleService.score(articleid, uno, score)){
+            return Result.ok().message("评分成功");
+        }
+        return Result.error().message("评分失败");
+    }
+
 }

@@ -28,6 +28,11 @@
       <el-table-column prop="createuser" label="发布者"></el-table-column>
       <el-table-column prop="algtype" label="算法类型"></el-table-column>
       <el-table-column prop="lang" label="算法语言"></el-table-column>
+      <el-table-column align="center" width="290" label="算法内容">
+        <template v-slot="scope" align="center">
+          <el-button type="primary" icon="el-icon-edit" size="small" @click="openView(scope.row.ano)">点击查看</el-button>
+        </template>
+      </el-table-column>
       <el-table-column align="center" width="290" label="审核">
         <template v-slot="scope">
           <el-button type="success" icon="el-icon-circle-check" size="small" circle @click="handleCheck(scope.row.ispermit, scope.row.ano)" v-if="scope.row.ispermit === 0"></el-button>
@@ -44,7 +49,22 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+
+    <!--查看算法-->
+    <system-dialog :title="algDialog.title" :visible="algDialog.visible" :width="algDialog.width" :height="algDialog.height"
+                   @onClose="closeView()" @onConfirm="closeView()">
+      <div slot="content">
+        <el-button v-clipboard:copy="algContext.context" v-clipboard:success="onCopy">复制代码</el-button>
+        <CommonEditor
+          :value="algContext.context"
+          :language="algContext.lang"
+          @input="changeTextareaView"
+          style="height: auto"
+        ></CommonEditor>
+      </div>
+    </system-dialog>
   </el-main>
+
 
 </template>
 
@@ -55,11 +75,12 @@ import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import user from "@/api/user";
 import * as alg from "@/api/alg";
+import CommonEditor from "@/views/CommonEditor/CommonEditor.vue";
 
 
 export default {
   name: "algList",
-  components: {systemDialog},
+  components: {CommonEditor, systemDialog},
   data() {
     return {
       algList:[],
@@ -87,6 +108,16 @@ export default {
         value: 'c++',
         label: 'c++'
       }],
+      algDialog: {
+        title: "查看算法",
+        visible: false,
+        height: 500,
+        width: 100
+      },
+      algContext:{
+        context: "",
+        lang:""
+      },
     }
   },
   created() {
@@ -99,6 +130,25 @@ export default {
 
   },
   methods: {
+    changeTextareaView(val) {
+      this.algContext.context = val
+    },
+    closeView(){
+      this.algDialog.visible = false;
+    },
+    onCopy(){
+      this.$message.success("复制成功！");
+    },
+    async openView(id){
+      let res = null;
+      res = await alg.findAlgByAno(id);
+      if(res.success){
+        this.algContext.context = res.data.context;
+        this.algContext.lang = res.data.lang;
+
+      }
+      this.algDialog.visible = true;
+    },
     handleSizeChange(size) {
       this.pageSize = size;
       this.search(this.pageNow, size);

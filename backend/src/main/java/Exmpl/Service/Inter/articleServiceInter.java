@@ -27,4 +27,9 @@ public interface articleServiceInter extends IService<Article> {
     List<Article> getUserRankByAuthor(String author);
 
     List<Article> rank();
+
+    int isscored(Long articleid, Long uno);
+
+
+    boolean score(Long articleid, Long uno, int score);
 }

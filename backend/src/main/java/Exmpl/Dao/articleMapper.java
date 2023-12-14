@@ -38,4 +38,11 @@ public interface articleMapper extends BaseMapper<Article> {
 
     @Select("select * from article order by rand() limit 4")
     List<Article> getList();
+
+    @Select("select count(1) from score where articleid = #{articleid} and uno= #{uno}")
+    int
+    isscored(Long articleid, Long uno);
+
+    @Insert("insert into score(articleid, uno, score) values (#{articleid}, #{uno}, #{score})")
+    boolean score(Long articleid, Long uno, int score);
 }

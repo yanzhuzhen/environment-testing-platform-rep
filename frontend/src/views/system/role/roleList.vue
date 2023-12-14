@@ -57,7 +57,7 @@
     <system-dialog :title="assignDialog.title" :visible="assignDialog.visible" :width="assignDialog.width" :height="assignDialog.height"
                    @onClose="onAssignClose()" @onConfirm="onAssignConfirm()">
       <div slot="content">
-        <el-tree ref="assignTree" :data="assignTreeData" node-key="rno" :props="defaultProps" empty-text="暂无数据"
+        <el-tree ref="assignTree" :data="assignTreeData" node-key="mno" :props="defaultProps" empty-text="暂无数据"
                  show-checkbox :highlight-current="true" default-expand-all>
         </el-tree>
       </div>
@@ -187,6 +187,7 @@ export default {
           rno: row.rno,
           uno: this.$store.getters.uno
         }
+        this.rno = row.rno;
         //发送查询权限分配菜单的请求
         let res = await getAssignMenuTree(params);
         //判断是否成功,如果成功则获取当前登录用户的菜单权限
@@ -207,6 +208,7 @@ export default {
             let nodes = this.$refs.assignTree.children;
             //设置子节点
             this.setChild(nodes, checkList);
+            console.log(nodes)
           })
 
         }
@@ -263,7 +265,6 @@ export default {
         this.assignDialog.visible = false;
       },
       async onAssignConfirm(){
-        this.rno = row.rno;
         //获取选中的树节点的key
         let ids = this.$refs.assignTree.getCheckedKeys();
         //获取选中节点的父节点id
@@ -294,7 +295,7 @@ export default {
             if(checkList && checkList.length>0){
               for (let j = 0; j < checkList.length; j++) {
                 //判断是否拥有该权限
-                if(childNodes[i].rno === checkList[j]){
+                if(childNodes[i].mno === checkList[j]){
                   //设置选中
                   if(childNodes[i].open){
                     this.$refs.assignTree.setChecked(node, true);

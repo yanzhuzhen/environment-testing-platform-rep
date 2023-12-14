@@ -71,3 +71,11 @@ export async function Rank() {
 export async function homePage() {
   return http.get('/api/article/homePage')
 }
+
+export async function isScored(articleid, uno) {
+  return http.get('/api/article/isscored/' +articleid + '/' + uno)
+}
+
+export async function Score(articleid, uno, score) {
+  return http.post('/api/article/score/' +articleid + '/' + uno + '/' + score)
+}

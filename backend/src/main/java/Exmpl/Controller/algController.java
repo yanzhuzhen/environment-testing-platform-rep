@@ -66,9 +66,7 @@ public class algController {
         Long id = incMapper.findAllAlg() + 1;
         alg.setAno(id);
         if(algService.save(alg)){
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) authentication.getPrincipal(); //获取用户信息
-            log.info(user.getUsername()+"::"+"发布算法");
+            opalog("发布算法");
             return Result.ok().message("算法发布成功，等待审核");
         }else {
             return Result.error().message("算法发布失败");

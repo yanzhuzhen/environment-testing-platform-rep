@@ -134,7 +134,6 @@ public class   sysUserController {
             User user = (User) authentication.getPrincipal();
             //清除redis缓存中的
             redisService.delCache("token_"+token);
-            syslog("退出登录成功");
             return Result.ok().message("退出登录成功");
         }
         return Result.error().message("退出登录失败");

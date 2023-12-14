@@ -75,4 +75,14 @@ public class articleService extends ServiceImpl<articleMapper, Article> implemen
     public List<Article> rank() {
         return baseMapper.getRank();
     }
+
+    @Override
+    public int isscored(Long articleid, Long uno) {
+        return baseMapper.isscored(articleid, uno);
+    }
+
+    @Override
+    public boolean score(Long articleid, Long uno, int score) {
+        return baseMapper.score(articleid, uno, score);
+    }
 }

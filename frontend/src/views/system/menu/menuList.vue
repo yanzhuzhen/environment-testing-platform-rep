@@ -26,9 +26,9 @@
           <svg-icon v-else :icon-class="scope.row.icon"></svg-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="菜单路由" sortable width="180"></el-table-column>
-      <el-table-column prop="url" label="菜单地址" sortable width="180"></el-table-column>
-      <el-table-column label="操作" sortable width="180">
+      <el-table-column prop="path" label="菜单路由" sortable ></el-table-column>
+      <el-table-column prop="url" label="菜单地址" sortable ></el-table-column>
+      <el-table-column label="操作" sortable width="200" align="center">
         <template v-slot="scope">
           <el-button type="primary" size="mini" @click="onEdit(scope.row)" icon="el-icon-edit" v-if="hasPermission('system:menu:update')">编辑</el-button>
           <el-button type="danger" size="mini" @click="onDelete(scope.row)" icon="el-icon-delete" v-if="hasPermission('system:menu:delete')">删除</el-button>

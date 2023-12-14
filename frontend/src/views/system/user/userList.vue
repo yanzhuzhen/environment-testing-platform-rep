@@ -167,8 +167,8 @@ export default {
           username: [{required: true, trigger: 'blur', message: "请填写用户名"}],
           password: [{required: true, trigger: 'blur', message: "请填写密码"}],
           realname: [{required: true, trigger: 'blur', message: "请填写真实姓名"}],
-          phone: [{trigger: 'blur', validator: phoneCheck}],
-          email:[{trigger: 'blur', validator: emailCheck}],
+          phone: [{required: true, trigger: 'blur', validator: phoneCheck}],
+          email:[{required: true, trigger: 'blur', validator: emailCheck}],
         },
         uploadHeader: {"token": getToken()},
         //分配角色窗口属性
@@ -289,9 +289,7 @@ export default {
         //提示是否确认删除
         let confirm = await this.$myconfirm("确定删除该用户吗？");
         if (confirm) {
-          console.log(row.uno)
-          let res = user.deleteUser(row.uno);
-          console.log(res.success)
+          let res = await user.deleteUser(row.uno);
           if (res.success) {
             this.$message.success(res.message);
             await this.search(this.pageNow, this.pageSize);

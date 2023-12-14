@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog top="5hv" :title="title" :visible.sync="visible" width="width + 'px'"
-               :before-close="onClose" :close-on-click-modal="false">
+               :before-close="onClose" :close-on-click-modal="false" style="margin-top: 150px">
       <div class="container" :style="{height:height + 'px'}">
         <slot name="content" v-if="visible"></slot>
       </div>
@@ -50,7 +50,7 @@
 
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
   .container{
     overflow-x: initial;
     overflow-y: auto;

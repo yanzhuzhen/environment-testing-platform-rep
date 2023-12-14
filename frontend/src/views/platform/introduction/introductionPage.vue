@@ -3,7 +3,10 @@
     <el-main>
       <el-card class="box-card">
        <div class="title" align="center">关于我们</div>
+
       </el-card>
+
+
     </el-main>
 
     <el-footer>

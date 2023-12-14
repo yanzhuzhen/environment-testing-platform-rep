@@ -41,14 +41,13 @@
       </el-table-column>
       <el-table-column label="文章评分" >
         <template v-slot="scope">
-          <span>{{ scope.row.score }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="来打分吧！" width="200" >
-        <template v-slot="scope" >
           <el-rate
-            v-model="scoring"
-            :colors="colors">
+            v-model="scope.row.score"
+            disabled
+            show-score
+            :colors="colors"
+            text-color="#ff9900"
+            score-template="{value}">
           </el-rate>
         </template>
       </el-table-column>
