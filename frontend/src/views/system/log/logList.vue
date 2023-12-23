@@ -31,7 +31,13 @@
         <el-button icon="el-icon-delete"  @click="resetValue()">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :height="tableHeight" :data="logList" border stripe style="width: 100%; margin-bottom: 10px">
+    <FilenameOption v-model="filename" />
+    <BookTypeOption v-model="bookType" />
+    <el-button style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handleDownload">
+      导出Excel
+    </el-button>
+    <el-table :height="tableHeight" :data="logList" border stripe style="width: 100%; margin-bottom: 10px" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" align="center" />
       <el-table-column prop="id" label="日志ID"></el-table-column>
       <el-table-column prop="loglevel" label="日志级别"></el-table-column>
       <el-table-column prop="logname" label="日志名称">
@@ -73,13 +79,20 @@ import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import * as log from "@/api/log";
 import deleteFile from "@/api/ossFile";
+import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
+import FilenameOption from "@/views/excel/components/FilenameOption.vue";
 
 
 export default {
   name: "logList",
+  components: {FilenameOption, BookTypeOption},
 
   data() {
     return {
+      filename: '',
+      autoWidth: true,
+      bookType: 'xlsx',
+      multipleSelection:[],
       searchModel: {
         loglevel: "",
         logtime: "",
@@ -140,6 +153,39 @@ export default {
 
   },
   methods: {
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    handleDownload() {
+      if (this.multipleSelection.length) {
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['日志ID', '日志级别', '日志名称', '日志内容','生成时间', '日志所在类', '日志所在线程', '全局追踪ID']
+          const filterVal = ['id', 'loglevel', 'logname', 'logcontent','logtime', 'logclass', 'logthread', 'trackid']
+          const list = this.multipleSelection
+          console.log(list)
+          for (let i = 0; i < list.length; i++) {
+            if(list[i].logname === 'Exmpl.Utils.oparateLogUtils' ) list[i].logname = '操作日志';
+            if(list[i].logname === 'Exmpl.Security.handler.loginSuccessHandler' ) list[i].logname = '登录日志';
+            if(list[i].logname === 'Exmpl.Utils.systemLogUtils' ) list[i].logname = '系统日志';
+          }
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename
+          })
+          this.$refs.roles.clearSelection()
+        })
+      } else {
+        this.$message({
+          message:'请选择要导出的行',
+          type: 'warning'
+        })
+      }
+    },
     hasPermission,
     handleSizeChange(size) {
       this.pageSize = size;

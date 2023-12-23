@@ -32,9 +32,6 @@ public interface userMapper extends BaseMapper<User> {
 
     User getUserByEmail(String email);
 
-    @Insert("insert into ur(uno,rno) values(#{uno},3)")
-    void setUR(Long uno);
-
     @Select("select avatar from usertable where uno = #{uno}")
     String findAvatarByUno(Long uno);
 

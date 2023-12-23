@@ -6,7 +6,7 @@
       <AutoWidthOption v-model="autoWidth" />
       <BookTypeOption v-model="bookType" />
       <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handleDownload">
-        Export Excel
+        导出Excel
       </el-button>
       <a href="https://panjiachen.github.io/vue-element-admin-site/feature/component/excel.html" target="_blank" style="margin-left:15px;">
         <el-tag type="info">Documentation</el-tag>
@@ -15,27 +15,27 @@
 
     <el-table v-loading="listLoading" :data="list" element-loading-text="Loading..." border fit highlight-current-row>
       <el-table-column align="center" label="Id" width="95">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag>{{ scope.row.author }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Readings" width="115" align="center">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="Date" width="220">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>

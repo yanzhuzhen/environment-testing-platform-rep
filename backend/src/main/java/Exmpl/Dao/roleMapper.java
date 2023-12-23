@@ -17,7 +17,7 @@ public interface roleMapper extends BaseMapper<Role> {
     int getRoleCountByRno(Long id);
 
     //删除角色权限关系
-    @Delete("delete from MR where rno = #{id}")
+    @Delete("delete from mr where rno = #{id}")
     void deleteRoleMenuByRno(Long id);
 
     //保存角色权限关系

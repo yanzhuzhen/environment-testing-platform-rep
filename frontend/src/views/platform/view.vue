@@ -178,7 +178,8 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style
+  lang="scss">
 .title {
   font-size: 30px;
   background-color: #20a0ff;

@@ -4,7 +4,7 @@
 
     <insert id="saveRoleMenu">
 
-        insert into MR (rno,mno) values
+        insert into mr (rno,mno) values
         <foreach collection="menuIds" item="i" index="index" separator=",">
             (#{rno},#{i})
         </foreach>

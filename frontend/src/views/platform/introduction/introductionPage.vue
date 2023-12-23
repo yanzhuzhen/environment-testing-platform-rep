@@ -3,7 +3,8 @@
     <el-main>
       <el-card class="box-card">
        <div class="title" align="center">关于我们</div>
-
+        <UploadExcel/>
+        <ExportExcel></ExportExcel>
       </el-card>
 
 
@@ -19,6 +20,13 @@
 
 <script>
 
+import UploadExcel from "@/views/excel/upload-excel.vue";
+import ExportExcel from "@/views/excel/export-excel.vue";
+
+export default {
+  name: 'intro',
+  components: {UploadExcel,ExportExcel},
+}
 </script>
 
 

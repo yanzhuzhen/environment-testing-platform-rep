@@ -174,7 +174,7 @@ public class   sysUserController {
         }
     }
 
-    // 通过邮箱注册
+    // 通过邮箱修改密码
     @PostMapping("/activationPassword")
     public Result activationPassword(@RequestBody HashMap<String,String> para){
         try {

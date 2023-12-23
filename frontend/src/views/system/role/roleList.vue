@@ -3,7 +3,7 @@
     <!-- 查询条件 -->
     <el-form ref="searchForm" :model="searchModel" label-width="80px" :inline="true" size="small">
       <el-form-item>
-      <el-input v-model="searchModel.rolename" placeholder="请输入角色名称"/>
+      <el-input v-model="searchModel.rolename" style="width: 200px;" placeholder="请输入角色名称"/>
     </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search(pageNow, pageSize)">查询</el-button>
@@ -11,8 +11,14 @@
         <el-button type="success" icon="el-icon-plus" @click="openAddWindow()" v-if="hasPermission('system:role:add')">新增</el-button>
       </el-form-item>
     </el-form>
+    <FilenameOption v-model="filename" />
+    <BookTypeOption v-model="bookType" />
+    <el-button style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handleDownload">
+      导出Excel
+    </el-button>
     <!-- 数据表格 -->
-    <el-table :data="roleList" :height="tableHeight" border stripe style="width: 100%; margin-bottom: 10px">
+    <el-table ref="roles" :data="roleList" :height="tableHeight" border stripe style="width: 100%; margin-bottom: 10px" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" align="center" />
       <el-table-column align="center" prop="rno" label="角色编号" width="100"></el-table-column>
       <el-table-column prop="rolename" label="角色名称"></el-table-column>
       <el-table-column prop="rolecode" label="角色编码"></el-table-column>
@@ -72,10 +78,14 @@ import myIcon from "@/components/system/myIcon.vue";
 import leafUtils from "@/utils/leaf";
 import row from "element-ui/packages/row";
 import hasPermission from "@/permission/index";
+import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
+import FilenameOption from "@/views/excel/components/FilenameOption.vue";
+import AutoWidthOption from "@/views/excel/components/AutoWidthOption.vue";
 
 export default {
     name:"roleList",
     components:{
+      AutoWidthOption, FilenameOption, BookTypeOption,
       myIcon,
       systemDialog
     },
@@ -124,8 +134,11 @@ export default {
         defaultProps:{
           children:"children",
           label:"label"
-        }
-
+        },
+        filename: '',
+        autoWidth: true,
+        bookType: 'xlsx',
+        multipleSelection:[]
       }
 
     },
@@ -138,6 +151,33 @@ export default {
       })
     },
     methods:{
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]))
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+      },
+      handleDownload() {
+         if (this.multipleSelection.length) {
+           import('@/vendor/Export2Excel').then(excel => {
+             const tHeader = ['角色编号', '角色名称', '角色编码', '角色备注']
+             const filterVal = ['rno', 'rolename', 'rolecode', 'remark']
+             const list = this.multipleSelection
+             const data = this.formatJson(filterVal, list)
+             excel.export_json_to_excel({
+                header: tHeader,
+                data,
+                filename: this.filename
+             })
+             this.$refs.roles.clearSelection()
+           })
+         } else {
+          this.$message({
+            message:'请选择要导出的行',
+            type: 'warning'
+          })
+        }
+      },
       hasPermission,
       async search(pageNow = 1, pageSize = 10){
         //修改当前页码和当前每页数量

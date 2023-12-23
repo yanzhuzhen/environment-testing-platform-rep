@@ -160,7 +160,6 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
         User user = baseMapper.getUserByEmail(email);
         user.setEnabled(true);
         baseMapper.isEnable(user.getEmail());
-        baseMapper.setUR(user.getUno());
 
 
         return Result.ok().message("注册成功，请使用注册的账号登录");

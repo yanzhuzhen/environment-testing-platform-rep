@@ -47,12 +47,14 @@ public class articleService extends ServiceImpl<articleMapper, Article> implemen
     }
 
     @Override
-    public boolean deleteArticleById(Long id) {
+    //根据id删除文章
+public boolean deleteArticleById(Long id) {
         return baseMapper.deleteById(id) > 0;
     }
 
-    @Override
+   @Override
     public int likes(Long id, Long uno) {
+        // 返回给定id和uno的点赞数
         return baseMapper.likes(id, uno);
     }
 
