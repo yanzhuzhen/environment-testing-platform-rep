@@ -2,6 +2,7 @@ package Exmpl.Controller;
 
 import Exmpl.Service.fileService;
 import Exmpl.Utils.Result;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import javax.annotation.Resource;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
-
+@Api(tags = "OSS对象管理")
 @RestController
 @RequestMapping("api/oss/file")
 public class OSSController {

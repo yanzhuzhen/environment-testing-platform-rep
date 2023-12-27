@@ -10,4 +10,5 @@ public interface replayServiceInter extends IService<Replay> {
     List<Replay> getReplayByCommentId(replayQueryVo replayQueryVo);
 
     boolean deleteReplayById(Long id);
+
 }

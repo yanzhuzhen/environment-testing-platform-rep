@@ -99,24 +99,23 @@
 
     </system-dialog>
   </el-main>
+
 </template>
 
 <script>
-import systemDialog from "@/components/system/systemDialog.vue";
+
 import menu from "@/api/menu";
 import {style} from "svgo/lib/svgo/jsAPI";
-import myIcon from "@/components/system/myIcon.vue";
 import hasPermission from "@/permission/index";
-
-
   export default {
     name: "menuList",
     computed: {
 
     },
     components:{
-      systemDialog,
-      myIcon
+      Myfooter:() => import("@/components/footer/index.vue"),
+      systemDialog:() => import("@/components/system/systemDialog.vue"),
+      myIcon:() => import("@/components/system/myIcon.vue")
     },
     data(){
       return{

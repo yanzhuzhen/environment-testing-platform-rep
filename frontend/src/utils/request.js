@@ -12,6 +12,8 @@ const service = axios.create({
   timeout: 50000 //请求超时时间
 })
 
+
+
 //刷新token
 function refreshTokenInfo(){
   let params = {

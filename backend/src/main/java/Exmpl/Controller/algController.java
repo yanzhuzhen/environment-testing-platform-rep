@@ -9,6 +9,7 @@ import Exmpl.Utils.Result;
 import Exmpl.vo.query.algQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
+@Api(tags = "算法管理")
 @Slf4j
 @RestController
 @RequestMapping("/api/alg")

@@ -16,13 +16,38 @@
     <el-button style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handleDownload">
       导出Excel
     </el-button>
+    <el-button style="margin:0 0 20px 20px;" type="primary" icon="el-icon-edit" @click="changToEdit">
+      批量修改
+    </el-button>
+    <el-button v-if="multiedit" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-check" @click="handleMultiedit">
+      确认修改
+    </el-button>
+    <el-button v-if="multiedit" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-close" @click="cancelEdit">
+      取消修改
+    </el-button>
     <!-- 数据表格 -->
     <el-table ref="roles" :data="roleList" :height="tableHeight" border stripe style="width: 100%; margin-bottom: 10px" @selection-change="handleSelectionChange">
       <el-table-column type="selection" align="center" />
-      <el-table-column align="center" prop="rno" label="角色编号" width="100"></el-table-column>
-      <el-table-column prop="rolename" label="角色名称"></el-table-column>
-      <el-table-column prop="rolecode" label="角色编码"></el-table-column>
-      <el-table-column prop="remark" label="角色备注" width="100"></el-table-column>
+      <el-table-column align="center" prop="rno" label="角色编号" width="100">
+        <template v-slot="scope">
+          <el-input v-model="scope.row.rno" v-if="multiedit"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rolename" label="角色名称">
+        <template v-slot="scope" v-if="multiedit">
+          <el-input v-model="scope.row.rolename" ></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rolecode" label="角色编码">
+        <template v-slot="scope" v-if="multiedit">
+          <el-input v-model="scope.row.rolecode" ></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remark" label="角色备注" width="100">
+        <template v-slot="scope" v-if="multiedit">
+          <el-input v-model="scope.row.remark" ></el-input>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="290">
         <template v-slot="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleEdit(scope.row)" v-if="hasPermission('system:role:update')">编辑</el-button>
@@ -33,6 +58,7 @@
     </el-table>
     <!-- 分页  -->
     <el-pagination
+      align="center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageNow"
@@ -47,7 +73,7 @@
       <div slot="content">
         <el-form ref="roleForm" :model="role" :rules="rules" label-width="80px" :inline="true" size="small">
           <el-form-item label="角色编码" size="small" prop="rolecode">
-            <el-input v-model="role.rolecode"></el-input>
+            <el-input v-model="role.rno"></el-input>
           </el-form-item>
           <el-form-item label="角色名称" size="small" prop="rolename">
             <el-input v-model="role.rolename"></el-input>
@@ -69,28 +95,35 @@
       </div>
     </system-dialog>
   </el-main>
+
 </template>
 
 <script>
-import {addRole, checkRole, deleteRole, getAssignMenuTree, getRoles, updateRole, saveAssign} from '@/api/role'
-import systemDialog from "@/components/system/systemDialog.vue";
-import myIcon from "@/components/system/myIcon.vue";
+import {
+  addRole,
+  checkRole,
+  deleteRole,
+  getAssignMenuTree,
+  getRoles,
+  updateRole,
+  saveAssign,
+  multiEdit
+} from '@/api/role'
 import leafUtils from "@/utils/leaf";
-import row from "element-ui/packages/row";
 import hasPermission from "@/permission/index";
-import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
-import FilenameOption from "@/views/excel/components/FilenameOption.vue";
-import AutoWidthOption from "@/views/excel/components/AutoWidthOption.vue";
+
 
 export default {
     name:"roleList",
     components:{
-      AutoWidthOption, FilenameOption, BookTypeOption,
-      myIcon,
-      systemDialog
+      systemDialog:() => import("@/components/system/systemDialog.vue"),
+      myIcon:() => import("@/components/system/myIcon.vue"),
+      FilenameOption:() => import("@/views/excel/components/FilenameOption.vue"),
+      BookTypeOption:() => import("@/views/excel/components/BookTypeOption.vue")
     },
     data(){
       return{
+        multiedit:false,
         //查询条件
         searchModel:{
           rolename:"",
@@ -174,6 +207,35 @@ export default {
          } else {
           this.$message({
             message:'请选择要导出的行',
+            type: 'warning'
+          })
+        }
+      },
+      changToEdit(){
+        this.multiedit = true;
+        this.$message({
+          message:'请选择要批量编辑的行',
+        })
+      },
+      cancelEdit(){
+        this.multiedit = false;
+      },
+      //批量修改
+      async handleMultiedit(){
+        if (this.multipleSelection.length) {
+          const roles = this.multipleSelection;
+          let res = await multiEdit(roles);
+          if(res.success){
+            this.$message.success(res.message);
+          }else {
+            this.$message.error(res.message);
+          }
+          await this.search();
+          this.multiedit = false;
+          this.$refs.roles.clearSelection()
+        } else {
+          this.$message({
+            message:'请选择要批量编辑的行',
             type: 'warning'
           })
         }

@@ -33,7 +33,7 @@
         </el-card>
 
       </el-main>
-      <div class="aside" style="width: 300px">
+      <div class="aside" style="width: 300px;">
         <div style="font-size: 15px;margin-top: 5px;margin-bottom: 5px" v-if="!isScored">
           来打分吧！
           <el-rate
@@ -50,11 +50,11 @@
             :colors="colors">
           </el-rate>
         </div>
-        <template v-if="isComment === 0">
+        <template v-if="isComment === 0" style="">
           <div style="font-size: 15px;margin-top: 10px;margin-bottom: 5px">来评论吧！</div>
           <div class="comment-list">
-            <div v-for="(item, index) in commentList" :key="index" class="comment-item">
-              <div class="comment-content">{{item.username}}:{{ item.content }}</div>
+            <div v-for="(comment, index) in commentList" :key="index" class="comment-item">
+              <div class="comment-content">{{comment.username}}:{{ comment.content }}</div>
             </div>
           </div>
           <el-form ref="commentForm" :model="comment" style="width: 300px">
@@ -83,6 +83,7 @@ export default {
   name:"articleView",
   data(){
     return{
+      webSocketObject: null,
       mycontent:"",
       mytitle:"",
       myauthor:"",
@@ -94,23 +95,49 @@ export default {
       isComment:0,
       isScored:false,
       commentList:[],
-      replay:[],
+      replayList:[],
       comment:{
         content:"",
         articleid: this.$route.query.id,
         username:this.$store.getters.username
-      }
+      },
+      loading:true,
+
     }
   },
   created() {
     this.getContent();
     this.getScore();
     this.isscored();
-  },
-  mounted() {
+    this.webSocketInit();
     this.getComment();
   },
+  mounted() {
+  },
   methods:{
+    webSocketInit(){
+      const webSocketUrl = 'ws://localhost:3000/websocket'
+      this.webSocketObject = new WebSocket(webSocketUrl);
+      this.webSocketObject.onopen = this.webSocketOnOpen
+      this.webSocketObject.onmessage = this.webSocketOnMessage
+      this.webSocketObject.onerror = this.webSocketOnError
+      this.webSocketObject.onclose = this.webSocketOnClose
+    },
+    webSocketOnOpen(e){
+      console.log('与服务端连接打开->',e)
+    },
+    webSocketOnMessage(e){
+      console.log('来自服务端的消息->',e)
+      const receiveMessage = JSON.parse(e.data);
+      this.commentList.push(receiveMessage)
+    },
+
+    webSocketOnError(e){
+      console.log('与服务端连接异常->',e)
+    },
+    webSocketOnClose(e){
+      console.log('与服务端连接关闭->',e)
+    },
     goBack() {
       this.$router.back();
     },
@@ -133,7 +160,15 @@ export default {
       let res = await comment.addComments(this.comment);
       if (res.success) {
         await this.getComment();
-        this.comment.content = "";
+        const username = this.comment.username
+        const message = this.comment.content
+        await this.webSocketObject.send(JSON.stringify({
+          id: 1,
+          message,
+          username,
+          time: new Date().getTime()
+        }))
+        this.comment.content = ""
         this.$message.success(res.message);
       }
     },
@@ -159,6 +194,7 @@ export default {
         let root = document.querySelector(".el-card");
         root.insertAdjacentHTML('beforeend',this.mycontent);
         hljs.highlightAll();
+        loading = false;
       }
     },
     async getScore(){
@@ -178,61 +214,6 @@ export default {
 }
 </script>
 
-<style
-  lang="scss">
-.title {
-  font-size: 30px;
-  background-color: #20a0ff;
-  color: white;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  height: 50px;
-  border-radius: 10px;
-  padding-left: 20px;
-  padding-top: 7px;
-
-
-}
-
-.aside {
-  font-size: 10px;
-  background-color: #ffffff;
-  color: rgba(55, 61, 75, 0.25);
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 7px;
-  width: 300px;
-  height: fit-content;
-  margin-top: 20px;
-}
-
-.el-card {
-  border-radius: 10px;
-  padding-left:50px
-
-}
-
-.author {
-  font-size: 20px;
-  color: gray;
-  text-align: end;
-  margin-bottom: 10px;
-}
-
-.score {
-  color:#ff9900;
-}
-.pre{
-  width: 100%;
-}
-
-.comment-list {
-  width: 250px;
-  height: 600px;
-  border-color: #20a0ff;
-}
-
+<style lang="scss">
+@import url("./view.scss");
 </style>

@@ -59,11 +59,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(loginFailHandler) //登陆失败处理器
                 .and()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //不创建Session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER) //不创建Session
                 .and()
                 .authorizeRequests() //需要拦截的请求
                 .antMatchers("/api/user/login").permitAll() //登陆请求放行
-                .antMatchers("/api/sysUser/signup","/api/sysUser/sendCode").permitAll() //注册放行
+                .antMatchers("/api/sysUser/signup","/api/sysUser/sendCode","/websocket").permitAll() //注册放行
+                .antMatchers("/swagger**/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/v2/**","/doc.html").permitAll()
                 .anyRequest().authenticated()  //其他请求都不放行
                 .and()
                 .exceptionHandling()

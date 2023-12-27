@@ -4,6 +4,7 @@ import Exmpl.Dao.incMapper;
 import Exmpl.Entity.Menu;
 import Exmpl.Utils.Result;
 import Exmpl.vo.query.menuQueryVo;
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import Exmpl.Service.menuService;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
+@Api(tags = "菜单管理")
 @RestController
 @RequestMapping("/api/menu")
 public class menuController {

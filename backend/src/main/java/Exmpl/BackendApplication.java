@@ -4,12 +4,13 @@ import org.jasypt.util.text.BasicTextEncryptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @MapperScan("Exmpl.Dao")
 @SpringBootApplication
 
 public class BackendApplication {
-
     public static void main(String[] args) {
 //        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 //        textEncryptor.setPassword("123asd!@#");
@@ -19,6 +20,7 @@ public class BackendApplication {
 //        System.out.println("username:"+username);
 //        String encryptedPassword =textEncryptor.decrypt (password);
 //        System.out.println("password:" + password + "   decrypted:" + encryptedPassword);
+
 
         SpringApplication.run(BackendApplication.class, args);
     }

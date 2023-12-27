@@ -3,29 +3,22 @@
     <el-main>
       <el-card class="box-card">
        <div class="title" align="center">关于我们</div>
-        <UploadExcel/>
-        <ExportExcel></ExportExcel>
+        <el-skeleton style="margin-top: 20px"  :rows="15" />
       </el-card>
-
-
     </el-main>
 
-    <el-footer>
-      <el-card class="foot">
-        footer
-      </el-card>
+    <el-footer height="150px">
+      <myfooter></myfooter>
     </el-footer>
   </el-container>
 </template>
 
 <script>
 
-import UploadExcel from "@/views/excel/upload-excel.vue";
-import ExportExcel from "@/views/excel/export-excel.vue";
 
 export default {
   name: 'intro',
-  components: {UploadExcel,ExportExcel},
+  components: {Myfooter:() => import("@/components/footer/index.vue")},
 }
 </script>
 
@@ -52,15 +45,5 @@ export default {
   background-color: #fff;
 }
 
-.foot {
-  color: white;
-  width: 100%;
-  height:150px;
-  margin-bottom: 10px;
-  border: 1px solid #eee;
-  border-radius: 5px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  background-color: rgb(36, 49, 65);
-}
 
 </style>

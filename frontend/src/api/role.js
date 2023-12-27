@@ -41,3 +41,7 @@ export async function getAssignMenuTree(param) {
 export async function saveAssign(param) {
   return http.post('/api/role/saveRoleAssign', param)
 }
+
+export async function multiEdit(param) {
+  return http.post('/api/role/multiedit', param)
+}

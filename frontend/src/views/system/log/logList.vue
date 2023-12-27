@@ -4,7 +4,7 @@
       <el-form-item>
         <el-row :gutter="24">
           <el-col :span="8">
-            <el-select v-model="searchModel.logname" placeholder="请选择日志名称">
+            <el-select v-model="searchModel.logname" style="width: 200px" placeholder="请选择日志名称">
               <el-option
                 v-for="item in lognameOptions"
                 :key="item.value"
@@ -60,6 +60,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      align="center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageNow"
@@ -74,18 +75,14 @@
 
 <script>
 
-import systemDialog from "@/components/system/systemDialog.vue";
-import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import * as log from "@/api/log";
-import deleteFile from "@/api/ossFile";
-import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
-import FilenameOption from "@/views/excel/components/FilenameOption.vue";
-
 
 export default {
   name: "logList",
-  components: {FilenameOption, BookTypeOption},
+  components: {Myfooter:() => import("@/components/footer/index.vue"),
+    FilenameOption:() => import("@/views/excel/components/FilenameOption.vue"),
+    BookTypeOption:() => import("@/views/excel/components/BookTypeOption.vue")},
 
   data() {
     return {

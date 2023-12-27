@@ -3,6 +3,8 @@ package Exmpl.Entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @TableName("mycomment")
 public class Comment {
@@ -10,5 +12,5 @@ public class Comment {
     private Long articleid;
     private String username;
     private String content;
-    private String createtime;
+    private Date createtime;
 }

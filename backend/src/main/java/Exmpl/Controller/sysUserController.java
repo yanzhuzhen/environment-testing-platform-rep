@@ -13,6 +13,7 @@ import Exmpl.vo.tokenVo;
 import ch.qos.logback.classic.Logger;
 import io.jsonwebtoken.Jwts;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,7 @@ import Exmpl.Utils.menuTree;
 import static Exmpl.Utils.oparateLogUtils.opalog;
 import static Exmpl.Utils.systemLogUtils.syslog;
 
+@Api(tags = "用户信息管理")
 @Slf4j
 @RestController
 @RequestMapping("/api/sysUser")

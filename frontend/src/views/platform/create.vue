@@ -49,10 +49,6 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
-import Upload from '@/components/Upload/SingleImage3'
-import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import * as article from '@/api/article'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 
@@ -68,7 +64,13 @@ const defaultForm = {
 
 export default {
   name: 'createArticle',
-  components: { Tinymce, MDinput, Upload, Sticky, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: { Tinymce:() => import("@/components/Tinymce"),
+    MDinput:() => import("@/components/MDinput"),
+    Upload:() => import("@/components/Upload/SingleImage3"),
+    Sticky:() => import("@/components/Sticky"),
+    CommentDropdown,
+    PlatformDropdown,
+    SourceUrlDropdown },
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {

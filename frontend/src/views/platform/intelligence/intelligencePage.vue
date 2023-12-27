@@ -1,79 +1,89 @@
 <template>
-  <el-main>
-    <el-form :model="searchModel" ref="searchForm" label-width="80px" :inline="true" size="small">
-      <el-form-item>
-        <el-row :gutter="24">
-          <el-col :span="12"><el-input v-model="searchModel.title" placeholder="请输入文章标题查询"/></el-col>
-          <el-col :span="12"><el-input v-model="searchModel.author" placeholder="请输入作者查询"/></el-col>
-        </el-row>
-      </el-form-item>
-      <el-form-item>
-        <el-button icon="el-icon-search" type="primary" @click="search(pageNow, pageSize)">查询</el-button>
-        <el-button icon="el-icon-delete"  @click="resetValue()">重置</el-button>
-        <el-button icon="el-icon-plus" type="success" size="small" @click="openAddWindow()">发布我的文章</el-button>
-      </el-form-item>
-    </el-form>
-    <el-table :height="tableHeight" :data="articleList" border fit highlight-current-row style="width: 100%">
-      <el-table-column width="180px" align="center" label="发布日期" >
-        <template v-slot="scope">
-          <span>{{ scope.row.displaytime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="120px" align="center" label="作者" >
-        <template v-slot="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" label="文章标题" >
-        <template v-slot="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="300px" label="文章概要" >
-        <template v-slot="scope">
-          <span>{{ scope.row.contentshort }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" label="查看文章" align="center">
-        <template v-slot="scope">
-          <span class="myLink" @click="upto(scope.row.id, scope.row.author)">查看文章</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="文章评分" >
-        <template v-slot="scope">
-          <el-rate
-            v-model="scope.row.score"
-            disabled
-            show-score
-            :colors="colors"
-            text-color="#ff9900"
-            score-template="{value}">
-          </el-rate>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="pageNow"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total">
-    </el-pagination>
-  </el-main>
+  <el-container>
+    <el-main>
+      <el-form :model="searchModel" ref="searchForm" label-width="80px" :inline="true" size="small">
+        <el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="12"><el-input v-model="searchModel.title" placeholder="请输入文章标题查询"/></el-col>
+            <el-col :span="12"><el-input v-model="searchModel.author" placeholder="请输入作者查询"/></el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item>
+          <el-button icon="el-icon-search" type="primary" @click="search(pageNow, pageSize)">查询</el-button>
+          <el-button icon="el-icon-delete"  @click="resetValue()">重置</el-button>
+          <el-button icon="el-icon-plus" type="success" size="small" @click="openAddWindow()">发布我的文章</el-button>
+        </el-form-item>
+      </el-form>
+      <el-row :gutter="12" >
+        <!-- date遍历循环的数据 -->
+        <el-col :span="6" v-for="item in articleList" :key="item.id">
+          <el-card :body-style="{ height: '200px' }" class="el-card" shadow="hover" ><!--style="background-color: #5daf34"  灰 #e1e1e1 绿 #5daf34-->
+            <!-- 卡片的头部位 -->
+            <template #header>
+              <div class="card-header">
+                  <span>{{ item.title }}</span>
+              </div>
+            </template>
+            <!-- 卡片显示的内容 -->
+            <div  class="text-item" >
+              {{item.contentshort}}
+            </div>
 
+            <div class="fix-btn">
+              <div  class="text-item-author" >
+                {{item.author}}
+              </div>
+              <el-row :gutter="20" >
+                <el-col :span="12" >
+                  <span style="padding-left: 3px;">{{ item.displaytime }}</span>
+                  <div style="width: 200px;">
+                    <el-rate
+                      v-model="item.score"
+                      disabled
+                      show-score
+                      :colors="colors"
+                      text-color="#ff9900"
+                      score-template="{value}">
+                    </el-rate>
+                  </div>
+                </el-col>
+                <el-col :span="6" :offset="6">
+                  <el-button round plain type="primary" class="myLink" @click="upto(item.id, item.author)"><i class="el-icon-view"></i></el-button>
+                </el-col>
+              </el-row>
+
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-pagination
+        align="center"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNow"
+        :page-sizes="[12, 24, 36, 48]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </el-main>
+    <el-footer height="150px">
+      <myfooter></myfooter>
+    </el-footer>
+  </el-container>
 
 </template>
 
 <script>
-import Pagination from '@/components/Pagination'
+
 import {parseTime} from "@/utils/index.js";
-import * as article from "@/api/article"; // Secondary package based on el-pagination
+import * as article from "@/api/article";
+
 
 export default {
   name: 'ArticleList',
-  components: { Pagination },
+  components: {Myfooter:() => import("@/components/footer/index.vue"),
+    Pagination:() => import("@/components/Pagination") },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -91,14 +101,14 @@ export default {
       total: 0,
       listLoading: false,
       pageNow: 1,
-      pageSize: 10,
+      pageSize: 12,
       searchModel: {
         title: "",
         author: "",
         displaytime:"",
         contentshort:"",
         pageNow: 1,
-        pageSize: 10
+        pageSize: 12
       },
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
       scoring:null,
@@ -115,6 +125,7 @@ export default {
   },
   methods: {
     upto(id, author){
+      console.log(typeof id);
       this.$router.push({
         path:"../article/view",
         query:{
@@ -178,8 +189,6 @@ export default {
 </script>
 
 <style scoped>
-.myLink:hover {
-  color: #20a0ff;
-}
+@import './intell.scss';
 </style>
 

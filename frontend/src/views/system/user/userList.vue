@@ -28,6 +28,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      align="center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageNow"
@@ -84,6 +85,7 @@
       </el-table>
 <!--分页工具栏-->
       <el-pagination
+        align="center"
         @size-change="assignSizeChange"
         @current-change="assignCurrentChange"
         :currentypage.sync="roleVo.pageNow"
@@ -97,6 +99,7 @@
     </system-dialog>
   </el-main>
 
+
 </template>
 
 <script>
@@ -106,6 +109,7 @@ import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import user from "@/api/user";
 import deleteFile from "@/api/ossFile";
+import Myfooter from "@/components/footer/index.vue";
 
 
 export default {
@@ -115,7 +119,9 @@ export default {
         return user
       }
     },
-    components: {systemDialog},
+    components: {
+      systemDialog:() => import("@/components/system/systemDialog.vue"),
+    },
     data() {
       let phoneCheck = (rule, value, callback) => {
         if (!value) {
@@ -400,27 +406,5 @@ export default {
 </script>
 
 <style lang="scss">
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
+@import url("./userList.scss");
 </style>

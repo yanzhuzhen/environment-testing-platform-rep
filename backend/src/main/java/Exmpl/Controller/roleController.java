@@ -10,13 +10,17 @@ import Exmpl.vo.query.roleQueryVo;
 import Exmpl.vo.roleMenuVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+import java.util.List;
+
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
+@Api(tags = "角色管理")
 @RestController
 @RequestMapping("/api/role")
 public class roleController {
@@ -102,6 +106,16 @@ public class roleController {
             return Result.ok().message("保存成功");
         }else {
             return Result.error().message("保存失败");
+        }
+    }
+
+    //批量修改
+    @PostMapping("/multiedit")
+    public Result multiedit(@RequestBody List<Role> roles) {
+        if (roleService.updateBatchById(roles)) {
+            return Result.ok().message("批量修改成功");
+        } else {
+            return Result.error().message("批量修改失败");
         }
     }
 }

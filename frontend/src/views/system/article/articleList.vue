@@ -46,6 +46,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      align="center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageNow"
@@ -55,18 +56,17 @@
       :total="total">
     </el-pagination>
   </el-main>
-
-
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
 import {parseTime} from "@/utils/index.js";
-import * as article from "@/api/article"; // Secondary package based on el-pagination
+import * as article from "@/api/article";
+import Myfooter from "@/components/footer/index.vue"; // Secondary package based on el-pagination
 
 export default {
   name: 'ArticleList',
-  components: { Pagination },
+  components: {Myfooter, Pagination },
   filters: {
     statusFilter(status) {
       const statusMap = {

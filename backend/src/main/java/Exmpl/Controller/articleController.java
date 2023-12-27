@@ -8,6 +8,7 @@ import Exmpl.Utils.Result;
 import Exmpl.vo.query.articleQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
+@Api(tags = "文章管理")
 @RestController
 @RequestMapping("/api/article")
 public class articleController {

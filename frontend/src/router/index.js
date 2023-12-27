@@ -9,7 +9,6 @@ import Layout from '@/layout'
 /* Router Modules */
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
 
 /**
@@ -90,7 +89,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/home/home',
     children: [
       {
         path: 'dashboard',
@@ -231,7 +230,7 @@ export const asyncRoutes = [
   componentsRouter,
   chartsRouter,
   nestedRouter,
-  tableRouter,
+  // tableRouter,
 
   {
     path: '/example',
@@ -288,18 +287,18 @@ export const asyncRoutes = [
       icon: '404'
     },
     children: [
-      // {
-      //   path: '401',
-      //   component: () => import('@/views/error-page/401'),
-      //   name: 'Page401',
-      //   meta: { title: '401', noCache: true }
-      // },
-      // {
-      //   path: '404',
-      //   component: () => import('@/views/error-page/404'),
-      //   name: 'Page404',
-      //   meta: { title: '404', noCache: true }
-      // }
+      {
+        path: '401',
+        component: () => import('@/views/error-page/401'),
+        name: 'Page401',
+        meta: { title: '401', noCache: true }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: 'Page404',
+        meta: { title: '404', noCache: true }
+      }
     ]
   },
 

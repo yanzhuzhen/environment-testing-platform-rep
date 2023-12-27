@@ -9,12 +9,14 @@ import Exmpl.Utils.Result;
 import Exmpl.vo.query.followsQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
 
+@Api(tags = "粉丝管理")
 @RestController
 @RequestMapping("/api/follows")
 public class followsController {

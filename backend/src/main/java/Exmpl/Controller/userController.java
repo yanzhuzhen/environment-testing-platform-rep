@@ -11,6 +11,7 @@ import Exmpl.vo.query.roleQueryVo;
 import Exmpl.vo.query.userQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
-
+@Api(tags = "用户管理")
 @RestController
 @RequestMapping("/api/user")
 public class userController {

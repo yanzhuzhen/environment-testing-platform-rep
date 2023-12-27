@@ -46,6 +46,7 @@
                 </el-table-column>
               </el-table>
               <el-pagination
+                align="center"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="pageNow"
@@ -87,6 +88,7 @@
                 </el-table-column>
               </el-table>
               <el-pagination
+                align="center"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="pageNow"
@@ -117,7 +119,7 @@
               <el-form  class="signup-form" ref="emailForm" :model="userEmail" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
                 <el-row>
                   <el-col >
-                    <el-form-item label="密码" size="small" prop="password">
+                    <el-form-item label="新的密码" size="small" prop="password">
                       <el-input type="password" v-model="userEmail.password" style="width: 200px"></el-input>
                     </el-form-item>
                   </el-col>
@@ -147,7 +149,56 @@
                 </el-row>
               </el-form>
             </el-tab-pane>
-            <el-tab-pane label="换绑邮箱">换绑邮箱</el-tab-pane>
+            <el-tab-pane label="换绑邮箱">
+              <el-form v-if="!next"  class="signup-form" ref="emailForm" :model="editEmail" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
+                <el-row>
+                  <el-col>
+                    <el-form-item label="请输入你原来的邮箱" size="small" prop="email" label-width="200px" >
+                      <el-input  v-model="editEmail.email" style="width: 200px"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col>
+                    <el-form-item label="请输入原邮箱的验证码" size="small" prop="code" label-width="200px">
+                      <el-input v-model="editEmail.code" style="width: 200px"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                  <el-row :gutter="35">
+                    <el-col :span="9">
+                      <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onSendCodeUpdateEmailOld">获取验证码</el-button>
+                    </el-col >
+                    <el-col :span="6">
+                      <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onNext">下一步</el-button>
+                    </el-col >
+                  </el-row>
+
+              </el-form>
+              <el-form  v-if="next" class="signup-form" ref="emailForm" :model="editEmail" :rules="rules" label-width="80px" :inline="true" size="small" label-position="left">
+                <el-row>
+                  <el-col >
+                    <el-form-item label="请输入你新的邮箱" size="small" prop="newemail" label-width="200px">
+                      <el-input  v-model="editEmail.newemail" style="width: 200px"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col >
+                    <el-form-item label="请输入新邮箱的验证码" size="small" prop="newcode" label-width="200px">
+                      <el-input  v-model="editEmail.newcode" style="width: 200px"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="35">
+                  <el-col :span="9">
+                    <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onSendCodeUpdateEmailNew">获取验证码</el-button>
+                  </el-col >
+                  <el-col :span="6">
+                    <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onto">上一步</el-button>
+                  </el-col >
+                  <el-col :span="6">
+                    <el-button type="primary" size="medium" style="height: 32px" class="ml-5" @click="onEdit">确认修改</el-button>
+                  </el-col >
+                </el-row>
+              </el-form>
+            </el-tab-pane>
           </el-tabs>
       </el-tab-pane>
 
@@ -231,23 +282,26 @@
         </div>
       </system-dialog>
     </el-main>
-    <el-footer>Footer</el-footer>
+    <el-footer height="150px">
+      <myfooter></myfooter>
+    </el-footer>
   </el-container>
 
 
 </template>
 
 <script>
-import systemDialog from "@/components/system/systemDialog.vue";
 import user, {activationPassword, sendCode, signup, updatePasswordByEmail} from "@/api/user";
 import {getToken} from "@/utils/auth";
 import * as alg from "@/api/alg";
-import CommonEditor from "@/views/CommonEditor/CommonEditor.vue";
 import * as follows from "@/api/follows";
 import * as article from "@/api/article";
+
 export  default {
   name:"personalPage",
-  components: {CommonEditor, systemDialog},
+  components: {Myfooter:() => import("@/components/footer/index.vue"),
+    CommonEditor:() => import("@/views/CommonEditor/CommonEditor.vue"),
+    systemDialog:() => import("@/components/system/systemDialog.vue")},
   data(){
     let phoneCheck = (rule, value, callback) => {
       if (!value) {
@@ -268,6 +322,7 @@ export  default {
       }
     }
     return{
+      next:false,
       followsList:[],
       searchModelFollows: {
         pageNow: 1,
@@ -335,6 +390,13 @@ export  default {
         code:"",
 
       },
+      editEmail: {
+        id: this.$store.getters.uno,
+        email:"",
+        code:"",
+        newemail:"",
+        newcode:"",
+      },
       algEdit: {
         ano: "",
         algname: "",
@@ -349,6 +411,7 @@ export  default {
         realname: [{trigger: 'blur', message: "请填写真实姓名"}],
         phone: [{trigger: 'blur', validator: phoneCheck}],
         email:[{trigger: 'blur', validator: emailCheck}],
+        newemail:[{trigger: 'blur', validator: emailCheck}],
       },
     }
   },
@@ -417,6 +480,25 @@ export  default {
         this.$message.error(res.message);
       }
     },
+    async onSendCodeUpdateEmailOld() {
+
+    },
+    async onSendCodeUpdateEmailNew() {
+
+    },
+    async onNext(){
+      this.next = true;
+    },
+    async onEdit(){
+
+    },
+    async onto(){
+      this.next = false;
+      this.editEmail.newcode = ''
+      this.editEmail.newemail = ''
+    },
+
+
     changeTextareaEdit(val) {
       this.algEdit.context = val
     },
@@ -592,93 +674,6 @@ export  default {
 
 
 <style lang="scss">
-.usertext {
-  font-size: 18px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-top: 10px;
-  margin-left: 20px;
-}
-
-.demo-basic--circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-  width: 200px;
-  font-size: 28px;
-
-}
-.edit{
-  margin-top: 10px;
-  margin-left: 20px;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-pre {
-  position: relative;
-  min-width: 600px;
-  margin: 0;
-}
-.hljs {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 1px;
-  color: #abb2bf;
-  font-weight: 200;
-  font-size: 0.75rem;
-  font-family: Menlo, Monaco, Consolas, Courier, monospace;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  border: 0;
-}
-.hljs ol {
-  margin: 0 0 0 35px;
-  padding: 0;
-  list-style-type: decimal;
-}
-.hljs ol li {
-  // padding: 5px;
-  // padding-left: 10px;
-  color: #abb2bf;
-  white-space: pre;
-  // list-style: decimal-leading-zero;
-  list-style-position: outside;
-  border-left: 1px solid #c5c5c5;
-}
-.signup-form {
-  position: relative;
-  width: 520px;
-  max-width: 100%;
-  padding: 20px 35px 0;
-  margin: 2px auto;
-  overflow: hidden;
-
-}
-.myLink:hover {
-  color: #20a0ff;
-}
+@import url("./personal.scss");
 
 </style>

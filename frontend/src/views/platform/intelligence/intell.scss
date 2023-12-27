@@ -1,0 +1,29 @@
+.myLink:hover {
+  color: white;
+}
+
+.el-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 320px;
+  height: 300px;
+  margin: 10px;
+  padding: 10px;
+  position: relative;
+}
+.text-item {
+  margin-bottom: 10px;
+  padding-left: 3px;
+}
+.text-item-author {
+  margin-bottom: 10px;
+  padding-left: 3px;
+  color: #1f9ffd;
+}
+.fix-btn {
+  margin-top: auto;
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+}

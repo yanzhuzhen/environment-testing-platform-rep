@@ -35,12 +35,15 @@
       </el-table-column>
       <el-table-column align="center" width="290" label="审核">
         <template v-slot="scope">
-          <el-button type="success" icon="el-icon-circle-check" size="small" circle @click="handleCheck(scope.row.ispermit, scope.row.ano)" v-if="scope.row.ispermit === 0"></el-button>
-          <el-button type="info" icon="el-icon-circle-check" size="small" @click="handleCheck(scope.row.ispermit)" v-if="scope.row.ispermit === 1" round>已审核</el-button>
+          <div>
+            <el-button type="success" icon="el-icon-circle-check" size="small" circle @click="handleCheck(scope.row.ispermit, scope.row.ano)" v-if="scope.row.ispermit === 0"></el-button>
+            <el-button type="info" icon="el-icon-circle-check" size="small" @click="handleCheck(scope.row.ispermit)" v-if="scope.row.ispermit === 1" round>已审核</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
+      align="center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageNow"
@@ -69,18 +72,12 @@
 </template>
 
 <script>
-
-import systemDialog from "@/components/system/systemDialog.vue";
-import {getToken} from "@/utils/auth";
-import hasPermission from "@/permission/index";
-import user from "@/api/user";
 import * as alg from "@/api/alg";
-import CommonEditor from "@/views/CommonEditor/CommonEditor.vue";
-
-
 export default {
   name: "algList",
-  components: {CommonEditor, systemDialog},
+  components: {Myfooter:() => import("@/components/footer/index.vue"),
+    CommonEditor:() => import("@/views/CommonEditor/CommonEditor.vue"),
+    systemDialog:() => import("@/components/system/systemDialog.vue")},
   data() {
     return {
       algList:[],

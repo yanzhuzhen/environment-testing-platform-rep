@@ -7,6 +7,7 @@ import Exmpl.Service.commentService;
 import Exmpl.Service.replayService;
 import Exmpl.Utils.Result;
 
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import java.util.Objects;
 
 import static Exmpl.Utils.oparateLogUtils.opalog;
 
+@Api(tags = "评论管理")
 @RestController
 @RequestMapping("/api/comment")
 public class commentController {
@@ -30,7 +32,7 @@ public class commentController {
 
     @PostMapping("/add")
     public Result add(@RequestBody Comment comment){
-        comment.setCreatetime(String.valueOf(new Date()));
+        comment.setCreatetime(new Date());
         if(commentService.save(comment)){
             opalog("评论成功");
             return Result.ok().message("评论成功");

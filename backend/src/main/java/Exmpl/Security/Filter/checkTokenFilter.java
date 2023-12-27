@@ -37,6 +37,12 @@ public class checkTokenFilter extends OncePerRequestFilter {
     private  String loginUrl = "/api/user/login";
     private  String signupUrl = "/api/sysUser/signup";
     private  String sendCodeUrl = "/api/sysUser/sendCode";
+    private  String swaggerUrl ="/swagger-ui.html";
+    private  String swaggerUrll ="/swagger**/**";
+    private  String swaggerUrlll ="/webjars/**";
+    private  String swaggerUrllll ="/v2/**";
+
+
 
 
     @Resource
@@ -56,8 +62,9 @@ public class checkTokenFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String url = request.getRequestURI();  //获取当前请求的URL
+            System.out.println(url);
             //判断当前请求是否为登录，如不是则验证Token
-            if(!url.equals(loginUrl) && !url.equals(signupUrl) && !url.equals(sendCodeUrl)){
+            if(!url.equals(loginUrl) && !url.equals(signupUrl) && !url.equals(sendCodeUrl)&& !url.equals(swaggerUrl)&& !url.equals(swaggerUrll)&& !url.equals(swaggerUrlll)&& !url.equals(swaggerUrllll)){
                 System.out.println("1111");
                 this.checkToken(request);
 
