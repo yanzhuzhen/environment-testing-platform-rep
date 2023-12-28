@@ -111,15 +111,19 @@ import {
 } from '@/api/role'
 import leafUtils from "@/utils/leaf";
 import hasPermission from "@/permission/index";
+import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
+import FilenameOption from "@/views/excel/components/FilenameOption.vue";
+import myIcon from "@/components/system/myIcon.vue";
+import systemDialog from "@/components/system/systemDialog.vue";
 
 
 export default {
     name:"roleList",
     components:{
-      systemDialog:() => import("@/components/system/systemDialog.vue"),
-      myIcon:() => import("@/components/system/myIcon.vue"),
-      FilenameOption:() => import("@/views/excel/components/FilenameOption.vue"),
-      BookTypeOption:() => import("@/views/excel/components/BookTypeOption.vue")
+      systemDialog,
+      myIcon,
+      FilenameOption,
+      BookTypeOption
     },
     data(){
       return{

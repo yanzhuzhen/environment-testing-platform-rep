@@ -28,12 +28,12 @@
       <el-table-column prop="createuser" label="发布者"></el-table-column>
       <el-table-column prop="algtype" label="算法类型"></el-table-column>
       <el-table-column prop="lang" label="算法语言"></el-table-column>
-      <el-table-column align="center" width="290" label="算法内容">
+      <el-table-column align="center" width="150" label="算法内容">
         <template v-slot="scope" align="center">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="openView(scope.row.ano)">点击查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="290" label="审核">
+      <el-table-column align="center" width="150" label="审核">
         <template v-slot="scope">
           <div>
             <el-button type="success" icon="el-icon-circle-check" size="small" circle @click="handleCheck(scope.row.ispermit, scope.row.ano)" v-if="scope.row.ispermit === 0"></el-button>
@@ -73,11 +73,14 @@
 
 <script>
 import * as alg from "@/api/alg";
+import CommonEditor from "@/views/CommonEditor/CommonEditor.vue";
+import systemDialog from "@/components/system/systemDialog.vue";
+import Myfooter from "@/components/footer/index.vue";
 export default {
   name: "algList",
-  components: {Myfooter:() => import("@/components/footer/index.vue"),
-    CommonEditor:() => import("@/views/CommonEditor/CommonEditor.vue"),
-    systemDialog:() => import("@/components/system/systemDialog.vue")},
+  components: {Myfooter,
+    CommonEditor,
+    systemDialog},
   data() {
     return {
       algList:[],

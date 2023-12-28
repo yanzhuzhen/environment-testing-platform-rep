@@ -160,8 +160,6 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
         User user = baseMapper.getUserByEmail(email);
         user.setEnabled(true);
         baseMapper.isEnable(user.getEmail());
-
-
         return Result.ok().message("注册成功，请使用注册的账号登录");
     }
 
@@ -197,21 +195,89 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
         }
     }
 
+    @Override
+    public Result updateEmailByEmail(userDTO userDTO) {
+        try {
+            User user =  userMapper.getUserByEmail(userDTO.getEmail());
+            //判断是否有该用户
+            if(user == null)
+                return Result.error().message("未找到使用此邮箱的用户！");
+            User newuser =  userMapper.getUserByEmail(userDTO.getNewemail());
+            //判断是否有该用户
+            if(newuser != null)
+                return Result.error().message("该邮箱已被注册！");
+            //判断密码是否输入
+            if(StringUtils.isBlank(userDTO.getNewemail()))
+                return Result.error().message("新的邮箱不能为空！");
+            //如果两次面不相等
+            if(userDTO.getEmail().equals(userDTO.getNewemail()))
+                return Result.error().message("新邮箱与旧邮箱相同！");
+            //更新邮箱
+            baseMapper.updateEmail(userDTO.getNewemail(),userDTO.getEmail());
+            baseMapper.isNonEnable(userDTO.getNewemail()); //暂时失效，等待激活
+            user.setEnabled(false);
+            testTemplateMail(userDTO.getNewemail());
+            return Result.ok().message("邮件已发送至邮箱，请在10分钟内完成!");
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    @Override
+    public Result confirmEmail(userDTO userDTO) {
+        try {
+            User user =  userMapper.getUserByEmail(userDTO.getEmail());
+            //判断是否有该用户
+            if(user == null)
+                return Result.error().message("未找到使用此邮箱的用户！");
+            testTemplateMail(user.getEmail());
+            return Result.ok().message("邮件已发送至邮箱，请在10分钟内完成!");
+        } catch (Exception e){
+            e.printStackTrace();
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    @Override
+    public Result checkEmailCode(String email, String code) {
+        if(StringUtils.isBlank(email)||StringUtils.isBlank(code)){
+            return Result.error().message("请输入邮箱或验证码");
+        }
+        //校验激活码是否正常
+        // redis服务器上获取的激活码
+        String s = redisService.getCache("Action:" + email);
+        System.out.println("redis服务器上获取的激活码为:"+s);
+        //从redis服务器中获取code值，如果code值为空，说明激活码错误或者已过期!
+        if(s==null)
+            return Result.error().message("邮箱或验证码错误或者已过期");
+        //激活码是否正确
+        if(!code.equals(s))//不正确
+        {
+            return Result.error().message("验证码错误或者已过期");
+        }
+        //激活后从redis服务器上移除
+        redisService.delCache("Action:" + email);
+
+        return Result.ok().message("验证码正确");
+    }
+
+
+
     /**
-     * 修改密码激活
+     * 修改密码或注册激活
      *
      * @param email 邮箱
      * @param code  激活码
      * @return
      */
     @Override
-    public Result activationPassword(String email, String code) {
+    public Result activationUpdate(String email, String code) {
         //判断输入是否为空
         if(StringUtils.isBlank(email)||StringUtils.isBlank(code)){
             return Result.error().message("请输入邮箱或验证码");
         }
         //校验激活码是否正常
-
         // redis服务器上获取的激活码
         String s = redisService.getCache("Action:" + email);
         System.out.println("redis服务器上获取的激活码为:"+s);
@@ -232,8 +298,10 @@ public class userService extends ServiceImpl<userMapper, User> implements userSe
         user.setEnabled(true);
         baseMapper.isEnable(user.getEmail());
 
-        return Result.ok().message("密码修改成功，请使用新的密码登录");
+        return Result.ok().message("密码或邮箱修改成功，请重新登录");
     }
+
+
 
 
 

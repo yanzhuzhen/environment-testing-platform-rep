@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 public class userDTO extends User {
     private String confirmPassword;
+    private String newemail;
 
 }

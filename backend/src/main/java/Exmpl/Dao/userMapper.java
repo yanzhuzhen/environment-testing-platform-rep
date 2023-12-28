@@ -28,6 +28,9 @@ public interface userMapper extends BaseMapper<User> {
     @Update("update usertable set password = #{password} where email = #{email}")
     void updatePassword(String password, String email);
 
+    @Update("update usertable set email = #{newemail} where email = #{email}")
+    void updateEmail(String newemail, String email);
+
     int saveUserRole(Long uno, List<Long> rnoList);
 
     User getUserByEmail(String email);

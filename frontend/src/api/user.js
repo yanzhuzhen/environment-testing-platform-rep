@@ -33,8 +33,20 @@ export async function updatePasswordByEmail(params){
   return http.post("api/sysUser/updatePasswordByEmail", params);
 }
 
-export async function activationPassword(params){
-  return http.post("api/sysUser/activationPassword", params);
+export async function updateEmailByEmail(params){
+  return http.post("api/sysUser/updateEmailByEmail", params);
+}
+
+export async function activationUpdate(params){
+  return http.post("api/sysUser/activationUpdate", params);
+}
+
+export async function confirmEmail(params){
+  return http.post("api/sysUser/confirmEmail", params);
+}
+
+export async function checkEmailCode(params){
+  return http.post("api/sysUser/checkEmailCode", params);
 }
 
 export  default {

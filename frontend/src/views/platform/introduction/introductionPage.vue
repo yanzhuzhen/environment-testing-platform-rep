@@ -14,11 +14,11 @@
 </template>
 
 <script>
-
+import Myfooter from "@/components/footer/index.vue";
 
 export default {
   name: 'intro',
-  components: {Myfooter:() => import("@/components/footer/index.vue")},
+  components: {Myfooter},
 }
 </script>
 
@@ -32,7 +32,6 @@ export default {
   padding: 10px 0;
   border-bottom: 1px solid #243141;
   margin: 10px 0;
-
 }
 
 .box-card {

@@ -51,6 +51,10 @@
 <script>
 import * as article from '@/api/article'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+import Tinymce from "@/components/Tinymce/index.vue";
+import MDinput from "@/components/MDinput/index.vue";
+import {Upload} from "element-ui";
+import Sticky from "@/directive/sticky";
 
 const defaultForm = {
   status: 'draft',
@@ -64,10 +68,10 @@ const defaultForm = {
 
 export default {
   name: 'createArticle',
-  components: { Tinymce:() => import("@/components/Tinymce"),
-    MDinput:() => import("@/components/MDinput"),
-    Upload:() => import("@/components/Upload/SingleImage3"),
-    Sticky:() => import("@/components/Sticky"),
+  components: { Tinymce,
+    MDinput,
+    Upload,
+    Sticky,
     CommentDropdown,
     PlatformDropdown,
     SourceUrlDropdown },

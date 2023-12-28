@@ -36,7 +36,7 @@ export function filterAsyncRoutes(routes, roles) {
         //再判断是否有根组件
         if(component ===  'Layout'){
           tmp.component = Layout
-        } else {``
+        } else {
           //获取对应具体的组件
           console.log(tmp.component)
           console.log(tmp)

@@ -52,15 +52,19 @@
 
 import * as article from '@/api/article'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+import Upload from "@/components/Upload/SingleImage3";
+import Tinymce from "@/components/Tinymce/index.vue";
+import MDinput from "@/components/MDinput/index.vue";
+import Sticky from "@/directive/sticky";
 
 
 
 export default {
   name: 'editArticle',
-  components: { Tinymce:() => import("@/components/Tinymce"),
-    MDinput:() => import("@/components/MDinput"),
-    Upload:() => import("@/components/Upload/SingleImage3"),
-    Sticky:() => import("@/components/Sticky"),
+  components: { Tinymce,
+    MDinput,
+    Upload,
+    Sticky,
     CommentDropdown,
     PlatformDropdown,
     SourceUrlDropdown },

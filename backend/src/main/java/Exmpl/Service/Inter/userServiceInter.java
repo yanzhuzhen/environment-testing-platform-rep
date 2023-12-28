@@ -27,7 +27,13 @@ public interface userServiceInter  extends IService<User> {
 
     Result activation(String email, String code);
 
-    Result activationPassword(String email, String code);
+    Result updateEmailByEmail(userDTO userDTO);
+
+    Result confirmEmail(userDTO userDTO);
+
+    Result checkEmailCode(String email, String code);
+
+    Result activationUpdate(String email, String code);
 
     String findAvatarByUno(Long id);
 }

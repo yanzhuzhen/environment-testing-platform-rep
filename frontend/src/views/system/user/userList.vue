@@ -109,9 +109,6 @@ import {getToken} from "@/utils/auth";
 import hasPermission from "@/permission/index";
 import user from "@/api/user";
 import deleteFile from "@/api/ossFile";
-import Myfooter from "@/components/footer/index.vue";
-
-
 export default {
     name: "userList",
     computed: {
@@ -120,7 +117,7 @@ export default {
       }
     },
     components: {
-      systemDialog:() => import("@/components/system/systemDialog.vue"),
+      systemDialog,
     },
     data() {
       let phoneCheck = (rule, value, callback) => {
@@ -406,5 +403,28 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("./userList.scss");
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+
 </style>

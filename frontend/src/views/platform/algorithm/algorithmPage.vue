@@ -109,15 +109,17 @@
 
 <script>
 import * as alg from "@/api/alg";
-
+import CommonEditor from "@/views/CommonEditor/CommonEditor.vue";
+import systemDialog from "@/components/system/systemDialog.vue";
+import Myfooter from "@/components/footer/index.vue";
 
 
 export default {
   name: "algList",
   components: {
-    Myfooter:() => import("@/components/footer/index.vue"),
-    CommonEditor:() => import("@/views/CommonEditor/CommonEditor.vue"),
-    systemDialog:() => import("@/components/system/systemDialog.vue")
+    Myfooter,
+    CommonEditor,
+    systemDialog
   },
   data() {
     return {

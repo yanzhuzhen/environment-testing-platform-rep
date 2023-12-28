@@ -12,7 +12,9 @@
 export default {
   name: 'myfooter',
   data() {
+    return{
 
+    }
   }
 }
 </script>

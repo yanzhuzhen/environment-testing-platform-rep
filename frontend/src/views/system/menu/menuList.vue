@@ -107,15 +107,15 @@
 import menu from "@/api/menu";
 import {style} from "svgo/lib/svgo/jsAPI";
 import hasPermission from "@/permission/index";
+import myIcon from "@/components/system/myIcon.vue";
+import systemDialog from "@/components/system/systemDialog.vue";
+import Myfooter from "@/components/footer/index.vue";
   export default {
     name: "menuList",
-    computed: {
-
-    },
     components:{
-      Myfooter:() => import("@/components/footer/index.vue"),
-      systemDialog:() => import("@/components/system/systemDialog.vue"),
-      myIcon:() => import("@/components/system/myIcon.vue")
+      Myfooter,
+      systemDialog,
+      myIcon
     },
     data(){
       return{
@@ -165,7 +165,7 @@ import hasPermission from "@/permission/index";
     },
     created() {
       this.search()
-
+      // this.tableHeight = window.innerHeight - 180
     },
     mounted() {
       this.$nextTick(() => {

@@ -28,9 +28,14 @@
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="300px" label="文章概要" >
+      <el-table-column width="300px" label="文章概要">
         <template v-slot="scope">
-          <span>{{ scope.row.contentshort }}</span>
+          <el-popover
+            width="200"
+            trigger="hover"
+            :content="scope.row.contentshort">
+            <div class="ellipsis" slot="reference">{{ scope.row.contentshort }}</div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" label="查看文章" align="center">
@@ -66,7 +71,7 @@ import Myfooter from "@/components/footer/index.vue"; // Secondary package based
 
 export default {
   name: 'ArticleList',
-  components: {Myfooter, Pagination },
+  components: {Myfooter, Pagination},
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -79,6 +84,7 @@ export default {
   },
   data() {
     return {
+      nameScroll: false,
       tableHeight:0,
       articleList: [],
       total: 0,
@@ -101,8 +107,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.tableHeight = window.innerHeight - 220;
-
-    })
+    });
+    this.nameScroll = this.$refs.songName1.clientWidth > this.$refs.first.clientWidth;
   },
   methods: {
     upto(id, author){
@@ -165,5 +171,13 @@ export default {
 .myLink:hover {
   color: #20a0ff;
 }
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: auto; /* 根据实际情况设置宽度 */
+  animation: scroll 10s linear infinite;
+}
+
 </style>
 

@@ -38,9 +38,9 @@
     </el-button>
     <el-table :height="tableHeight" :data="logList" border stripe style="width: 100%; margin-bottom: 10px" @selection-change="handleSelectionChange">
       <el-table-column type="selection" align="center" />
-      <el-table-column prop="id" label="日志ID"></el-table-column>
-      <el-table-column prop="loglevel" label="日志级别"></el-table-column>
-      <el-table-column prop="logname" label="日志名称">
+      <el-table-column prop="id" label="日志ID" width="100px" align="center"></el-table-column>
+      <el-table-column prop="loglevel" label="日志级别" width="100px" align="center"></el-table-column>
+      <el-table-column prop="logname" label="日志名称" width="120px" align="center">
         <template v-slot="scope">
           <el-tag v-if="scope.row.logname === 'Exmpl.Utils.oparateLogUtils'">操作日志</el-tag>
           <el-tag v-if="scope.row.logname === 'Exmpl.Security.handler.loginSuccessHandler'" type="success">登录日志</el-tag>
@@ -51,9 +51,7 @@
       <el-table-column prop="logtime" label="生成时间"></el-table-column>
       <el-table-column prop="logclass" label="日志所在类"></el-table-column>
       <el-table-column prop="logthread" label="日志所在线程"></el-table-column>
-      <el-table-column prop="trackid" label="全局追踪ID"></el-table-column>
-
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="150px">
         <template v-slot="scope">
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)" v-if="hasPermission('system:user:delete')">删除</el-button>
         </template>
@@ -77,12 +75,16 @@
 
 import hasPermission from "@/permission/index";
 import * as log from "@/api/log";
-
+import BookTypeOption from "@/views/excel/components/BookTypeOption.vue";
+import FilenameOption from "@/views/excel/components/FilenameOption.vue";
+import Myfooter from "@/components/footer/index.vue";
 export default {
   name: "logList",
-  components: {Myfooter:() => import("@/components/footer/index.vue"),
-    FilenameOption:() => import("@/views/excel/components/FilenameOption.vue"),
-    BookTypeOption:() => import("@/views/excel/components/BookTypeOption.vue")},
+  components: {
+    Myfooter,
+    FilenameOption,
+    BookTypeOption
+  },
 
   data() {
     return {

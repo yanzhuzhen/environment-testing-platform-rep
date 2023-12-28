@@ -17,7 +17,7 @@
       <el-row :gutter="12" >
         <!-- date遍历循环的数据 -->
         <el-col :span="6" v-for="item in articleList" :key="item.id">
-          <el-card :body-style="{ height: '200px' }" class="el-card" shadow="hover" ><!--style="background-color: #5daf34"  灰 #e1e1e1 绿 #5daf34-->
+          <el-card  :body-style="{ height: '200px' }" class="my-el-card" shadow="hover" ><!--style="background-color: #5daf34"  灰 #e1e1e1 绿 #5daf34-->
             <!-- 卡片的头部位 -->
             <template #header>
               <div class="card-header">
@@ -67,7 +67,7 @@
         :total="total">
       </el-pagination>
     </el-main>
-    <el-footer height="150px">
+    <el-footer height="150px" >
       <myfooter></myfooter>
     </el-footer>
   </el-container>
@@ -78,12 +78,11 @@
 
 import {parseTime} from "@/utils/index.js";
 import * as article from "@/api/article";
-
+import Myfooter from "@/components/footer/index.vue";
 
 export default {
   name: 'ArticleList',
-  components: {Myfooter:() => import("@/components/footer/index.vue"),
-    Pagination:() => import("@/components/Pagination") },
+  components: {Myfooter},
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -96,7 +95,6 @@ export default {
   },
   data() {
     return {
-      tableHeight:0,
       articleList: [],
       total: 0,
       listLoading: false,
@@ -118,10 +116,7 @@ export default {
     this.search();
   },
   mounted() {
-    this.$nextTick(() => {
-      this.tableHeight = window.innerHeight - 220;
 
-    })
   },
   methods: {
     upto(id, author){
@@ -134,25 +129,6 @@ export default {
         }
       })
     },
-    async islike(id){
-      let res = await article.like(id, this.$store.getters.uno);
-      if(res.success){
-        await this.search();
-        this.$message.success(res.message);
-      }else {
-        this.$message.error(res.message);
-      }
-    },
-    isliked(){
-      this.$message.success("已添加到喜欢");
-    },
-    async myalreadyLike(id){
-      let res = await article.alreadyLike(id, this.$store.getters.uno)
-      if(res.success){
-        return res.data;
-      }
-    },
-
     handleSizeChange(size) {
       this.pageSize = size;
       this.search(this.pageNow, size);
@@ -189,6 +165,6 @@ export default {
 </script>
 
 <style scoped>
-@import './intell.scss';
+@import url("./intell.scss");
 </style>
 

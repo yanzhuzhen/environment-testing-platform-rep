@@ -177,17 +177,53 @@ public class   sysUserController {
     }
 
     // 通过邮箱修改密码
-    @PostMapping("/activationPassword")
-    public Result activationPassword(@RequestBody HashMap<String,String> para){
+    @PostMapping("/activationUpdate")
+    public Result activationUpdate(@RequestBody HashMap<String,String> para){
         try {
             String email=para.get("email");
             String code = para.get("code");
-            return userService.activationPassword(email,code);
+            return userService.activationUpdate(email,code);
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.error().message("修改密码失败，请重试");
+            return Result.error().message("修改密码或邮箱失败，请重试");
         }
     }
 
+    // 发送邮件
+    @PostMapping("/updateEmailByEmail")
+    public Result updateEmailByEmail(@RequestBody userDTO userDTO){
+        try {
+            log.info(userDTO.getUsername()+"::"+"获取验证码");
+            return userService.updateEmailByEmail(userDTO);
+        } catch (Exception e) {
+            log.info(userDTO.getUsername()+"::"+"获取验证码失败");
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    // 发送邮件
+    @PostMapping("/confirmEmail")
+    public Result confirmEmail(@RequestBody userDTO userDTO){
+        try {
+            log.info(userDTO.getUsername()+"::"+"获取验证码");
+            return userService.confirmEmail(userDTO);
+        } catch (Exception e) {
+            log.info(userDTO.getUsername()+"::"+"获取验证码失败");
+            return Result.error().message("获取验证码失败");
+        }
+    }
+
+    // 通过邮箱修改密码
+    @PostMapping("/checkEmailCode")
+    public Result checkEmailCode(@RequestBody HashMap<String,String> para){
+        try {
+            String email=para.get("email");
+            String code = para.get("code");
+            return userService.checkEmailCode(email,code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error().message("验证码错误");
+        }
+    }
 
 }
