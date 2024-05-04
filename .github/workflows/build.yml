@@ -2,7 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - test  # 确保这里的分支名称与您的实际使用分支相匹配
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -33,6 +33,5 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # 确保这里的 SONAR_TOKEN 是正确的
-        working-directory: ./backend  # 确保这是包含 pom.xml 的正确路径
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=yanzhuzhen_environment-testing-platform-rep -DskipTests
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=yanzhuzhen_environment-testing-platform-rep
